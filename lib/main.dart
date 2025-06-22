@@ -20,3 +20,4 @@ void checkFirebaseConnected() async {
   bool isConnected = Firebase.apps.isNotEmpty;
   print('Firebase connected: $isConnected');
 }
+
