@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1050847711151",
+    "project_id": "tradeupapp-b3d24",
+    "storage_bucket": "tradeupapp-b3d24.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1050847711151:android:159d2a54181004132ea95a",
+        "android_client_info": {
+          "package_name": "com.example.tradeupapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBVG53ehEV9wd2zV7RG0gHTcDAgQg24sXQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

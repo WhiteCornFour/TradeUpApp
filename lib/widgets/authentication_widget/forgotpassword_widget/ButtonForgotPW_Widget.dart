@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:tradeupapp/assets/colors/AppColors.dart';
 
-class ButtonRegister_Widget extends StatelessWidget {
+class ButtonForgotPW_Widget extends StatelessWidget {
   final VoidCallback onPressed;
-  const ButtonRegister_Widget({super.key, required this.onPressed});
+  const ButtonForgotPW_Widget({super.key, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +23,7 @@ class ButtonRegister_Widget extends StatelessWidget {
             borderRadius: BorderRadius.circular(10),
           ),
           child: Text(
-            "Sign Up",
+            "Send",
             style: TextStyle(
               fontWeight: FontWeight.w600,
               fontSize: 15,

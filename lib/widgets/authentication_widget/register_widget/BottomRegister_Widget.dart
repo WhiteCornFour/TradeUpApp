@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:tradeupapp/assets/colors/AppColors.dart';
 
 class BottomRegister_Widget extends StatelessWidget {
-  const BottomRegister_Widget({super.key});
-
+  const BottomRegister_Widget({super.key, required this.onPressed});
+  final VoidCallback onPressed;
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -19,14 +19,12 @@ class BottomRegister_Widget extends StatelessWidget {
             ),
           ),
           TextButton(
-            onPressed: () {
-              // điều hướng sang màn hình đăng nhập
-            },
+            onPressed: onPressed,
             child: Text(
               "Sign In",
               style: TextStyle(
-                fontSize: 14,
-                color: AppColors.text,
+                fontSize: 15,
+                color: Colors.black,
                 fontWeight: FontWeight.bold,
                 fontFamily: 'Roboto-Bold',
               ),
