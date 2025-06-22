@@ -2,7 +2,7 @@ name: tradeupapp
 description: "A new Flutter project."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -51,11 +51,43 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
-
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  assets:
+    - lib/assets/images/
+  fonts:
+    - family: Roboto-Thin
+      fonts:
+        - asset: lib/assets/fonts/Roboto-Thin.ttf
+    - family: Roboto-ThinItalic
+      fonts:
+        - asset: lib/assets/fonts/Roboto-ThinItalic.ttf
+    - family: Roboto-Light
+      fonts:
+        - asset: lib/assets/fonts/Roboto-Light.ttf
+    - family: Roboto-LightItalic
+      fonts:
+        - asset: lib/assets/fonts/Roboto-LightItalic.ttf
+    - family: Roboto-Regular
+      fonts:
+        - asset: lib/assets/fonts/Roboto-Regular.ttf
+    - family: Roboto-Medium
+      fonts:
+        - asset: lib/assets/fonts/Roboto-Medium.ttf
+    - family: Roboto-MediumItalic
+      fonts:
+        - asset: lib/assets/fonts/Roboto-MediumItalic.ttf
+    - family: Roboto-Bold
+      fonts:
+        - asset: lib/assets/fonts/Roboto-Bold.ttf
+    - family: Roboto-BoldItalic
+      fonts:
+        - asset: lib/assets/fonts/Roboto-BoldItalic.ttf
+    - family: Roboto-Black
+      fonts:
+        - asset: lib/assets/fonts/Roboto-Black.ttf
 
   # To add assets to your application, add an assets section, like this:
   # assets:
