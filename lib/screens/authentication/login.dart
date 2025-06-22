@@ -12,12 +12,10 @@ class Login extends StatefulWidget {
 class _Login extends State<Login> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        resizeToAvoidBottomInset: false,
-        appBar: AppBar(elevation: 0, backgroundColor: Colors.white),
-        body: SizedBox(
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      body: SingleChildScrollView(
+        child: SizedBox(
           height: MediaQuery.of(
             context,
           ).size.height, //lay toan bo chieu cao man hinh
@@ -30,6 +28,7 @@ class _Login extends State<Login> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
+                    SizedBox(height: 50),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 36),
                       child: Column(
@@ -54,7 +53,10 @@ class _Login extends State<Login> {
                           Column(
                             children: <Widget>[
                               CustomInputField(label: 'Username'),
-                              CustomInputField(label: 'Password', obscureText: true),
+                              CustomInputField(
+                                label: 'Password',
+                                obscureText: true,
+                              ),
                             ],
                           ),
                           SizedBox(height: 10),
