@@ -30,7 +30,7 @@ class AuthServices {
   Future<void> forgotPassword(String email) async {
     await firebaseAuth.sendPasswordResetEmail(email: email);
   }
-
+  
   Future<UserCredential> signIn({
     required String email,
     required String password,
