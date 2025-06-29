@@ -5,7 +5,7 @@ import 'package:tradeupapp/screens/main_app/favorite/favorite.dart';
 import 'package:tradeupapp/screens/main_app/home/home.dart';
 import 'package:tradeupapp/screens/main_app/search/search.dart';
 import 'package:tradeupapp/screens/main_app/set_up/set_up.dart';
-import 'package:tradeupapp/screens/main_app/user/user.dart';
+import 'package:tradeupapp/screens/main_app/profile/profile.dart';
 
 class Index extends StatefulWidget {
   const Index({super.key});
@@ -18,7 +18,7 @@ class _Index extends State<Index> {
   final navigationKey = GlobalKey<CurvedNavigationBarState>();
   int index = 0;
 
-  final screens = [Home(), Favorite(), Search(), SetUp(), User()];
+  final screens = [Home(), Favorite(), Search(), SetUp(), Profile()];
 
   final items = <Widget>[
     Icon(Icons.home, size: 30),

@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:tradeupapp/firebase/auth_service.dart';
 import 'package:tradeupapp/screens/authentication/login.dart';
 
-class User extends StatefulWidget {
-  const User({super.key});
+class Profile extends StatefulWidget {
+  const Profile({super.key});
 
   @override
-  State<User> createState() => _User();
+  State<Profile> createState() => _User();
 }
 
-class _User extends State<User> {
+class _User extends State<Profile> {
   void _logout() async {
     try {
       await authServices.value.signOut();

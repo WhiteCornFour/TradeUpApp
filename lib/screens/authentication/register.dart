@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:tradeupapp/firebase/auth_service.dart';
 import 'package:tradeupapp/firebase/database_service.dart';
+import 'package:tradeupapp/screens/authentication/login.dart';
 import 'package:tradeupapp/utils/snackbar_helper.dart';
+import 'package:tradeupapp/models/UserModal.dart';
 import 'package:tradeupapp/widgets/authentication_widget/register_widget/BottomRegister_Widget.dart';
 import 'package:tradeupapp/widgets/authentication_widget/register_widget/ButtonRegister_Widget.dart';
 import 'package:tradeupapp/widgets/authentication_widget/register_widget/TextInput_Widget.dart';
@@ -34,26 +36,29 @@ class _RegisterState extends State<Register> {
 
   void _handleRegister() async {
     final yourName = _yourNameController.text.trim();
-    final userName = _userNameController.text.trim();
+    // final userName = _userNameController.text.trim();
     final passWord = _passWordController.text.trim();
     final email = _emailController.text.trim();
     final phoneNumber = _phoneNumberController.text.trim();
 
-    // //Kiem tra thong tin nguoi dung nhap vao
-    // String resultCheck = _checkInputData();
-    // if (resultCheck != 'NoError') {
-    //   showCustomSnackBar(context, resultCheck);
-    //   return;
-    // }
-    // //Kiem tra email hien tai co trung hay khong?
-    // final emailExists = await auth.checkEmailExists(email);
-    // if (emailExists) {
-    //   showCustomSnackBar(context, "Email has been registered before!");
-    // }
+    //Kiem tra thong tin nguoi dung nhap vao
+    String resultCheck = _checkInputData();
+    if (resultCheck != 'NoError') {
+      SnackbarHelper.showCustomSnackBar(context, resultCheck);
+      return;
+    }
+    //Kiem tra email hien tai co trung hay khong?
+    final emailExists = await auth.checkEmailExists(email);
+    if (emailExists) {
+      SnackbarHelper.showCustomSnackBar(
+        context,
+        "Email has been registered before!",
+      );
+    }
 
     try {
       await auth.signUp(email: email, password: passWord);
-      //await database.addUser(yourName, userName, passWord, email, phoneNumber);
+      await database.addUser(yourName, email, passWord, phoneNumber);
       SnackbarHelper.showCustomSnackBar(
         context,
         "Registration successful! Please check your email for verification.",
@@ -71,10 +76,10 @@ class _RegisterState extends State<Register> {
     if (_yourNameController.text.isEmpty) {
       return 'Please enter your name!';
     }
-    if (_userNameController.text.isEmpty ||
-        _userNameController.text.length < 8) {
-      return 'Username must be at least 8 characters!';
-    }
+    // if (_userNameController.text.isEmpty ||
+    //     _userNameController.text.length < 8) {
+    //   return 'Username must be at least 8 characters!';
+    // }
     if (_passWordController.text.isEmpty ||
         _passWordController.text.length < 8) {
       return 'Password must be at least 8 characters!';
@@ -145,9 +150,14 @@ class _RegisterState extends State<Register> {
               name: "Your name",
               obscureText: false,
             ),
+            // TextInput(
+            //   controller: _userNameController,
+            //   name: "Username",
+            //   obscureText: false,
+            // ),
             TextInput(
-              controller: _userNameController,
-              name: "Username",
+              controller: _emailController,
+              name: "Email",
               obscureText: false,
             ),
             TextInput(
@@ -155,11 +165,7 @@ class _RegisterState extends State<Register> {
               name: "Password",
               obscureText: true,
             ),
-            TextInput(
-              controller: _emailController,
-              name: "Email",
-              obscureText: false,
-            ),
+
             TextInput(
               controller: _phoneNumberController,
               name: "Phone number",
