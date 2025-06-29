@@ -16,16 +16,30 @@ class TextInput extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text(
-          name,
-          style: TextStyle(
-            fontSize: 15,
-            fontWeight: FontWeight.w400,
-            color: Colors.black87,
-          ),
+        Row(
+          children: [
+            Text(
+              '*',
+              style: TextStyle(
+                color: Colors.red,
+                fontSize: 15,
+                fontFamily: 'Roboto-Regular',
+              ),
+            ),
+            SizedBox(width: 2),
+            Text(
+              name,
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w400,
+                color: Colors.black87,
+              ),
+            ),
+          ],
         ),
         SizedBox(height: 5),
         TextField(
+          controller: controller,
           obscureText: obscureText,
           decoration: InputDecoration(
             contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
