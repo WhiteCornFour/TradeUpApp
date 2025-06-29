@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:tradeupapp/firebase/auth_service.dart';
+import 'package:tradeupapp/utils/snackbar_helper.dart';
 import 'package:tradeupapp/widgets/authentication_widget/forgotpassword_widget/ButtonForgotPW_Widget.dart';
 import 'package:tradeupapp/widgets/authentication_widget/forgotpassword_widget/TextInput_Widget.dart';
 
@@ -11,6 +13,28 @@ class Forgotpassword extends StatefulWidget {
 
 class _ForgotpasswordState extends State<Forgotpassword> {
   final TextEditingController _emailFPController = TextEditingController();
+
+  final auth = AuthService();
+  void _handleForgotPassWord() async {
+    final email = _emailFPController.text.trim();
+    if (email.isEmpty || !email.contains('@') || !email.contains('.')) {
+      SnackbarHelper.showCustomSnackBar(context, 'Please enter a valid email!');
+      return;
+    }
+    try {
+      await auth.forgotPassword(email);
+      SnackbarHelper.showCustomSnackBar(
+        context,
+        'Password reset email has been sent!',
+        backgroundColor: Colors.green,
+        seconds: 3
+      );
+      Navigator.pop(context);
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -70,7 +94,7 @@ class _ForgotpasswordState extends State<Forgotpassword> {
               name: "Email",
               obscureText: false,
             ),
-            ButtonForgotPW_Widget(onPressed: () {}),
+            ButtonForgotPW_Widget(onPressed: _handleForgotPassWord),
           ],
         ),
       ),

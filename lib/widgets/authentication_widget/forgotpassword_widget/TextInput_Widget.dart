@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:tradeupapp/assets/colors/AppColors.dart';
 
@@ -27,6 +26,7 @@ class TextInput extends StatelessWidget {
         ),
         SizedBox(height: 5),
         TextField(
+          controller: controller,
           obscureText: obscureText,
           decoration: InputDecoration(
             contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),

@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:tradeupapp/firebase/auth_service.dart';
+import 'package:tradeupapp/firebase/database_service.dart';
+import 'package:tradeupapp/utils/snackbar_helper.dart';
 import 'package:tradeupapp/widgets/authentication_widget/register_widget/BottomRegister_Widget.dart';
 import 'package:tradeupapp/widgets/authentication_widget/register_widget/ButtonRegister_Widget.dart';
 import 'package:tradeupapp/widgets/authentication_widget/register_widget/TextInput_Widget.dart';
@@ -14,11 +17,80 @@ class _RegisterState extends State<Register> {
   final TextEditingController _userNameController = TextEditingController();
   final TextEditingController _passWordController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _numberPhoneController = TextEditingController();
+  final TextEditingController _phoneNumberController = TextEditingController();
+
+  final auth = AuthService();
+  final database = DatabaseService();
+
   @override
   void dispose() {
     _yourNameController.dispose();
+    _userNameController.dispose();
+    _passWordController.dispose();
+    _emailController.dispose();
+    _phoneNumberController.dispose();
     super.dispose();
+  }
+
+  void _handleRegister() async {
+    final yourName = _yourNameController.text.trim();
+    final userName = _userNameController.text.trim();
+    final passWord = _passWordController.text.trim();
+    final email = _emailController.text.trim();
+    final phoneNumber = _phoneNumberController.text.trim();
+
+    // //Kiem tra thong tin nguoi dung nhap vao
+    // String resultCheck = _checkInputData();
+    // if (resultCheck != 'NoError') {
+    //   showCustomSnackBar(context, resultCheck);
+    //   return;
+    // }
+    // //Kiem tra email hien tai co trung hay khong?
+    // final emailExists = await auth.checkEmailExists(email);
+    // if (emailExists) {
+    //   showCustomSnackBar(context, "Email has been registered before!");
+    // }
+
+    try {
+      await auth.signUp(email: email, password: passWord);
+      //await database.addUser(yourName, userName, passWord, email, phoneNumber);
+      SnackbarHelper.showCustomSnackBar(
+        context,
+        "Registration successful! Please check your email for verification.",
+        backgroundColor: Colors.green,
+        seconds: 3,
+      );
+      Navigator.pop(context);
+    } catch (e) {
+      print("Error: $e");
+    }
+  }
+
+  //Function check infor of user
+  String _checkInputData() {
+    if (_yourNameController.text.isEmpty) {
+      return 'Please enter your name!';
+    }
+    if (_userNameController.text.isEmpty ||
+        _userNameController.text.length < 8) {
+      return 'Username must be at least 8 characters!';
+    }
+    if (_passWordController.text.isEmpty ||
+        _passWordController.text.length < 8) {
+      return 'Password must be at least 8 characters!';
+    }
+    if (_emailController.text.isEmpty ||
+        !_emailController.text.contains('@') ||
+        !_emailController.text.contains('.')) {
+      return 'Please enter a valid email!';
+    }
+    if (_phoneNumberController.text.isEmpty ||
+        _phoneNumberController.text.length != 10 ||
+        !RegExp(r'^[0-9]+$').hasMatch(_phoneNumberController.text)) {
+      return 'Please enter a valid 10-digit phone number!';
+    }
+
+    return 'NoError';
   }
 
   @override
@@ -89,21 +161,11 @@ class _RegisterState extends State<Register> {
               obscureText: false,
             ),
             TextInput(
-              controller: _numberPhoneController,
+              controller: _phoneNumberController,
               name: "Phone number",
               obscureText: false,
             ),
-            ButtonRegister_Widget(
-              onPressed: () {
-                // Xử lý đăng ký ở đây
-                print("Tên: ${_yourNameController.text}");
-                print("Username: ${_userNameController.text}");
-                print("Mật khẩu: ${_passWordController.text}");
-                print("Email: ${_emailController.text}");
-                print("SĐT: ${_numberPhoneController.text}");
-                // TODO: Thêm validate và gửi data
-              },
-            ),
+            ButtonRegister_Widget(onPressed: _handleRegister),
             BottomRegister_Widget(
               onPressed: () {
                 Navigator.pop(context);
