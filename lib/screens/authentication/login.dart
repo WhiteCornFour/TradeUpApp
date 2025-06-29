@@ -1,7 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:tradeupapp/assets/colors/AppColors.dart';
+import 'package:tradeupapp/firebase/auth_service.dart';
 import 'package:tradeupapp/screens/authentication/forgotpassword.dart';
 import 'package:tradeupapp/screens/authentication/register.dart';
+import 'package:tradeupapp/screens/main_app/index.dart';
 import 'package:tradeupapp/widgets/authentication_widget/login_widget/input_field_login_widget.dart';
 
 class Login extends StatefulWidget {
@@ -12,6 +15,25 @@ class Login extends StatefulWidget {
 }
 
 class _Login extends State<Login> {
+  final TextEditingController controllerEmail = TextEditingController();
+  final TextEditingController controllerPassword = TextEditingController();
+  String errorMessage = '';
+
+  void signIn() async {
+    final email = controllerEmail.text.trim();
+    final password = controllerPassword.text.trim();
+    try {
+      await authService.value.signIn(email: email, password: password);
+      if (!mounted) return; //neu widget da dispose thi chuyen trang
+      Navigator.push(context, MaterialPageRoute(builder: (context) => Index()));
+    } on FirebaseAuthException catch (e) {
+      if (!mounted) return; //dam bao context con truoc khi hien thi Snackbar
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.message ?? "Something went wrong!")),
+      );
+    }
+  }
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,8 +75,12 @@ class _Login extends State<Login> {
                         SizedBox(height: 20),
                         Column(
                           children: <Widget>[
-                            CustomInputField(label: 'Username'),
                             CustomInputField(
+                              controller: controllerEmail,
+                              label: 'Email',
+                            ),
+                            CustomInputField(
+                              controller: controllerPassword,
                               label: 'Password',
                               obscureText: true,
                             ),
@@ -85,7 +111,7 @@ class _Login extends State<Login> {
                         MaterialButton(
                           minWidth: double.infinity,
                           height: 50,
-                          onPressed: () {},
+                          onPressed: signIn,
                           color: AppColors.header,
                           elevation: 0,
                           shape: RoundedRectangleBorder(
@@ -112,26 +138,64 @@ class _Login extends State<Login> {
                       fontFamily: 'Roboto-Regular',
                     ),
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Image.asset(
-                        "lib/assets/images/google_icon.png",
-                        width: 26,
-                        height: 26,
+                  Container(
+                    margin: EdgeInsets.symmetric(horizontal: 36),
+                    child: OutlinedButton(
+                      onPressed: () async {
+                        try {
+                          await authService.value.signInWithGoogle();
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => Index()),
+                          );
+                        } catch (e) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text("Đăng nhập bằng Google thất bại"),
+                            ),
+                          );
+                        }
+                      },
+                      style: OutlinedButton.styleFrom(
+                        backgroundColor: Colors.grey.shade200,
+                        side: BorderSide(color: Colors.black, width: 1),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          vertical: 12,
+                          horizontal: 16,
+                        ),
                       ),
-                      Image.asset(
-                        "lib/assets/images/facebook_icon.png",
-                        width: 26,
-                        height: 26,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            "lib/assets/images/google_icon.png",
+                            width: 24,
+                            height: 24,
+                          ),
+                          SizedBox(width: 10),
+                          Container(
+                            margin: EdgeInsets.symmetric(horizontal: 12),
+                            width: 1,
+                            height: 24,
+                            color: Colors.black,
+                          ),
+                          SizedBox(width: 10),
+                          Text(
+                            "Continue with Google",
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontFamily: 'Roboto-Regular',
+                              color: Colors.black,
+                            ),
+                          ),
+                        ],
                       ),
-                      Image.asset(
-                        "lib/assets/images/twitter_icon.png",
-                        width: 26,
-                        height: 26,
-                      ),
-                    ],
+                    ),
                   ),
+
                   SizedBox(height: 20),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -146,6 +210,7 @@ class _Login extends State<Login> {
                       ),
                       TextButton(
                         onPressed: () {
+                          // register();
                           Navigator.push(
                             context,
                             MaterialPageRoute(builder: (context) => Register()),
