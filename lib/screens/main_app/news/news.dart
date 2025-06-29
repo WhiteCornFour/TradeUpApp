@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 
-class Favorite extends StatefulWidget {
-  const Favorite({super.key});
+class News extends StatefulWidget {
+  const News({super.key});
 
   @override
-  State<Favorite> createState() => _Favorite();
+  State<News> createState() => _News();
 }
 
-class _Favorite extends State<Favorite> {
+class _News extends State<News> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Column(
         children: [
-          Text('Favorite'),
+          Text('SetUp'),
         ],
       ),
     );
