@@ -5,11 +5,11 @@ import 'package:tradeupapp/firebase/auth_service.dart';
 import 'package:tradeupapp/screens/authentication/forgotpassword.dart';
 import 'package:tradeupapp/screens/authentication/register.dart';
 import 'package:tradeupapp/screens/main_app/index.dart';
+import 'package:tradeupapp/utils/snackbar_helper.dart';
 import 'package:tradeupapp/widgets/authentication_widget/login_widget/input_field_login_widget.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
-
   @override
   State<Login> createState() => _Login();
 }
@@ -17,20 +17,47 @@ class Login extends StatefulWidget {
 class _Login extends State<Login> {
   final TextEditingController controllerEmail = TextEditingController();
   final TextEditingController controllerPassword = TextEditingController();
+
+  @override
+  void dispose() {
+    // TODO: implement
+    controllerEmail.clear();
+    controllerPassword.clear();
+    super.dispose();
+  }
+
+  //Nhan thông tin của User mới từ Register gửi qua
   String errorMessage = '';
 
   void signIn() async {
     final email = controllerEmail.text.trim();
     final password = controllerPassword.text.trim();
     try {
-      await authServices.value.signIn(email: email, password: password);
-      if (!mounted) return; //neu widget da dispose thi chuyen trang
-      Navigator.push(context, MaterialPageRoute(builder: (context) => Index()));
-    } on FirebaseAuthException catch (e) {
-      if (!mounted) return; //dam bao context con truoc khi hien thi Snackbar
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(e.message ?? "Something went wrong!")),
+      //Đăn nhập
+      final credential = await AuthServices().signIn(
+        email: email,
+        password: password,
       );
+      //Reload lấy thông tin mới nhất
+      final user = credential.user;
+      await user?.reload();
+      //Kiem tra tai khoan da verify chưa
+      if (user != null && user.emailVerified) {
+        if (!mounted) return;
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => Index()),
+        );
+      } else {
+        SnackbarHelper.showCustomSnackBar(
+          context,
+          'Please verify email before logging in!',
+        );
+        await AuthServices().signOut();
+      }
+    } on FirebaseAuthException catch (e) {
+      if (!mounted) return;
+      SnackbarHelper.showCustomSnackBar(context, "Something went wrong!");
     }
   }
 
@@ -149,10 +176,9 @@ class _Login extends State<Login> {
                             MaterialPageRoute(builder: (context) => Index()),
                           );
                         } catch (e) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text("Đăng nhập bằng Google thất bại"),
-                            ),
+                          SnackbarHelper.showCustomSnackBar(
+                            context,
+                            "Google SignIn failed!",
                           );
                         }
                       },

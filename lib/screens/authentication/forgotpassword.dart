@@ -14,6 +14,13 @@ class Forgotpassword extends StatefulWidget {
 class _ForgotpasswordState extends State<Forgotpassword> {
   final TextEditingController _emailFPController = TextEditingController();
 
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _emailFPController.clear();
+    super.dispose();
+  }
+
   final auth = AuthServices();
   void _handleForgotPassWord() async {
     final email = _emailFPController.text.trim();
