@@ -23,7 +23,7 @@ class _Login extends State<Login> {
     final email = controllerEmail.text.trim();
     final password = controllerPassword.text.trim();
     try {
-      await authService.value.signIn(email: email, password: password);
+      await authServices.value.signIn(email: email, password: password);
       if (!mounted) return; //neu widget da dispose thi chuyen trang
       Navigator.push(context, MaterialPageRoute(builder: (context) => Index()));
     } on FirebaseAuthException catch (e) {
@@ -33,7 +33,7 @@ class _Login extends State<Login> {
       );
     }
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -143,7 +143,7 @@ class _Login extends State<Login> {
                     child: OutlinedButton(
                       onPressed: () async {
                         try {
-                          await authService.value.signInWithGoogle();
+                          await authServices.value.signInWithGoogle();
                           Navigator.push(
                             context,
                             MaterialPageRoute(builder: (context) => Index()),

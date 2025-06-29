@@ -13,7 +13,7 @@ class User extends StatefulWidget {
 class _User extends State<User> {
   void _logout() async {
     try {
-      await authService.value.signOut();
+      await authServices.value.signOut();
       Navigator.push(context, MaterialPageRoute(builder: (context) => Login()));
     } on FirebaseAuthException catch (e) {
       print(e.message);
