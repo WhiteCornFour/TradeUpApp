@@ -14,7 +14,7 @@ class Forgotpassword extends StatefulWidget {
 class _ForgotpasswordState extends State<Forgotpassword> {
   final TextEditingController _emailFPController = TextEditingController();
 
-  final auth = AuthService();
+  final auth = AuthServices();
   void _handleForgotPassWord() async {
     final email = _emailFPController.text.trim();
     if (email.isEmpty || !email.contains('@') || !email.contains('.')) {
@@ -27,7 +27,7 @@ class _ForgotpasswordState extends State<Forgotpassword> {
         context,
         'Password reset email has been sent!',
         backgroundColor: Colors.green,
-        seconds: 3
+        seconds: 3,
       );
       Navigator.pop(context);
     } catch (e) {

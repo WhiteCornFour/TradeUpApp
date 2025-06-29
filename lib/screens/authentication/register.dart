@@ -19,7 +19,7 @@ class _RegisterState extends State<Register> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
 
-  final auth = AuthService();
+  final auth = AuthServices();
   final database = DatabaseService();
 
   @override
