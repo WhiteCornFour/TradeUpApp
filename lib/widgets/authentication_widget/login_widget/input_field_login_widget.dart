@@ -4,10 +4,12 @@ import 'package:tradeupapp/assets/colors/AppColors.dart';
 class CustomInputField extends StatelessWidget {
   final String label;
   final bool obscureText;
+  final TextEditingController controller;
 
   const CustomInputField({
     super.key,
     required this.label,
+    required this.controller,
     this.obscureText = false,
   });
 
@@ -26,6 +28,7 @@ class CustomInputField extends StatelessWidget {
         ),
         SizedBox(height: 5),
         TextField(
+          controller: controller,
           obscureText: obscureText,
           decoration: InputDecoration(
             contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
