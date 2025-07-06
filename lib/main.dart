@@ -1,7 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tradeupapp/screens/authentication/login.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:tradeupapp/screens/authentication/on_boarding.dart';
 import 'package:tradeupapp/screens/main_app/index.dart';
 import 'firebase_options.dart';
 
@@ -9,11 +12,17 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   checkFirebaseConnected();
+
+  //Check if user have already seen the OnBoarding screeen yet by using SharedPreference
+  final prefs = await SharedPreferences.getInstance();
+  final seenOnBoarding = prefs.getBool('seenOnBoarding') ?? false;
+
   runApp(
-    MaterialApp(
+    GetMaterialApp(
       title: 'SwapIT',
       debugShowCheckedModeBanner: false,
-      home: AuthChecker(),
+      home: seenOnBoarding ? const AuthChecker() : const OnBoarding(),
+      //If seenOnBoarding was false, go to OnBoarding, else go to AuthChecker
     ),
   );
 }
