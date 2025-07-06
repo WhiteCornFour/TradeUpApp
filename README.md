@@ -4,6 +4,12 @@ A new Flutter project.
 
 ## Getting Started
 
+## Quy tắc đặt tên trong Project
+screens: tên thư mục_chức năng.dart
+widgets: tên thư mục_chức năng_widget.dart
+model: tên object_model.dart
+controller: tên object_controller.dart
+
 This project is a starting point for a Flutter application.
 
 A few resources to get you started if this is your first Flutter project:

@@ -1,12 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:tradeupapp/assets/colors/AppColors.dart';
+import 'package:tradeupapp/assets/colors/app_colors.dart';
 import 'package:tradeupapp/firebase/auth_service.dart';
-import 'package:tradeupapp/screens/authentication/forgotpassword.dart';
+import 'package:tradeupapp/screens/authentication/forgot_password.dart';
 import 'package:tradeupapp/screens/authentication/register.dart';
+import 'package:tradeupapp/screens/debug/debug.dart';
 import 'package:tradeupapp/screens/main_app/index.dart';
 import 'package:tradeupapp/utils/snackbar_helper.dart';
-import 'package:tradeupapp/widgets/authentication_widget/login_widget/input_field_login_widget.dart';
+import 'package:tradeupapp/widgets/authentication_widget/login_widget/login_text_field_widget.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -33,7 +34,7 @@ class _Login extends State<Login> {
     final email = controllerEmail.text.trim();
     final password = controllerPassword.text.trim();
     try {
-      //Đăn nhập
+      //Đăng nhập
       final credential = await AuthServices().signIn(
         email: email,
         password: password,
@@ -83,11 +84,22 @@ class _Login extends State<Login> {
                     padding: EdgeInsets.symmetric(horizontal: 36),
                     child: Column(
                       children: [
-                        Image.asset(
-                          "lib/assets/images/logo-transparent.png",
-                          width: 150,
-                          height: 150,
+                        GestureDetector(
+                          onLongPress: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => const DebugMenu(),
+                              ),
+                            );
+                          },
+                          child: Image.asset(
+                            "lib/assets/images/logo-transparent.png",
+                            width: 150,
+                            height: 150,
+                          ),
                         ),
+
                         SizedBox(height: 40),
                         Align(
                           alignment: Alignment.centerLeft,
@@ -102,11 +114,11 @@ class _Login extends State<Login> {
                         SizedBox(height: 20),
                         Column(
                           children: <Widget>[
-                            CustomInputField(
+                            TextFieldLogin(
                               controller: controllerEmail,
                               label: 'Email',
                             ),
-                            CustomInputField(
+                            TextFieldLogin(
                               controller: controllerPassword,
                               label: 'Password',
                               obscureText: true,

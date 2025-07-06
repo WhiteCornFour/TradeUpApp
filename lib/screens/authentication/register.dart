@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:tradeupapp/firebase/auth_service.dart';
 import 'package:tradeupapp/firebase/database_service.dart';
-import 'package:tradeupapp/screens/authentication/login.dart';
 import 'package:tradeupapp/utils/snackbar_helper.dart';
-import 'package:tradeupapp/models/UserModal.dart';
-import 'package:tradeupapp/widgets/authentication_widget/register_widget/BottomRegister_Widget.dart';
-import 'package:tradeupapp/widgets/authentication_widget/register_widget/ButtonRegister_Widget.dart';
-import 'package:tradeupapp/widgets/authentication_widget/register_widget/TextInput_Widget.dart';
+import 'package:tradeupapp/widgets/authentication_widget/register_widget/register_bottom_widget.dart';
+import 'package:tradeupapp/widgets/authentication_widget/register_widget/register_button_widget.dart';
+import 'package:tradeupapp/widgets/authentication_widget/register_widget/register_text_field_widget.dart';
 
 class Register extends StatefulWidget {
   const Register({super.key});
@@ -145,7 +143,7 @@ class _RegisterState extends State<Register> {
               ),
             ),
             SizedBox(height: 10),
-            TextInput(
+            TextFieldRegister(
               controller: _yourNameController,
               name: "Your name",
               obscureText: false,
@@ -155,24 +153,24 @@ class _RegisterState extends State<Register> {
             //   name: "Username",
             //   obscureText: false,
             // ),
-            TextInput(
+            TextFieldRegister(
               controller: _emailController,
               name: "Email",
               obscureText: false,
             ),
-            TextInput(
+            TextFieldRegister(
               controller: _passWordController,
               name: "Password",
               obscureText: true,
             ),
 
-            TextInput(
+            TextFieldRegister(
               controller: _phoneNumberController,
               name: "Phone number",
               obscureText: false,
             ),
-            ButtonRegister_Widget(onPressed: _handleRegister),
-            BottomRegister_Widget(
+            ButtonRegister(onPressed: _handleRegister),
+            BottomRegister(
               onPressed: () {
                 Navigator.pop(context);
               },

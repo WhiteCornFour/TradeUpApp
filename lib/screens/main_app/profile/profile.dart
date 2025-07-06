@@ -7,14 +7,17 @@ class Profile extends StatefulWidget {
   const Profile({super.key});
 
   @override
-  State<Profile> createState() => _User();
+  State<Profile> createState() => _Profile();
 }
 
-class _User extends State<Profile> {
+class _Profile extends State<Profile> {
   void _logout() async {
     try {
       await authServices.value.signOut();
-      Navigator.push(context, MaterialPageRoute(builder: (context) => Login()));
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => Login()),
+      );
     } on FirebaseAuthException catch (e) {
       print(e.message);
     }
