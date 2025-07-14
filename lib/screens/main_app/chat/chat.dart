@@ -12,22 +12,22 @@ class _Chat extends State<Chat> {
   final TextEditingController _searchController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          title: Text(
-            "messages",
-            style: TextStyle(
-              color: Colors.black,
-              fontFamily: 'Roboto-Medium',
-              fontSize: 27,
-            ),
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        title: Text(
+          "messages",
+          style: TextStyle(
+            color: Colors.black,
+            fontFamily: 'Roboto-Medium',
+            fontSize: 27,
           ),
-          elevation: 0,
         ),
-        body: Column(
+        elevation: 0,
+      ),
+      body: SafeArea(
+        child: Column(
           children: [
             Container(
               margin: EdgeInsets.only(left: 15, right: 15, top: 10),
@@ -57,8 +57,6 @@ class _Chat extends State<Chat> {
                 ],
               ),
             ),
-            SizedBox(height: 20),
-
             Expanded(
               child: ListView(
                 padding: EdgeInsets.only(top: 20),
