@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:tradeupapp/assets/colors/app_colors.dart';
 import 'package:tradeupapp/models/category_model.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/home_widgets/home_button_group_widget.dart';
@@ -30,7 +31,7 @@ class _Home extends State<Home> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Welcome + Avatar
+              // Welcome + Avatar + Wishlist
               Padding(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 25,
@@ -77,7 +78,7 @@ class _Home extends State<Home> {
                         border: Border.all(color: Colors.black54, width: 1.5),
                       ),
                       child: IconButton(
-                        icon: const Icon(Icons.favorite_border_rounded),
+                        icon: const Icon(Iconsax.bookmark),
                         color: Colors.black,
                         onPressed: () {},
                       ),
@@ -175,7 +176,7 @@ class _Home extends State<Home> {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Icon(Icons.category_rounded, color: Colors.black),
+                    const Icon(Iconsax.category, color: Colors.black),
                     const SizedBox(width: 15),
                     const Text(
                       'Sort by Category',
@@ -275,7 +276,7 @@ class _Home extends State<Home> {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Icon(Icons.shopping_bag_rounded, color: Colors.black),
+                    const Icon(Iconsax.ticket_star, color: Colors.black),
                     const SizedBox(width: 15),
                     const Text(
                       'Discover',

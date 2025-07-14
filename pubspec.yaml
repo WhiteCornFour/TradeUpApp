@@ -43,6 +43,8 @@ dependencies:
   flutter_native_splash: ^2.4.6
   smooth_page_indicator: ^1.2.1
   shared_preferences: ^2.5.3
+  carousel_slider: ^5.1.1
+  readmore: ^3.0.0
 
 dev_dependencies:
   flutter_test:
@@ -67,6 +69,7 @@ flutter:
   assets:
     - lib/assets/images/
     - lib/assets/images/on_boarding_images/
+    - lib/assets/images/sample_images/
   fonts:
     - family: Roboto-Thin
       fonts:

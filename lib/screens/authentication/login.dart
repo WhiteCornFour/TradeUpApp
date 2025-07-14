@@ -7,7 +7,7 @@ import 'package:tradeupapp/screens/authentication/register.dart';
 import 'package:tradeupapp/screens/debug/debug.dart';
 import 'package:tradeupapp/screens/main_app/index.dart';
 import 'package:tradeupapp/utils/snackbar_helper.dart';
-import 'package:tradeupapp/widgets/authentication_widget/login_widget/login_text_field_widget.dart';
+import 'package:tradeupapp/widgets/authentication_widgets/login_widgets/login_text_field_widget.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});

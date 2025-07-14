@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tradeupapp/screens/authentication/controllers/on_boarding_controller.dart';
-import 'package:tradeupapp/widgets/authentication_widget/on_boarding_page_widget/on_boarding_next_button.dart';
-import 'package:tradeupapp/widgets/authentication_widget/on_boarding_page_widget/on_boarding_dot_navigation.dart';
-import 'package:tradeupapp/widgets/authentication_widget/on_boarding_page_widget/on_boarding_skip.dart';
-import 'package:tradeupapp/widgets/authentication_widget/on_boarding_page_widget/on_boarding_page_widget.dart';
+import 'package:tradeupapp/widgets/authentication_widgets/on_boarding_page_widgets/on_boarding_next_button.dart';
+import 'package:tradeupapp/widgets/authentication_widgets/on_boarding_page_widgets/on_boarding_dot_navigation.dart';
+import 'package:tradeupapp/widgets/authentication_widgets/on_boarding_page_widgets/on_boarding_skip.dart';
+import 'package:tradeupapp/widgets/authentication_widgets/on_boarding_page_widgets/on_boarding_page_widget.dart';
 
 class OnBoarding extends StatelessWidget {
   const OnBoarding({super.key});
