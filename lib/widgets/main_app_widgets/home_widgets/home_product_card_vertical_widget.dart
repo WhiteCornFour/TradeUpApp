@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:tradeupapp/assets/colors/app_colors.dart';
-import 'package:tradeupapp/widgets/main_app_widgets/home_widgets/home_circulation_button_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/home_widgets/home_image_container_widget.dart';
+import 'package:tradeupapp/widgets/system_widgets/system_book_marked_toggle_icon_widget.dart';
 
 class ProductCardVerticalHome extends StatelessWidget {
   const ProductCardVerticalHome({super.key});
@@ -43,7 +43,7 @@ class ProductCardVerticalHome extends StatelessWidget {
                   //Thumbnail Image
                   ImageContainerHome(
                     height: 180,
-                    imageUrl: 'lib/assets/images/sample.png',
+                    imageUrl: 'lib/assets/images/sample_images/sample.png',
                     applyImageRadius: true,
                   ),
 
@@ -81,11 +81,7 @@ class ProductCardVerticalHome extends StatelessWidget {
                   Positioned(
                     top: 5,
                     right: 8,
-                    child: CirculationIconHome(
-                      onPressed: () {},
-                      icon: Iconsax.heart5,
-                      color: Colors.red,
-                    ),
+                    child: BookmarkedToggleButtonSystem(),
                   ),
                 ],
               ),

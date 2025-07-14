@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:tradeupapp/firebase/auth_service.dart';
 import 'package:tradeupapp/utils/snackbar_helper.dart';
-import 'package:tradeupapp/widgets/authentication_widget/forgotpassword_widget/forgot_password_button_widget.dart';
-import 'package:tradeupapp/widgets/authentication_widget/forgotpassword_widget/forgot_password_text_field_widget.dart';
+import 'package:tradeupapp/widgets/authentication_widgets/forgotpassword_widgets/forgot_password_button_widget.dart';
+import 'package:tradeupapp/widgets/authentication_widgets/forgotpassword_widgets/forgot_password_text_field_widget.dart';
 
 class Forgotpassword extends StatefulWidget {
   const Forgotpassword({super.key});

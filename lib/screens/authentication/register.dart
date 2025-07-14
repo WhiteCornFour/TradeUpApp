@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:tradeupapp/firebase/auth_service.dart';
 import 'package:tradeupapp/firebase/database_service.dart';
 import 'package:tradeupapp/utils/snackbar_helper.dart';
-import 'package:tradeupapp/widgets/authentication_widget/register_widget/register_bottom_widget.dart';
-import 'package:tradeupapp/widgets/authentication_widget/register_widget/register_button_widget.dart';
-import 'package:tradeupapp/widgets/authentication_widget/register_widget/register_text_field_widget.dart';
+import 'package:tradeupapp/widgets/authentication_widgets/register_widgets/register_bottom_widget.dart';
+import 'package:tradeupapp/widgets/authentication_widgets/register_widgets/register_button_widget.dart';
+import 'package:tradeupapp/widgets/authentication_widgets/register_widgets/register_text_field_widget.dart';
 
 class Register extends StatefulWidget {
   const Register({super.key});

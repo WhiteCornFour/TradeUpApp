@@ -1,9 +1,10 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:tradeupapp/assets/colors/app_colors.dart';
 import 'package:tradeupapp/screens/main_app/chat/chat.dart';
 import 'package:tradeupapp/screens/main_app/home/home.dart';
-import 'package:tradeupapp/screens/main_app/offer/offer.dart';
+import 'package:tradeupapp/screens/main_app/shop/shop.dart';
 import 'package:tradeupapp/screens/main_app/news/news.dart';
 import 'package:tradeupapp/screens/main_app/profile/profile.dart';
 
@@ -18,14 +19,14 @@ class _Index extends State<Index> {
   final navigationKey = GlobalKey<CurvedNavigationBarState>();
   int index = 0;
 
-  final screens = [Home(), Chat(), Offer(), News(), Profile()];
+  final screens = [Home(), Chat(), Shop(), News(), Profile()];
 
   final items = <Widget>[
-    Icon(Icons.home, size: 30),
-    Icon(Icons.chat, size: 30),
-    Icon(Icons.add_circle_outlined, size: 30),
-    Icon(Icons.notifications, size: 30),
-    Icon(Icons.person, size: 30),
+    Icon(Iconsax.home, size: 30),
+    Icon(Iconsax.message, size: 30),
+    Icon(Iconsax.shopping_bag, size: 30),
+    Icon(Iconsax.notification, size: 30),
+    Icon(Iconsax.user, size: 30),
   ];
 
   @override
