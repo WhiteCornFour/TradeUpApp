@@ -13,10 +13,10 @@ class ChatRoom extends StatefulWidget {
 class _ChatRoomState extends State<ChatRoom> {
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBarCustomChat(),
-        body: Container(
+    return Scaffold(
+      appBar: AppBarCustomChat(),
+      body: SafeArea(
+        child: Container(
           color: Colors.white,
           child: Column(
             children: [
@@ -34,8 +34,8 @@ class _ChatRoomState extends State<ChatRoom> {
             ],
           ),
         ),
-        bottomSheet: BottomTextFieldChat(),
       ),
+      bottomSheet: BottomTextFieldChat(),
     );
   }
 }
