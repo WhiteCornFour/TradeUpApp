@@ -5,6 +5,7 @@ import 'package:tradeupapp/firebase/auth_service.dart';
 import 'package:tradeupapp/screens/authentication/login.dart';
 import 'package:tradeupapp/screens/main_app/profile/about_us/about_us.dart';
 import 'package:tradeupapp/screens/main_app/profile/change_password/change_password.dart';
+import 'package:tradeupapp/screens/main_app/profile/report/report.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/user_profile_widgets/user_profile_appbar_custom_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/user_profile_widgets/user_profile_business_mode_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/user_profile_widgets/user_profile_category_function_widget.dart';
@@ -124,7 +125,12 @@ class _Profile extends State<Profile> {
 
                     //Report
                     CategoryFuncUserProfile(
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => Report()),
+                        );
+                      },
                       icon: Icons.report_outlined,
                       label: 'Report',
                     ),
