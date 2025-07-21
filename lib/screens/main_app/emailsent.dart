@@ -1,14 +1,37 @@
+import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/material.dart';
 import 'package:tradeupapp/assets/colors/app_colors.dart';
+import 'package:tradeupapp/widgets/main_app_widgets/email_sent_widgets/email_sent_bottom_widget.dart';
+import 'package:tradeupapp/widgets/main_app_widgets/email_sent_widgets/email_sent_open_gmail_button_widget.dart';
+import 'package:tradeupapp/widgets/main_app_widgets/email_sent_widgets/email_sent_skip_button_widget.dart';
 
 class EmailSent extends StatefulWidget {
-  const EmailSent({super.key});
-
+  const EmailSent({super.key, required this.destination});
+  final Widget destination;
   @override
   State<EmailSent> createState() => _EmailSentState();
 }
 
 class _EmailSentState extends State<EmailSent> {
+  void _previousScreen() {
+    Navigator.of(context).pop();
+  }
+
+  void _changeToOtherScreen() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => widget.destination),
+    );
+  }
+
+  void _handleOpenGmailApp() async {
+    // final Uri params = Uri(scheme: 'mailto');
+    // final url = params.toString();
+    // launch(url);
+    _changeToOtherScreen();
+    launch("https://mail.google.com/mail/u/0/#inbox");
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,7 +62,7 @@ class _EmailSentState extends State<EmailSent> {
                       SizedBox(height: 5),
                       Container(
                         width: double.maxFinite,
-                        margin: const EdgeInsets.all(15),
+                        margin: const EdgeInsets.all(30),
                         padding: const EdgeInsets.symmetric(vertical: 15),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(12),
@@ -66,67 +89,19 @@ class _EmailSentState extends State<EmailSent> {
                               ),
                             ),
                             const SizedBox(height: 25),
-                            MaterialButton(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 45,
-                                vertical: 15,
-                              ),
-                              color: AppColors.header,
-                              shape: ContinuousRectangleBorder(
-                                borderRadius: BorderRadius.circular(15),
-                              ),
-                              onPressed: () {},
-                              child: Text(
-                                'Open email app',
-                                style: TextStyle(
-                                  color: AppColors.text,
-                                  fontSize: 18,
-                                  fontFamily: 'Roboto-Medium',
-                                ),
-                              ),
-                            ),
+                            OpenGmailButtonEmailSent(func: _handleOpenGmailApp),
                             const SizedBox(height: 10),
-                            TextButton(
-                              onPressed: () {},
-                              child: Text(
-                                'Skip, I\'ll change later',
-                                style: TextStyle(
-                                  color: AppColors.background,
-                                  fontFamily: 'Roboto-Regular',
-                                  fontSize: 15,
-                                ),
-                              ),
+                            //Skip button
+                            SkipButtonEmailSent(
+                              onPressed: _changeToOtherScreen,
                             ),
                           ],
                         ),
                       ),
                     ],
                   ),
-                  Column(
-                    children: [
-                      const Text(
-                        'Did not receive the email? Check your spam filter,',
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Text('or '),
-                          TextButton(
-                            onPressed: () {},
-                            child: Text(
-                              'try another email address',
-                              style: TextStyle(
-                                color: AppColors.background,
-                                fontFamily: 'Roboto-Regular',
-                                fontSize: 15,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 15),
-                    ],
-                  ),
+                  //Change email button
+                  BottomEmailSent(onPressed: _previousScreen),
                 ],
               ),
             );

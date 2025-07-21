@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:tradeupapp/firebase/auth_service.dart';
 import 'package:tradeupapp/firebase/database_service.dart';
+import 'package:tradeupapp/screens/authentication/login.dart';
+import 'package:tradeupapp/screens/main_app/emailsent.dart';
 import 'package:tradeupapp/utils/snackbar_helper.dart';
 import 'package:tradeupapp/widgets/authentication_widgets/register_widgets/register_bottom_widget.dart';
 import 'package:tradeupapp/widgets/authentication_widgets/register_widgets/register_button_widget.dart';
@@ -61,9 +63,15 @@ class _RegisterState extends State<Register> {
         context,
         "Registration successful! Please check your email for verification.",
         backgroundColor: Colors.green,
-        seconds: 3,
+        seconds: 1,
       );
-      Navigator.pop(context);
+      //Chuyen sang trang email sent
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => EmailSent(destination: Login()),
+        ),
+      );
     } catch (e) {
       print("Error: $e");
     }
@@ -74,10 +82,6 @@ class _RegisterState extends State<Register> {
     if (_yourNameController.text.isEmpty) {
       return 'Please enter your name!';
     }
-    // if (_userNameController.text.isEmpty ||
-    //     _userNameController.text.length < 8) {
-    //   return 'Username must be at least 8 characters!';
-    // }
     if (_passWordController.text.isEmpty ||
         _passWordController.text.length < 8) {
       return 'Password must be at least 8 characters!';
@@ -123,26 +127,22 @@ class _RegisterState extends State<Register> {
                 ),
               ),
               SizedBox(height: 20),
-              Container(
-                child: Text(
-                  "Register",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 25,
-                    fontFamily: 'Roboto-Black',
-                    letterSpacing: 2,
-                  ),
+              Text(
+                "Register",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 25,
+                  fontFamily: 'Roboto-Black',
+                  letterSpacing: 2,
                 ),
               ),
-              Container(
-                child: Text(
-                  "New here? Sign up and let’s grow together!",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 15,
-                    fontFamily: 'Roboto-Black',
-                    letterSpacing: 1,
-                  ),
+              Text(
+                "New here? Sign up and let’s grow together!",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 15,
+                  fontFamily: 'Roboto-Black',
+                  letterSpacing: 1,
                 ),
               ),
               SizedBox(height: 10),
