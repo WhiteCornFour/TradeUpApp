@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:tradeupapp/firebase/auth_service.dart';
+import 'package:tradeupapp/screens/authentication/login.dart';
+import 'package:tradeupapp/screens/main_app/emailsent.dart';
+import 'package:tradeupapp/utils/back_button.dart';
 import 'package:tradeupapp/utils/snackbar_helper.dart';
 import 'package:tradeupapp/widgets/authentication_widgets/forgotpassword_widgets/forgot_password_button_widget.dart';
 import 'package:tradeupapp/widgets/authentication_widgets/forgotpassword_widgets/forgot_password_text_field_widget.dart';
@@ -36,7 +39,12 @@ class _ForgotpasswordState extends State<Forgotpassword> {
         backgroundColor: Colors.green,
         seconds: 3,
       );
-      Navigator.pop(context);
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => EmailSent(destination: Login()),
+        ),
+      );
     } catch (e) {
       print('Error: $e');
     }
@@ -54,17 +62,7 @@ class _ForgotpasswordState extends State<Forgotpassword> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(height: 10),
-              IconButton(
-                padding: EdgeInsets.only(right: 50),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                icon: Icon(
-                  Icons.arrow_back_ios_new,
-                  color: Colors.black,
-                  size: 30,
-                ),
-              ),
+              BackButtonCustom(),
               SizedBox(height: 40),
               Center(
                 child: Container(
@@ -80,7 +78,7 @@ class _ForgotpasswordState extends State<Forgotpassword> {
                   ),
                 ),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 40),
               Text(
                 'Forgot password?',
                 style: TextStyle(

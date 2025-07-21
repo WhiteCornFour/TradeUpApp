@@ -50,6 +50,10 @@ class _Login extends State<Login> {
           MaterialPageRoute(builder: (context) => Index()),
         );
       } else {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => Login()),
+        );
         SnackbarHelper.showCustomSnackBar(
           context,
           'Please verify email before logging in!',
