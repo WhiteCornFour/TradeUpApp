@@ -32,13 +32,13 @@ import 'package:tradeupapp/assets/colors/app_colors.dart';
 //     );
 //   }
 // }
-
 class CustomDialog {
   static void show(
     BuildContext context,
     String header,
     String content,
-    Function onPressed, {
+    Function onPressed,
+    Function onPressedExtend, {
     String textButton1 = 'Confirm',
     String textButton2 = 'Cancel',
     String image = 'completed.png',
@@ -129,6 +129,7 @@ class CustomDialog {
                                     //Button 2
                                     MaterialButton(
                                       onPressed: () {
+                                        onPressedExtend();
                                         Navigator.of(context).pop();
                                       },
                                       shape: ContinuousRectangleBorder(

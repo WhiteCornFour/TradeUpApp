@@ -82,7 +82,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                 Center(
                   child: Container(
                     width: 260,
-                    height: 230,
+                    height: 250,
                     decoration: BoxDecoration(
                       image: DecorationImage(
                         image: AssetImage(
@@ -121,7 +121,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                   child: MaterialButton(
                     minWidth: double.infinity,
                     height: 50,
-                    color: AppColors.header,
+                    color: AppColors.background,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -130,7 +130,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                       'Send Instructions',
                       style: TextStyle(
                         color: AppColors.text,
-                        fontFamily: 'Roboto-Medium',
+                        fontFamily: 'Roboto-Black',
                         fontSize: 15,
                       ),
                     ),

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:tradeupapp/assets/colors/app_colors.dart';
@@ -8,6 +9,8 @@ import 'package:tradeupapp/screens/authentication/login.dart';
 import 'package:tradeupapp/screens/main_app/profile/about_us/about_us.dart';
 import 'package:tradeupapp/screens/main_app/profile/change_password/change_password.dart';
 import 'package:tradeupapp/screens/main_app/profile/report/report.dart';
+import 'package:tradeupapp/utils/custom_dialog.dart';
+import 'package:tradeupapp/utils/snackbar_helper.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/user_profile_widgets/user_profile_appbar_custom_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/user_profile_widgets/user_profile_business_mode_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/user_profile_widgets/user_profile_category_function_widget.dart';
@@ -46,6 +49,79 @@ class _ProfileState extends State<Profile> {
     Navigator.push(context, MaterialPageRoute(builder: (context) => screen));
   }
 
+  void _handleBusinessMode(bool value) async {
+    setState(() {
+      isBusinessMode = value;
+    });
+    if (isBusinessMode) {
+      CustomDialog.show(
+        context,
+        'Business Mode Enabled',
+        'You are now in Business Mode.\nYour profile is visible to other users as a seller, and you can start managing your products and offers.',
+        numberOfButton: 2,
+        //Thực hiện hành động cập nhật lại role cho người dùng
+        () {
+          updateRoleUser(2);
+          SnackbarHelper.showCustomSnackBar(
+            context,
+            'You are now in Business Mode',
+            backgroundColor: Colors.green,
+          );
+          setState(() {
+            isBusinessMode = true;
+          });
+        },
+        //Khi dùng hủy thì đặt lại value của business là false
+        () {
+          setState(() {
+            isBusinessMode = false;
+          });
+        },
+      );
+    } else {
+      CustomDialog.show(
+        context,
+        'Business Mode Disabled',
+        'You have exited Business Mode.\nYour seller profile is hidden, and you won’t receive business-related notifications.',
+        image: 'warning.jpg',
+        numberOfButton: 2,
+        //Thực hiện hành động cập nhật lại role cho người dùng
+        () {
+          updateRoleUser(1);
+          SnackbarHelper.showCustomSnackBar(
+            context,
+            'You have exited Business Mode',
+            backgroundColor: Colors.red,
+          );
+          setState(() {
+            isBusinessMode = false;
+          });
+        },
+        //Khi dùng hủy thì đặt lại value của business là true
+        () {
+          setState(() {
+            isBusinessMode = true;
+          });
+        },
+      );
+    }
+  }
+
+  //Hàm cập nhật role của user lên firebase
+  Future<void> updateRoleUser(int? role) async {
+    try {
+      final currentUser = FirebaseAuth.instance.currentUser;
+      if (currentUser == null) throw Exception("User not logged in");
+
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(currentUser.uid)
+          .update({'role': role});
+    } catch (e) {
+      print("❌ Failed to update role: $e");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<UserModal?>(
@@ -64,11 +140,13 @@ class _ProfileState extends State<Profile> {
 
         if (!snapshot.hasData || snapshot.data == null) {
           return const Scaffold(
-            body: Center(child: Text('Không thể tải dữ liệu người dùng')),
+            body: Center(child: Text('Cannot load user data!')),
           );
         }
 
         final user = snapshot.data!;
+        //Kiểm tra business mode có bật hay không?
+        isBusinessMode = user.role == 1 ? false : true;
 
         return SafeArea(
           child: Scaffold(
@@ -91,14 +169,13 @@ class _ProfileState extends State<Profile> {
                   _buildSection(
                     title: 'Business',
                     children: [
+                      //Business Mode
                       BusinessModeUserProfile(
                         label: 'Business mode',
                         icon: Icons.business_center_outlined,
                         value: isBusinessMode,
                         onChanged: (value) {
-                          setState(() {
-                            isBusinessMode = value;
-                          });
+                          _handleBusinessMode(value);
                         },
                       ),
                     ],
