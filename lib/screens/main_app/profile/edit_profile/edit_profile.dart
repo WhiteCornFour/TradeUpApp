@@ -414,6 +414,7 @@ class _EditProfileState extends State<EditProfile> {
                     'Confirm Update',
                     'Are you sure you want to update your profile information? These changes will be saved and visible to others.',
                     _updateProfileUser,
+                    () {},
                     numberOfButton: 2,
                   );
                 },

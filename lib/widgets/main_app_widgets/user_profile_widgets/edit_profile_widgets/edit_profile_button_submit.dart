@@ -18,11 +18,11 @@ class ButtonSubmitEditProfile extends StatelessWidget {
             onPressed: () {
               onPressed();
             },
-            color: AppColors.header,
+            color: AppColors.background,
             shape: ContinuousRectangleBorder(
               borderRadius: BorderRadius.circular(30),
             ),
-            highlightColor: AppColors.background,
+            highlightColor: AppColors.header,
             child: Text(
               'Sumbit change',
               style: TextStyle(
