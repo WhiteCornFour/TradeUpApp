@@ -36,7 +36,6 @@ class _RegisterState extends State<Register> {
 
   void _handleRegister() async {
     final yourName = _yourNameController.text.trim();
-    // final userName = _userNameController.text.trim();
     final passWord = _passWordController.text.trim();
     final email = _emailController.text.trim();
     final phoneNumber = _phoneNumberController.text.trim();
@@ -58,7 +57,12 @@ class _RegisterState extends State<Register> {
 
     try {
       await auth.signUp(email: email, password: passWord);
-      await database.addUser(yourName, email, passWord, phoneNumber);
+      await database.addUser(
+        yourName: yourName,
+        passWord: passWord,
+        email: email,
+        phoneNumber: phoneNumber,
+      );
       SnackbarHelper.showCustomSnackBar(
         context,
         "Registration successful! Please check your email for verification.",

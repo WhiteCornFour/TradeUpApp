@@ -6,7 +6,7 @@ class BackButtonCustom extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => Navigator.pop(context),
+      onTap: () => Navigator.pop(context, true),
       child: Row(
         mainAxisSize: MainAxisSize.min, // không chiếm hết chiều ngang
         children: [

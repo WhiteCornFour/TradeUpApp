@@ -5,7 +5,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tradeupapp/screens/authentication/login.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:tradeupapp/screens/authentication/on_boarding.dart';
-import 'package:tradeupapp/screens/main_app/emailsent.dart';
 import 'package:tradeupapp/screens/main_app/index.dart';
 
 import 'firebase_options.dart';

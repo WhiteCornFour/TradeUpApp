@@ -40,6 +40,7 @@ class TextFieldRegister extends StatelessWidget {
         SizedBox(height: 5),
         TextField(
           controller: controller,
+          autofocus: true,
           obscureText: obscureText,
           decoration: InputDecoration(
             contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
