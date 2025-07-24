@@ -40,7 +40,7 @@ class TextFieldEditProfile extends StatelessWidget {
             controller: controller,
             enabled: enabled, // ✅ Truyền vào đây
             //Loai du lieu nhap vao
-            keyboardType: textInputType,
+            keyboardType: textInputType,         
             cursorColor: Colors.black,
             style: TextStyle(
               color: AppColors.header,

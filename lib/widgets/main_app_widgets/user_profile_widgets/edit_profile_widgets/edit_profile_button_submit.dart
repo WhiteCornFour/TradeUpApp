@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:tradeupapp/assets/colors/app_colors.dart';
 
 class ButtonSubmitEditProfile extends StatelessWidget {
-  const ButtonSubmitEditProfile({super.key});
+  final Function onPressed;
+  const ButtonSubmitEditProfile({super.key, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +15,9 @@ class ButtonSubmitEditProfile extends StatelessWidget {
           margin: EdgeInsets.only(top: 15),
           child: MaterialButton(
             padding: EdgeInsets.symmetric(vertical: 10),
-            onPressed: () {},
+            onPressed: () {
+              onPressed();
+            },
             color: AppColors.header,
             shape: ContinuousRectangleBorder(
               borderRadius: BorderRadius.circular(30),

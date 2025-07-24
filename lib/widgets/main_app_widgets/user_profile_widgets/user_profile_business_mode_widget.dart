@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tradeupapp/assets/colors/app_colors.dart';
 
 class BusinessModeUserProfile extends StatelessWidget {
   final String label;
@@ -48,8 +49,8 @@ class BusinessModeUserProfile extends StatelessWidget {
             Switch(
               value: value,
               onChanged: onChanged,
-              activeColor: Colors.black,
-              activeTrackColor: Colors.red,
+              activeColor: AppColors.text,
+              activeTrackColor: AppColors.background,
             ),
           ],
         ),

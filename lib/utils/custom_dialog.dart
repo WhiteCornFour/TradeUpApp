@@ -38,7 +38,7 @@ class CustomDialog {
     BuildContext context,
     String header,
     String content,
-    VoidCallback onPressed, {
+    Function onPressed, {
     String textButton1 = 'Confirm',
     String textButton2 = 'Cancel',
     String image = 'completed.png',
@@ -103,7 +103,10 @@ class CustomDialog {
                                   children: [
                                     //Button 1
                                     MaterialButton(
-                                      onPressed: onPressed,
+                                      onPressed: () {
+                                        onPressed();
+                                        Navigator.of(context).pop();
+                                      },
                                       shape: ContinuousRectangleBorder(
                                         borderRadius: BorderRadius.circular(16),
                                         side: BorderSide(
@@ -126,7 +129,6 @@ class CustomDialog {
                                     //Button 2
                                     MaterialButton(
                                       onPressed: () {
-                                        // Xử lý xác nhận
                                         Navigator.of(context).pop();
                                       },
                                       shape: ContinuousRectangleBorder(
@@ -138,7 +140,7 @@ class CustomDialog {
                                         vertical: 5,
                                       ),
                                       child: Text(
-                                        textButton1,
+                                        textButton2,
                                         style: TextStyle(
                                           color: AppColors.text,
                                           fontFamily: 'Roboto-Medium',
@@ -150,7 +152,10 @@ class CustomDialog {
                                 )
                               : Center(
                                   child: MaterialButton(
-                                    onPressed: onPressed,
+                                    onPressed: () {
+                                      onPressed();
+                                      Navigator.of(context).pop();
+                                    },
                                     shape: ContinuousRectangleBorder(
                                       borderRadius: BorderRadius.circular(16),
                                     ),
