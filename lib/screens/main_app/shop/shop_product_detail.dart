@@ -3,12 +3,15 @@ import 'package:flutter/services.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:readmore/readmore.dart';
 import 'package:tradeupapp/assets/colors/app_colors.dart';
-import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/shop_product_detail_bottom_navigation_widget.dart';
-import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/shop_product_detail_image_slider_widget.dart';
-import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/shop_product_detail_header_widget.dart';
-import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/shop_product_detail_price_tag_widget.dart';
+import 'package:tradeupapp/data/category_data.dart';
+import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/shop_product_detail/shop_product_detail_bottom_navigation_widget.dart';
+import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/shop_product_detail/shop_product_detail_image_slider_widget.dart';
+import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/shop_product_detail/shop_product_detail_header_widget.dart';
+import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/shop_product_detail/shop_product_detail_price_tag_widget.dart';
 import 'package:tradeupapp/widgets/system_widgets/system_book_marked_toggle_icon_widget.dart';
 import 'package:tradeupapp/widgets/system_widgets/system_custom_app_bar_widget.dart';
+import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/shop_product_detail/shop_product_detail_tag_button_widget.dart';
+import 'package:tradeupapp/widgets/system_widgets/system_button_widget.dart';
 
 class ProductDetailShop extends StatefulWidget {
   const ProductDetailShop({super.key});
@@ -18,6 +21,11 @@ class ProductDetailShop extends StatefulWidget {
 }
 
 class _ProductDetailShopState extends State<ProductDetailShop> {
+  //Test data for categories
+  final selectedCategories = categories
+      .where((cat) => cat.name == 'Electronics' || cat.name == 'Computers')
+      .toList();
+
   @override
   Widget build(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
@@ -45,7 +53,7 @@ class _ProductDetailShopState extends State<ProductDetailShop> {
                         ],
                       ),
 
-                      // Overlay gradient đen ở trên cùng
+                      // Dark Overlay
                       Container(
                         height:
                             MediaQuery.of(context).padding.top +
@@ -60,7 +68,7 @@ class _ProductDetailShopState extends State<ProductDetailShop> {
                         ),
                       ),
 
-                      // AppBar đặt trên cùng
+                      // AppBar
                       Positioned(
                         top: 0,
                         left: 0,
@@ -123,7 +131,7 @@ class _ProductDetailShopState extends State<ProductDetailShop> {
                           TextSpan(
                             children: [
                               TextSpan(
-                                text: 'Status: ',
+                                text: 'Condition: ',
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontFamily: 'Roboto-Regular',
@@ -131,7 +139,7 @@ class _ProductDetailShopState extends State<ProductDetailShop> {
                                 ),
                               ),
                               TextSpan(
-                                text: 'Available',
+                                text: 'New',
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontFamily: 'Roboto-Bold',
@@ -141,77 +149,49 @@ class _ProductDetailShopState extends State<ProductDetailShop> {
                             ],
                           ),
                         ),
+
                         SizedBox(height: 16),
 
                         //Tag
-                        Text.rich(
-                          TextSpan(
-                            children: [
-                              TextSpan(
-                                text: 'Tag: ',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontFamily: 'Roboto-Regular',
-                                  color: Colors.black54,
-                                ),
-                              ),
-                              TextSpan(
-                                text: 'Electronics, Computers',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontFamily: 'Roboto-Bold',
-                                  color: Colors.black87,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-
-                        SizedBox(height: 16),
-                        //Checkout Button
-                        SizedBox(
-                          width: double.infinity,
-                          height: 52,
-                          child: ElevatedButton(
-                            onPressed: () {},
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.black,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  Iconsax.receipt_item,
-                                  size: 24,
-                                  color: Colors.white,
-                                ),
-                                SizedBox(width: 20),
-                                Text(
-                                  'Make An Offer',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontFamily: 'Roboto-Bold',
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-
-                        SizedBox(height: 16),
-                        Divider(),
-                        SizedBox(height: 16),
-                        //Description
                         Text(
-                          'Description',
+                          'Category',
                           style: TextStyle(
                             fontSize: 20,
                             fontFamily: 'Roboto-Bold',
                             color: Colors.black,
+                          ),
+                        ),
+                        SizedBox(height: 8),
+                        Wrap(
+                          spacing: 12,
+                          runSpacing: 12,
+                          children: selectedCategories.map((category) {
+                            return ProductDetailTagButtonShop(
+                              label: category.name,
+                              icon: category.icon,
+                              backgroundColor: category.color,
+                              textColor: Colors.black87,
+                              iconColor: Colors.black54,
+                              onPressed: () {
+                                // handle click
+                                print('Selected: ${category.name}');
+                              },
+                            );
+                          }).toList(),
+                        ),
+
+                        SizedBox(height: 16),
+
+                        //Make An Offer Button
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 5),
+                          child: ButtonSystem(
+                            width: double.infinity,
+                            text: 'Make An Offer',
+                            icon: Iconsax.receipt_item,
+                            backgroundColor: AppColors.header,
+                            isOutlined: true,
+                            onPressed: () {},
                           ),
                         ),
                         SizedBox(height: 8),

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:tradeupapp/models/category_model.dart';
+import 'package:tradeupapp/screens/main_app/system/system_category_products.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/home_widgets/home_category_card_widget.dart';
 
 class CategoryGroupHome extends StatelessWidget {
@@ -40,7 +42,17 @@ class CategoryGroupHome extends StatelessWidget {
         ),
         child: Row(
           children: [
-            CategoryCardHome(category: categories[0], width: 138, height: 180),
+            CategoryCardHome(
+              category: categories[0],
+              onTap: () {
+                Get.to(
+                  () => CategoryProductsSystem(),
+                  arguments: categories[0],
+                );
+              },
+              width: 138,
+              height: 180,
+            ),
             const SizedBox(width: 6),
             Expanded(
               child: Column(
@@ -48,6 +60,12 @@ class CategoryGroupHome extends StatelessWidget {
                   Expanded(
                     child: CategoryCardHome(
                       category: categories[1],
+                      onTap: () {
+                        Get.to(
+                          () => CategoryProductsSystem(),
+                          arguments: categories[1],
+                        );
+                      },
                       width: 118,
                       height: double.infinity,
                     ),
@@ -56,6 +74,12 @@ class CategoryGroupHome extends StatelessWidget {
                   Expanded(
                     child: CategoryCardHome(
                       category: categories[2],
+                      onTap: () {
+                        Get.to(
+                          () => CategoryProductsSystem(),
+                          arguments: categories[2],
+                        );
+                      },
                       width: 118,
                       height: double.infinity,
                     ),
@@ -89,6 +113,12 @@ class CategoryGroupHome extends StatelessWidget {
                   Expanded(
                     child: CategoryCardHome(
                       category: categories[0],
+                      onTap: () {
+                        Get.to(
+                          () => CategoryProductsSystem(),
+                          arguments: categories[0],
+                        );
+                      },
                       width: double.infinity,
                       height: double.infinity,
                     ),
@@ -97,6 +127,12 @@ class CategoryGroupHome extends StatelessWidget {
                   Expanded(
                     child: CategoryCardHome(
                       category: categories[1],
+                      onTap: () {
+                        Get.to(
+                          () => CategoryProductsSystem(),
+                          arguments: categories[1],
+                        );
+                      },
                       width: double.infinity,
                       height: double.infinity,
                     ),
@@ -111,6 +147,12 @@ class CategoryGroupHome extends StatelessWidget {
                   Expanded(
                     child: CategoryCardHome(
                       category: categories[2],
+                      onTap: () {
+                        Get.to(
+                          () => CategoryProductsSystem(),
+                          arguments: categories[2],
+                        );
+                      },
                       width: double.infinity,
                       height: double.infinity,
                     ),
@@ -119,6 +161,12 @@ class CategoryGroupHome extends StatelessWidget {
                   Expanded(
                     child: CategoryCardHome(
                       category: categories[3],
+                      onTap: () {
+                        Get.to(
+                          () => CategoryProductsSystem(),
+                          arguments: categories[3],
+                        );
+                      },
                       width: double.infinity,
                       height: double.infinity,
                     ),
@@ -151,6 +199,12 @@ class CategoryGroupHome extends StatelessWidget {
                 Expanded(
                   child: CategoryCardHome(
                     category: categories[0],
+                    onTap: () {
+                      Get.to(
+                        () => CategoryProductsSystem(),
+                        arguments: categories[0],
+                      );
+                    },
                     width: 118,
                     height: double.infinity,
                   ),
@@ -159,6 +213,12 @@ class CategoryGroupHome extends StatelessWidget {
                 Expanded(
                   child: CategoryCardHome(
                     category: categories[1],
+                    onTap: () {
+                      Get.to(
+                        () => CategoryProductsSystem(),
+                        arguments: categories[1],
+                      );
+                    },
                     width: 118,
                     height: double.infinity,
                   ),
@@ -167,7 +227,17 @@ class CategoryGroupHome extends StatelessWidget {
             ),
             const SizedBox(width: 6),
 
-            CategoryCardHome(category: categories[2], width: 138, height: 180),
+            CategoryCardHome(
+              category: categories[2],
+              onTap: () {
+                Get.to(
+                  () => CategoryProductsSystem(),
+                  arguments: categories[2],
+                );
+              },
+              width: 138,
+              height: 180,
+            ),
           ],
         ),
       ),

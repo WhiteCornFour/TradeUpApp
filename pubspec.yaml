@@ -70,6 +70,7 @@ flutter:
     - lib/assets/images/
     - lib/assets/images/on_boarding_images/
     - lib/assets/images/sample_images/
+    - lib/assets/images/categories_background_images/
   fonts:
     - family: Roboto-Thin
       fonts:

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:iconsax/iconsax.dart';
+
+import 'package:tradeupapp/utils/back_button.dart';
 
 class CustomAppBarSystem extends StatelessWidget
     implements PreferredSizeWidget {
@@ -10,6 +10,7 @@ class CustomAppBarSystem extends StatelessWidget
     this.actions,
     this.leadingIcon,
     this.leadingOnPressed,
+    this.backgroundColor = Colors.transparent,
     this.showBackArrow = true,
   });
 
@@ -17,6 +18,7 @@ class CustomAppBarSystem extends StatelessWidget
   final bool showBackArrow;
   final IconData? leadingIcon;
   final List<Widget>? actions;
+  final Color backgroundColor;
   final VoidCallback? leadingOnPressed;
 
   @override
@@ -25,14 +27,14 @@ class CustomAppBarSystem extends StatelessWidget
       padding: EdgeInsets.symmetric(horizontal: 16),
       child: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: Colors.transparent,
+        backgroundColor: backgroundColor,
         leading: showBackArrow
-            ? IconButton(
-                onPressed: () => Get.back(),
-                icon: Icon(Iconsax.arrow_left, size: 26),
-              )
+            ? BackButtonCustom()
             : leadingIcon != null
-            ? IconButton(onPressed: leadingOnPressed, icon: Icon(leadingIcon))
+            ? IconButton(
+                onPressed: leadingOnPressed,
+                icon: Icon(leadingIcon, color: Colors.black),
+              )
             : null,
         title: title,
         actions: actions,
