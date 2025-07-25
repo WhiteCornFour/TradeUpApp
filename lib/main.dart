@@ -6,6 +6,7 @@ import 'package:tradeupapp/screens/authentication/login.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:tradeupapp/screens/authentication/on_boarding.dart';
 import 'package:tradeupapp/screens/main_app/index.dart';
+import 'package:tradeupapp/screens/main_app/system/system_category_products.dart';
 
 import 'firebase_options.dart';
 
@@ -21,9 +22,16 @@ void main() async {
   runApp(
     GetMaterialApp(
       title: 'SwapIT',
+      //If seenOnBoarding was false, go to OnBoarding, else go to AuthChecker
       debugShowCheckedModeBanner: false,
       home: seenOnBoarding ? const AuthChecker() : const OnBoarding(),
-      //If seenOnBoarding was false, go to OnBoarding, else go to AuthChecker
+      //Get to category page
+      getPages: [
+        GetPage(
+          name: '/category/:categoryName',
+          page: () => CategoryProductsSystem(),
+        ),
+      ],
     ),
   );
 }
