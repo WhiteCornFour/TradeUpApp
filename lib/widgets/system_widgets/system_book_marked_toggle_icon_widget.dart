@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tradeupapp/widgets/system_widgets/system_custom_icon_widget.dart';
+import 'package:tradeupapp/widgets/system_widgets/system_icon_widget.dart';
 
 class BookmarkedToggleButtonSystem extends StatefulWidget {
   const BookmarkedToggleButtonSystem({
@@ -43,7 +43,7 @@ class _BookmarkedToggleButtonSystemState
         transitionBuilder: (child, animation) {
           return ScaleTransition(scale: animation, child: child);
         },
-        child: CustomIconSystem(
+        child: IconSystem(
           width: 48,
           height: 48,
           key: ValueKey<bool>(isBookmarked),

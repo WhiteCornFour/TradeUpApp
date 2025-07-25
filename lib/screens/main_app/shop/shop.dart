@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:tradeupapp/screens/main_app/shop/shop_product_detail.dart';
-import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/shop_post_card_widget.dart';
+import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/shop_pop_menu/shop_pop_menu_widget.dart';
+import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/shop_post_card/shop_post_card_widget.dart';
+import 'package:tradeupapp/widgets/system_widgets/system_search_app_bar_widget.dart';
 
 class Shop extends StatefulWidget {
   const Shop({super.key});
@@ -22,7 +24,7 @@ class _Shop extends State<Shop> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              //Search button + Text: Market + Wishlist
+              //Search + Market + Menu
               Padding(
                 padding: EdgeInsets.only(
                   left: 30,
@@ -47,18 +49,14 @@ class _Shop extends State<Shop> {
                         IconButton(
                           icon: Icon(Iconsax.search_normal),
                           color: Colors.black,
-                          onPressed: () {},
-                        ),
-                        IconButton(
-                          icon: Icon(Iconsax.menu_1),
-                          color: Colors.black,
-                          onPressed: () {},
+                          onPressed: () => showSystemSearch(context),
                         ),
                         IconButton(
                           icon: Icon(Iconsax.shop),
                           color: Colors.black,
                           onPressed: () {},
                         ),
+                        PopMenuShop(),
                       ],
                     ),
                   ],

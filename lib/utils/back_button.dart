@@ -10,8 +10,11 @@ class BackButtonCustom extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min, // không chiếm hết chiều ngang
         children: [
-          Icon(Icons.arrow_back_ios, color: AppColors.header, size: 20),
-          SizedBox(width: 4), // Khoảng cách nhỏ giữa icon và chữ
+          Icon(
+            Icons.arrow_back_ios,
+            color: AppColors.header,
+            size: 20,
+          ), 
           Text(
             'Back',
             style: TextStyle(

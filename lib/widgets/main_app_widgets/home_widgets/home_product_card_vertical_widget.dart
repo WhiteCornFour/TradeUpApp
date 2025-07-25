@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:tradeupapp/assets/colors/app_colors.dart';
+import 'package:tradeupapp/screens/main_app/shop/shop_product_detail.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/home_widgets/home_image_container_widget.dart';
 import 'package:tradeupapp/widgets/system_widgets/system_book_marked_toggle_icon_widget.dart';
 
@@ -10,7 +12,9 @@ class ProductCardVerticalHome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        Get.to(() => ProductDetailShop());
+      },
       child: Container(
         width: 180,
         decoration: BoxDecoration(
@@ -150,21 +154,24 @@ class ProductCardVerticalHome extends StatelessWidget {
                         textAlign: TextAlign.left,
                       ),
 
-                      Container(
-                        decoration: const BoxDecoration(
-                          color: Colors.black,
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(12),
-                            bottomRight: Radius.circular(16),
+                      GestureDetector(
+                        onTap: () => {print('Go to chat box')},
+                        child: Container(
+                          decoration: const BoxDecoration(
+                            color: AppColors.header,
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(12),
+                              bottomRight: Radius.circular(16),
+                            ),
                           ),
-                        ),
-                        child: SizedBox(
-                          width: 44 * 1.2,
-                          height: 44 * 1.2,
-                          child: Center(
-                            child: const Icon(
-                              Iconsax.message,
-                              color: Colors.white,
+                          child: SizedBox(
+                            width: 44 * 1.2,
+                            height: 44 * 1.2,
+                            child: Center(
+                              child: const Icon(
+                                Iconsax.message,
+                                color: Colors.white,
+                              ),
                             ),
                           ),
                         ),
