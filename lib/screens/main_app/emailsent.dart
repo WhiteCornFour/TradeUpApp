@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:tradeupapp/assets/colors/app_colors.dart';
 
-class EmailSentSystem extends StatefulWidget {
-  const EmailSentSystem({super.key});
+class EmailSent extends StatefulWidget {
+  const EmailSent({super.key});
 
   @override
-  State<EmailSentSystem> createState() => _EmailSentSystemState();
+  State<EmailSent> createState() => _EmailSentState();
 }
 
-class _EmailSentSystemState extends State<EmailSentSystem> {
+class _EmailSentState extends State<EmailSent> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
