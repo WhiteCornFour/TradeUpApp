@@ -80,11 +80,21 @@ class AuthServices {
   }
 
   Future<UserCredential> signInWithGoogle() async {
+    final googleSignIn = GoogleSignIn(scopes: ['email']);
+
+    //sign out before log in another account if not
+    await googleSignIn.signOut();
+
     //begin interactive sign in process
     final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
 
+    //user went out while sign in
+    if (gUser == null) {
+      throw Exception("Failed to Sign In.");
+    }
+
     //obtain auth details from request
-    final GoogleSignInAuthentication gAuth = await gUser!.authentication;
+    final GoogleSignInAuthentication gAuth = await gUser.authentication;
 
     //create a new credential for user
     final credential = GoogleAuthProvider.credential(

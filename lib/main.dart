@@ -56,7 +56,7 @@ class AuthChecker extends StatelessWidget {
 
         // Nếu đã đăng nhập và đã xác minh email
         if (snapshot.hasData && snapshot.data!.emailVerified) {
-          return Index();
+          return MainAppIndex();
         }
 
         // Chưa đăng nhập hoặc chưa xác minh email

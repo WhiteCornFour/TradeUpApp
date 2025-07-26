@@ -52,7 +52,7 @@ class _ChangePasswordState extends State<ChangePassword> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => EmailSent(destination: Index()),
+          builder: (context) => EmailSent(destination: MainAppIndex()),
         ),
       );
     } catch (e) {
