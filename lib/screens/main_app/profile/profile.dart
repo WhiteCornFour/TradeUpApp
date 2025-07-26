@@ -71,13 +71,10 @@ class _ProfileState extends State<Profile> {
             isBusinessMode = true;
           });
         },
-        //Khi dùng hủy thì đặt lại value của business là false
-        () {
-          setState(() {
-            isBusinessMode = false;
-          });
-        },
       );
+      setState(() {
+        isBusinessMode = false;
+      });
     } else {
       CustomDialog.show(
         context,
@@ -97,13 +94,10 @@ class _ProfileState extends State<Profile> {
             isBusinessMode = false;
           });
         },
-        //Khi dùng hủy thì đặt lại value của business là true
-        () {
-          setState(() {
-            isBusinessMode = true;
-          });
-        },
       );
+      setState(() {
+        isBusinessMode = true;
+      });
     }
   }
 

@@ -152,7 +152,7 @@ class _EditProfileState extends State<EditProfile> {
                     color: AppColors.header,
                   ),
                   title: const Text(
-                    'Chụp ảnh từ Camera',
+                    'Take a photo with Camera',
                     style: TextStyle(
                       color: AppColors.header,
                       fontFamily: 'Roboto-Regular',
@@ -170,7 +170,7 @@ class _EditProfileState extends State<EditProfile> {
                     color: AppColors.header,
                   ),
                   title: const Text(
-                    'Chọn ảnh từ Thư viện',
+                    'Choose Photo from Gallery',
                     style: TextStyle(
                       color: AppColors.header,
                       fontFamily: 'Roboto-Regular',
@@ -185,7 +185,7 @@ class _EditProfileState extends State<EditProfile> {
                 ListTile(
                   leading: const Icon(Icons.close, color: AppColors.header),
                   title: const Text(
-                    'Huỷ',
+                    'Cancel',
                     style: TextStyle(
                       color: AppColors.header,
                       fontFamily: 'Roboto-Regular',
@@ -414,7 +414,6 @@ class _EditProfileState extends State<EditProfile> {
                     'Confirm Update',
                     'Are you sure you want to update your profile information? These changes will be saved and visible to others.',
                     _updateProfileUser,
-                    () {},
                     numberOfButton: 2,
                   );
                 },

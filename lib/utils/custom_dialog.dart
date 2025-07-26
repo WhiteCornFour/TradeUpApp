@@ -37,8 +37,7 @@ class CustomDialog {
     BuildContext context,
     String header,
     String content,
-    Function onPressed,
-    Function onPressedExtend, {
+    Function onPressed, {
     String textButton1 = 'Confirm',
     String textButton2 = 'Cancel',
     String image = 'completed.png',
@@ -129,7 +128,6 @@ class CustomDialog {
                                     //Button 2
                                     MaterialButton(
                                       onPressed: () {
-                                        onPressedExtend();
                                         Navigator.of(context).pop();
                                       },
                                       shape: ContinuousRectangleBorder(
