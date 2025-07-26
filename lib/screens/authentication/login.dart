@@ -1,7 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:tradeupapp/assets/colors/app_colors.dart';
 import 'package:tradeupapp/firebase/auth_service.dart';
+import 'package:tradeupapp/screens/authentication/complete_personal_info.dart';
 import 'package:tradeupapp/screens/authentication/forgot_password.dart';
 import 'package:tradeupapp/screens/authentication/register.dart';
 import 'package:tradeupapp/screens/debug/debug.dart';
@@ -21,7 +24,6 @@ class _Login extends State<Login> {
 
   @override
   void dispose() {
-    // TODO: implement
     controllerEmail.clear();
     controllerPassword.clear();
     super.dispose();
@@ -45,24 +47,77 @@ class _Login extends State<Login> {
       //Kiem tra tai khoan da verify chưa
       if (user != null && user.emailVerified) {
         if (!mounted) return;
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => Index()),
-        );
+        SnackbarHelper.showCustomSnackBar(context, 'Sign in sucessfull!!!');
+        await Future.delayed(Duration(seconds: 2)); //Chờ 2 giây
+        Get.offAll(() => MainAppIndex());
       } else {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => Login()),
-        );
-        SnackbarHelper.showCustomSnackBar(
-          context,
-          'Please verify email before logging in!',
-        );
+        Get.to(() => Login());
         await AuthServices().signOut();
       }
-    } on FirebaseAuthException catch (e) {
+    } on FirebaseAuthException catch (_) {
       if (!mounted) return;
-      SnackbarHelper.showCustomSnackBar(context, "Something went wrong!");
+      SnackbarHelper.showCustomSnackBar(
+        context,
+        "Something went wrong!",
+        backgroundColor: Colors.green,
+      );
+    }
+  }
+
+  void signInWithGoogle() async {
+    try {
+      //Đăng nhập Google
+      final userCredential = await authServices.value.signInWithGoogle();
+      final user = userCredential.user;
+
+      if (user == null) {
+        if (!mounted) return;
+        SnackbarHelper.showCustomSnackBar(
+          context,
+          "User not found after sign in!",
+        );
+        return;
+      }
+
+      // //Kiểm tra nếu email đã tồn tại với phương thức khác
+      // final signInMethods = await FirebaseAuth.instance
+      //     .fetchSignInMethodsForEmail(user.email!);
+
+      // if (signInMethods.contains('password')) {
+      //
+      //   await FirebaseAuth.instance.signOut(); //Sign out khỏi tài khoản Google
+      //   SnackbarHelper.showCustomSnackBar(
+      //     context,
+      //     "This email was registered manually. Please sign in with Email & Password.",
+      //   );
+      //   return;
+      // }
+
+      final uid = user.uid;
+
+      //Kiểm tra xem đã có thông tin trong Firestore chưa
+      final userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(uid)
+          .get();
+
+      if (userDoc.exists) {
+        //Đã có thông tin thì vào trang chính
+        if (!mounted) return;
+        SnackbarHelper.showCustomSnackBar(
+          context,
+          'Sign in sucessfull!!!',
+          backgroundColor: Colors.green,
+        );
+        await Future.delayed(Duration(seconds: 2)); //Chờ 2 giây
+        Get.offAll(() => MainAppIndex());
+      } else {
+        //Chưa đủ thông tin chuyển sang trang điền thông tin
+        Get.to(() => const CompletePersonalInfoAuthentication());
+      }
+    } catch (e) {
+      if (!mounted) return;
+      SnackbarHelper.showCustomSnackBar(context, "Google SignIn failed!");
     }
   }
 
@@ -80,8 +135,8 @@ class _Login extends State<Login> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
-              //chiem toan bo chieu cao co the co trong cot
               child: Column(
+                //chiem toan bo chieu cao co the co trong cot
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Padding(
@@ -90,12 +145,7 @@ class _Login extends State<Login> {
                       children: [
                         GestureDetector(
                           onLongPress: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => const DebugMenu(),
-                              ),
-                            );
+                            Get.to(() => DebugMenu());
                           },
                           child: Image.asset(
                             "lib/assets/images/logo-transparent.png",
@@ -184,20 +234,7 @@ class _Login extends State<Login> {
                   Container(
                     margin: EdgeInsets.symmetric(horizontal: 36),
                     child: OutlinedButton(
-                      onPressed: () async {
-                        try {
-                          await authServices.value.signInWithGoogle();
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => Index()),
-                          );
-                        } catch (e) {
-                          SnackbarHelper.showCustomSnackBar(
-                            context,
-                            "Google SignIn failed!",
-                          );
-                        }
-                      },
+                      onPressed: signInWithGoogle,
                       style: OutlinedButton.styleFrom(
                         backgroundColor: Colors.grey.shade200,
                         side: BorderSide(color: Colors.black, width: 1),
@@ -251,13 +288,7 @@ class _Login extends State<Login> {
                         ),
                       ),
                       TextButton(
-                        onPressed: () {
-                          // register();
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => Register()),
-                          );
-                        },
+                        onPressed: () => Get.to(Register()),
                         child: Text(
                           "Sign up",
                           style: TextStyle(

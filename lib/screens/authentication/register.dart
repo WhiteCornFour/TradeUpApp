@@ -73,7 +73,8 @@ class _RegisterState extends State<Register> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => EmailSent(destination: Login()),
+          builder: (context) =>
+              EmailSent(destination: Login()),
         ),
       );
     } catch (e) {

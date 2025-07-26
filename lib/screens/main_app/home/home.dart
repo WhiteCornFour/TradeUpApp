@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:tradeupapp/assets/colors/app_colors.dart';
+import 'package:tradeupapp/firebase/database_service.dart';
 import 'package:tradeupapp/models/category_model.dart';
+import 'package:tradeupapp/models/user_model.dart';
 import 'package:tradeupapp/screens/main_app/system/system_all_categories.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/home_widgets/home_sort_option_group/home_sort_option_group_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/home_widgets/home_category_group_widget.dart';
@@ -26,108 +28,143 @@ class _Home extends State<Home> {
   final PageController _pageController = PageController(viewportFraction: 0.92);
   int _currentPage = 0; //Update dot indicator index
 
+  Future<UserModal?> _loadUserFuture() async {
+    final userData = await DatabaseService().loadCurrentUser();
+    if (userData != null) {
+      return UserModal.fromMap(userData);
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      endDrawer: DrawerHome(),
-      resizeToAvoidBottomInset: false,
-      body: SafeArea(
-        bottom: false,
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Welcome + Avatar + Wishlist
-              HeaderHome(
-                userName: 'Kathe Timber',
-                userAvatar:
-                    'https://media.istockphoto.com/id/1317804578/photo/one-businesswoman-headshot-smiling-at-the-camera.jpg?s=612x612&w=0&k=20&c=EqR2Lffp4tkIYzpqYh8aYIPRr-gmZliRHRxcQC5yylY=',
+    return FutureBuilder<UserModal?>(
+      future: _loadUserFuture(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Scaffold(
+            body: Center(
+              child: CircularProgressIndicator(
+                backgroundColor: AppColors.background,
+                color: AppColors.text,
               ),
+            ),
+          );
+        }
 
-              //Searching Group
-              SearchingGroupHome(itemCount: 138),
+        if (!snapshot.hasData || snapshot.data == null) {
+          return const Scaffold(
+            body: Center(child: Text('Cannot load user data!')),
+          );
+        }
 
-              //Header Section: Sort by Category
-              HeaderSectionSystem(
-                title: 'Sort by Category',
-                icon: Iconsax.category,
-                onTap: () => Get.to(() => AllCategoriesSystem()),
+        final user = snapshot.data!;
+
+        print(user.fullName);
+
+        return Scaffold(
+          endDrawer: DrawerHome(),
+          resizeToAvoidBottomInset: false,
+          body: SafeArea(
+            bottom: false,
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Welcome + Avatar + Wishlist
+                  HeaderHome(
+                    userName: user.fullName ?? 'Cannot Find User Name',
+                    userAvatar: user.avtURL ?? '',
+                    role: user.role ?? 0,
+                  ),
+
+                  //Searching Group
+                  SearchingGroupHome(itemCount: 138),
+
+                  //Header Section: Sort by Category
+                  HeaderSectionSystem(
+                    title: 'Sort by Category',
+                    icon: Iconsax.category,
+                    onTap: () => Get.to(() => AllCategoriesSystem()),
+                  ),
+
+                  SizedBox(
+                    height: 210,
+                    child: PageView(
+                      controller: _pageController,
+                      scrollDirection: Axis.horizontal,
+                      onPageChanged: (index) {
+                        setState(() {
+                          _currentPage = index;
+                        });
+                      },
+                      pageSnapping: true,
+                      children: [
+                        CategoryGroupHome(
+                          categories: allCategories.sublist(0, 3),
+                          layoutType: 1,
+                        ),
+                        CategoryGroupHome(
+                          categories: allCategories.sublist(3, 7),
+                          layoutType: 2,
+                        ),
+                        CategoryGroupHome(
+                          categories: allCategories.sublist(7, 11),
+                          layoutType: 2,
+                        ),
+                        CategoryGroupHome(
+                          categories: allCategories.sublist(11, 14),
+                          layoutType: 3,
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  //Dot Indicator
+                  SizedBox(
+                    height: 16,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: List.generate(4, (index) {
+                        return AnimatedContainer(
+                          duration: const Duration(milliseconds: 300),
+                          margin: const EdgeInsets.symmetric(horizontal: 4),
+                          width: _currentPage == index ? 12 : 8,
+                          height: _currentPage == index ? 12 : 8,
+                          decoration: BoxDecoration(
+                            color: _currentPage == index
+                                ? AppColors.background
+                                : Colors.grey[400],
+                            shape: BoxShape.circle,
+                          ),
+                        );
+                      }),
+                    ),
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  //Header Section: Discover
+                  HeaderSectionSystem(
+                    title: 'Discover',
+                    icon: Iconsax.ticket_star,
+                  ),
+                  SizedBox(height: 10),
+
+                  //Sort Option Button
+                  SortOptionGroupHome(),
+                  SizedBox(height: 15),
+
+                  //GridView Products
+                  GridViewProductVerticalListSystem(itemCount: 4),
+
+                  SizedBox(height: 30),
+                ],
               ),
-
-              SizedBox(
-                height: 210,
-                child: PageView(
-                  controller: _pageController,
-                  scrollDirection: Axis.horizontal,
-                  onPageChanged: (index) {
-                    setState(() {
-                      _currentPage = index;
-                    });
-                  },
-                  pageSnapping: true,
-                  children: [
-                    CategoryGroupHome(
-                      categories: allCategories.sublist(0, 3),
-                      layoutType: 1,
-                    ),
-                    CategoryGroupHome(
-                      categories: allCategories.sublist(3, 7),
-                      layoutType: 2,
-                    ),
-                    CategoryGroupHome(
-                      categories: allCategories.sublist(7, 11),
-                      layoutType: 2,
-                    ),
-                    CategoryGroupHome(
-                      categories: allCategories.sublist(11, 14),
-                      layoutType: 3,
-                    ),
-                  ],
-                ),
-              ),
-
-              //Dot Indicator
-              SizedBox(
-                height: 16,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: List.generate(4, (index) {
-                    return AnimatedContainer(
-                      duration: const Duration(milliseconds: 300),
-                      margin: const EdgeInsets.symmetric(horizontal: 4),
-                      width: _currentPage == index ? 12 : 8,
-                      height: _currentPage == index ? 12 : 8,
-                      decoration: BoxDecoration(
-                        color: _currentPage == index
-                            ? AppColors.background
-                            : Colors.grey[400],
-                        shape: BoxShape.circle,
-                      ),
-                    );
-                  }),
-                ),
-              ),
-
-              const SizedBox(height: 20),
-
-              //Header Section: Discover
-              HeaderSectionSystem(title: 'Discover', icon: Iconsax.ticket_star),
-              SizedBox(height: 10),
-
-              //Sort Option Button
-              SortOptionGroupHome(),
-              SizedBox(height: 15),
-
-              //GridView Products
-              GridViewProductVerticalListSystem(itemCount: 4),
-
-              SizedBox(height: 30),
-            ],
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }
-
-

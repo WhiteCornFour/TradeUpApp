@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:tradeupapp/assets/colors/app_colors.dart';
 import 'package:tradeupapp/firebase/auth_service.dart';
 import 'package:tradeupapp/firebase/database_service.dart';
@@ -35,11 +37,11 @@ class _ProfileState extends State<Profile> {
 
   void _logout() async {
     try {
+      //Sign Out bình thường
       await authServices.value.signOut();
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const Login()),
-      );
+      //Sign Out Google Account
+      await GoogleSignIn().signOut();
+      Get.offAll(() => Login());
     } on FirebaseAuthException catch (e) {
       print(e.message);
     }

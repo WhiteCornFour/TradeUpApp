@@ -8,14 +8,14 @@ import 'package:tradeupapp/screens/main_app/shop/shop.dart';
 import 'package:tradeupapp/screens/main_app/news/news.dart';
 import 'package:tradeupapp/screens/main_app/profile/profile.dart';
 
-class Index extends StatefulWidget {
-  const Index({super.key});
+class MainAppIndex extends StatefulWidget {
+  const MainAppIndex({super.key});
 
   @override
-  State<Index> createState() => _Index();
+  State<MainAppIndex> createState() => _Index();
 }
 
-class _Index extends State<Index> {
+class _Index extends State<MainAppIndex> {
   final navigationKey = GlobalKey<CurvedNavigationBarState>();
   int index = 0;
 
