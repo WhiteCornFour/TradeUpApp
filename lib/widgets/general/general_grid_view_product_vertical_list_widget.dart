@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/home_widgets/home_product_card_vertical_widget.dart';
 
-class GridViewProductVerticalListSystem extends StatelessWidget {
-  const GridViewProductVerticalListSystem({
+class GridViewProductVerticalListGeneral extends StatelessWidget {
+  const GridViewProductVerticalListGeneral({
     super.key,
     required this.itemCount,
     this.crossAxisCount = 2,

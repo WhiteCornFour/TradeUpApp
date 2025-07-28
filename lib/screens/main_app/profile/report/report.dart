@@ -8,9 +8,9 @@ import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:tradeupapp/constants/app_colors.dart';
 import 'package:tradeupapp/models/report_model.dart';
-import 'package:tradeupapp/utils/back_button.dart';
-import 'package:tradeupapp/utils/custom_dialog.dart';
-import 'package:tradeupapp/utils/snackbar_helper.dart';
+import 'package:tradeupapp/widgets/general/general_back_button.dart';
+import 'package:tradeupapp/widgets/general/general_custom_dialog.dart';
+import 'package:tradeupapp/widgets/general/general_snackbar_helper.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/user_profile_widgets/report_widgets/report_submit_button_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/user_profile_widgets/report_widgets/report_text_field_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/user_profile_widgets/report_widgets/report_upload_list_image_widget.dart';
@@ -37,7 +37,7 @@ class _ReportState extends State<Report> {
   void _handleSubmitReport() async {
     final currentUser = FirebaseAuth.instance.currentUser;
     if (_contentFeedBack.text.isEmpty) {
-      SnackbarHelper.showCustomSnackBar(
+      SnackbarHelperGeneral.showCustomSnackBar(
         context,
         'Enter the details of what you want to report!',
         backgroundColor: Colors.red,
@@ -53,7 +53,7 @@ class _ReportState extends State<Report> {
           String? url;
           url = await uploadToCloudinary(imageFile);
           if (url == null) {
-            SnackbarHelper.showCustomSnackBar(
+            SnackbarHelperGeneral.showCustomSnackBar(
               context,
               'Failed to upload image. Please try again.',
               backgroundColor: Colors.red,
@@ -87,14 +87,14 @@ class _ReportState extends State<Report> {
         imageList.clear();
         _isSubmitting = false;
       });
-      SnackbarHelper.showCustomSnackBar(
+      SnackbarHelperGeneral.showCustomSnackBar(
         context,
         'Your report has been submitted successfully.',
         backgroundColor: Colors.green,
       );
     } catch (e) {
       setState(() => _isSubmitting = false);
-      SnackbarHelper.showCustomSnackBar(
+      SnackbarHelperGeneral.showCustomSnackBar(
         context,
         'Something went wrong. Please try again.',
         backgroundColor: Colors.red,
@@ -233,7 +233,7 @@ class _ReportState extends State<Report> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    BackButtonCustom(),
+                    BackButtonCustomGeneral(),
                     const Text(
                       'Report',
                       style: TextStyle(
@@ -310,7 +310,7 @@ class _ReportState extends State<Report> {
                 SizedBox(height: 20),
                 ButtomSubmitReport(
                   onPressed: () {
-                    CustomDialog.show(
+                    CustomDialogGeneral.show(
                       context,
                       'Confirm Report Submission',
                       'Do you want to proceed with submitting this report?\nOur team will review it as soon as possible.',

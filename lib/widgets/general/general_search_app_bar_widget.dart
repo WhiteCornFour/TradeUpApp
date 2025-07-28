@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:tradeupapp/screens/main_app/system/system_search_product.dart';
+import 'package:tradeupapp/screens/general/general_search_product.dart';
 
-void showSystemSearch(BuildContext context) {
+void showSystemSearchGeneral(BuildContext context) {
   showSearch(context: context, delegate: CustomSearchDelegate());
 }
 
@@ -83,7 +83,7 @@ class CustomSearchDelegate extends SearchDelegate {
 
     if (match.isNotEmpty) {
       close(context, null);
-      Get.to(() => SearchProductSystem());
+      Get.to(() => SearchProductGeneral());
     } else {
       super.showResults(context);
     }

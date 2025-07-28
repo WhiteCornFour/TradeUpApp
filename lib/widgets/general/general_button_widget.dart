@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class ButtonSystem extends StatelessWidget {
-  const ButtonSystem({
+class ButtonGeneral extends StatelessWidget {
+  const ButtonGeneral({
     super.key,
     this.text = '',
     this.onPressed,

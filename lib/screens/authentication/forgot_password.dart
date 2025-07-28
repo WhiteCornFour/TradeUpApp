@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:tradeupapp/firebase/auth_service.dart';
 import 'package:tradeupapp/screens/authentication/login.dart';
-import 'package:tradeupapp/screens/main_app/emailsent.dart';
-import 'package:tradeupapp/utils/back_button.dart';
-import 'package:tradeupapp/utils/snackbar_helper.dart';
+import 'package:tradeupapp/screens/general/general_email_sent.dart';
+import 'package:tradeupapp/widgets/general/general_back_button.dart';
+import 'package:tradeupapp/widgets/general/general_snackbar_helper.dart';
 import 'package:tradeupapp/widgets/authentication_widgets/forgotpassword_widgets/forgot_password_button_widget.dart';
 import 'package:tradeupapp/widgets/authentication_widgets/forgotpassword_widgets/forgot_password_text_field_widget.dart';
 
@@ -28,12 +28,15 @@ class _ForgotpasswordState extends State<Forgotpassword> {
   void _handleForgotPassWord() async {
     final email = _emailFPController.text.trim();
     if (email.isEmpty || !email.contains('@') || !email.contains('.')) {
-      SnackbarHelper.showCustomSnackBar(context, 'Please enter a valid email!');
+      SnackbarHelperGeneral.showCustomSnackBar(
+        context,
+        'Please enter a valid email!',
+      );
       return;
     }
     try {
       await auth.forgotPassword(email);
-      SnackbarHelper.showCustomSnackBar(
+      SnackbarHelperGeneral.showCustomSnackBar(
         context,
         'Password reset email has been sent!',
         backgroundColor: Colors.green,
@@ -42,8 +45,7 @@ class _ForgotpasswordState extends State<Forgotpassword> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) =>
-              EmailSent(destination: Login()),
+          builder: (context) => EmailSentGeneral(destination: Login()),
         ),
       );
     } catch (e) {
@@ -63,7 +65,7 @@ class _ForgotpasswordState extends State<Forgotpassword> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(height: 10),
-              BackButtonCustom(),
+              BackButtonCustomGeneral(),
               SizedBox(height: 40),
               Center(
                 child: Container(
@@ -71,9 +73,7 @@ class _ForgotpasswordState extends State<Forgotpassword> {
                   width: 150,
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: AssetImage(
-                        "assets/images/logo-transparent.png",
-                      ),
+                      image: AssetImage("assets/images/logo-transparent.png"),
                       fit: BoxFit.fill,
                     ),
                   ),

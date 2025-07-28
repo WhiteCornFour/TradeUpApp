@@ -8,10 +8,10 @@ import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/shop_product_de
 import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/shop_product_detail/shop_product_detail_image_slider_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/shop_product_detail/shop_product_detail_header_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/shop_product_detail/shop_product_detail_price_tag_widget.dart';
-import 'package:tradeupapp/widgets/system_widgets/system_book_marked_toggle_icon_widget.dart';
-import 'package:tradeupapp/widgets/system_widgets/system_custom_app_bar_widget.dart';
+import 'package:tradeupapp/widgets/general/general_book_marked_toggle_icon_widget.dart';
+import 'package:tradeupapp/widgets/general/general_custom_app_bar_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/shop_product_detail/shop_product_detail_tag_button_widget.dart';
-import 'package:tradeupapp/widgets/system_widgets/system_button_widget.dart';
+import 'package:tradeupapp/widgets/general/general_button_widget.dart';
 
 class ProductDetailShop extends StatefulWidget {
   const ProductDetailShop({super.key});
@@ -42,8 +42,7 @@ class _ProductDetailShopState extends State<ProductDetailShop> {
                   Stack(
                     children: [
                       ProductDetailImageSliderShop(
-                        firstImage:
-                            'assets/images/sample_images/sample2.jpg',
+                        firstImage: 'assets/images/sample_images/sample2.jpg',
                         imageList: [
                           'assets/images/sample_images/sample4.jpg',
                           'assets/images/sample_images/sample3.jpg',
@@ -73,12 +72,12 @@ class _ProductDetailShopState extends State<ProductDetailShop> {
                         top: 0,
                         left: 0,
                         right: 0,
-                        child: CustomAppBarSystem(
+                        child: CustomAppBarGeneral(
                           showBackArrow: true,
                           actions: [
                             Padding(
                               padding: const EdgeInsets.only(right: 10),
-                              child: BookmarkedToggleButtonSystem(),
+                              child: BookmarkedToggleButtonGeneral(),
                             ),
                           ],
                         ),
@@ -185,7 +184,7 @@ class _ProductDetailShopState extends State<ProductDetailShop> {
                         //Make An Offer Button
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 5),
-                          child: ButtonSystem(
+                          child: ButtonGeneral(
                             width: double.infinity,
                             text: 'Make An Offer',
                             icon: Iconsax.receipt_item,

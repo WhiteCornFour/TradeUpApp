@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tradeupapp/constants/app_colors.dart';
-import 'package:tradeupapp/utils/back_button.dart';
+import 'package:tradeupapp/widgets/general/general_back_button.dart';
 
 class AboutUs extends StatefulWidget {
   const AboutUs({super.key});
@@ -25,7 +25,7 @@ class _AboutUsState extends State<AboutUs> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    BackButtonCustom(),
+                    BackButtonCustomGeneral(),
                     const Text(
                       'About Us',
                       style: TextStyle(

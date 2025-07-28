@@ -11,8 +11,8 @@ import 'package:tradeupapp/screens/authentication/login.dart';
 import 'package:tradeupapp/screens/main_app/profile/about_us/about_us.dart';
 import 'package:tradeupapp/screens/main_app/profile/change_password/change_password.dart';
 import 'package:tradeupapp/screens/main_app/profile/report/report.dart';
-import 'package:tradeupapp/utils/custom_dialog.dart';
-import 'package:tradeupapp/utils/snackbar_helper.dart';
+import 'package:tradeupapp/widgets/general/general_custom_dialog.dart';
+import 'package:tradeupapp/widgets/general/general_snackbar_helper.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/user_profile_widgets/user_profile_appbar_custom_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/user_profile_widgets/user_profile_business_mode_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/user_profile_widgets/user_profile_category_function_widget.dart';
@@ -56,7 +56,7 @@ class _ProfileState extends State<Profile> {
       isBusinessMode = value;
     });
     if (isBusinessMode) {
-      CustomDialog.show(
+      CustomDialogGeneral.show(
         context,
         'Business Mode Enabled',
         'You are now in Business Mode.\nYour profile is visible to other users as a seller, and you can start managing your products and offers.',
@@ -64,7 +64,7 @@ class _ProfileState extends State<Profile> {
         //Thực hiện hành động cập nhật lại role cho người dùng
         () {
           updateRoleUser(2);
-          SnackbarHelper.showCustomSnackBar(
+          SnackbarHelperGeneral.showCustomSnackBar(
             context,
             'You are now in Business Mode',
             backgroundColor: Colors.green,
@@ -78,7 +78,7 @@ class _ProfileState extends State<Profile> {
         isBusinessMode = false;
       });
     } else {
-      CustomDialog.show(
+      CustomDialogGeneral.show(
         context,
         'Business Mode Disabled',
         'You have exited Business Mode.\nYour seller profile is hidden, and you won’t receive business-related notifications.',
@@ -87,7 +87,7 @@ class _ProfileState extends State<Profile> {
         //Thực hiện hành động cập nhật lại role cho người dùng
         () {
           updateRoleUser(1);
-          SnackbarHelper.showCustomSnackBar(
+          SnackbarHelperGeneral.showCustomSnackBar(
             context,
             'You have exited Business Mode',
             backgroundColor: Colors.red,

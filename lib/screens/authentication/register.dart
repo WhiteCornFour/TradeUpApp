@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:tradeupapp/firebase/auth_service.dart';
 import 'package:tradeupapp/firebase/database_service.dart';
 import 'package:tradeupapp/screens/authentication/login.dart';
-import 'package:tradeupapp/screens/main_app/emailsent.dart';
-import 'package:tradeupapp/utils/snackbar_helper.dart';
+import 'package:tradeupapp/screens/general/general_email_sent.dart';
+import 'package:tradeupapp/widgets/general/general_snackbar_helper.dart';
 import 'package:tradeupapp/widgets/authentication_widgets/register_widgets/register_bottom_widget.dart';
 import 'package:tradeupapp/widgets/authentication_widgets/register_widgets/register_button_widget.dart';
 import 'package:tradeupapp/widgets/authentication_widgets/register_widgets/register_text_field_widget.dart';
@@ -43,13 +43,13 @@ class _RegisterState extends State<Register> {
     //Kiem tra thong tin nguoi dung nhap vao
     String resultCheck = _checkInputData();
     if (resultCheck != 'NoError') {
-      SnackbarHelper.showCustomSnackBar(context, resultCheck);
+      SnackbarHelperGeneral.showCustomSnackBar(context, resultCheck);
       return;
     }
     //Kiem tra email hien tai co trung hay khong?
     final emailExists = await auth.checkEmailExists(email);
     if (emailExists) {
-      SnackbarHelper.showCustomSnackBar(
+      SnackbarHelperGeneral.showCustomSnackBar(
         context,
         "Email has been registered before!",
       );
@@ -63,7 +63,7 @@ class _RegisterState extends State<Register> {
         email: email,
         phoneNumber: phoneNumber,
       );
-      SnackbarHelper.showCustomSnackBar(
+      SnackbarHelperGeneral.showCustomSnackBar(
         context,
         "Registration successful! Please check your email for verification.",
         backgroundColor: Colors.green,
@@ -73,8 +73,7 @@ class _RegisterState extends State<Register> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) =>
-              EmailSent(destination: Login()),
+          builder: (context) => EmailSentGeneral(destination: Login()),
         ),
       );
     } catch (e) {
@@ -123,9 +122,7 @@ class _RegisterState extends State<Register> {
                   width: 150,
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: AssetImage(
-                        "assets/images/logo-transparent.png",
-                      ),
+                      image: AssetImage("assets/images/logo-transparent.png"),
                       fit: BoxFit.fill,
                     ),
                   ),

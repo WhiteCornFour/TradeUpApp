@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:tradeupapp/constants/app_colors.dart';
 import 'package:tradeupapp/firebase/auth_service.dart';
-import 'package:tradeupapp/screens/main_app/emailsent.dart';
+import 'package:tradeupapp/screens/general/general_email_sent.dart';
 import 'package:tradeupapp/screens/main_app/index.dart';
-import 'package:tradeupapp/utils/back_button.dart';
-import 'package:tradeupapp/utils/snackbar_helper.dart';
+import 'package:tradeupapp/widgets/general/general_back_button.dart';
+import 'package:tradeupapp/widgets/general/general_snackbar_helper.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/user_profile_widgets/change_password_widgets/change_password_text_field_widget.dart';
 
 class ChangePassword extends StatefulWidget {
@@ -28,14 +28,17 @@ class _ChangePasswordState extends State<ChangePassword> {
   void _handleResetPassword() async {
     //kiem tra email nhap vao co hop le hay khong
     if (!_controller.text.contains('@') || !_controller.text.contains('.')) {
-      SnackbarHelper.showCustomSnackBar(context, 'Please enter a valid email!');
+      SnackbarHelperGeneral.showCustomSnackBar(
+        context,
+        'Please enter a valid email!',
+      );
       return;
     }
     try {
       //kiem tra email nay co ton tai tren database hay khong
       final methods = await auth.checkEmailExists(_controller.text);
       if (methods) {
-        SnackbarHelper.showCustomSnackBar(
+        SnackbarHelperGeneral.showCustomSnackBar(
           context,
           "This email has not been registered!",
         );
@@ -43,7 +46,7 @@ class _ChangePasswordState extends State<ChangePassword> {
       }
       //Gui mot email de reset password
       await auth.resetPassword(email: _controller.text);
-      SnackbarHelper.showCustomSnackBar(
+      SnackbarHelperGeneral.showCustomSnackBar(
         context,
         "Please check your email!.",
         backgroundColor: Colors.green,
@@ -52,11 +55,11 @@ class _ChangePasswordState extends State<ChangePassword> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => EmailSent(destination: MainAppIndex()),
+          builder: (context) => EmailSentGeneral(destination: MainAppIndex()),
         ),
       );
     } catch (e) {
-      SnackbarHelper.showCustomSnackBar(
+      SnackbarHelperGeneral.showCustomSnackBar(
         context,
         "An error occurred. Please try again later.",
       );
@@ -77,7 +80,7 @@ class _ChangePasswordState extends State<ChangePassword> {
               children: [
                 SizedBox(height: 30),
                 //Nut back
-                BackButtonCustom(),
+                BackButtonCustomGeneral(),
                 SizedBox(height: 40),
                 Center(
                   child: Container(

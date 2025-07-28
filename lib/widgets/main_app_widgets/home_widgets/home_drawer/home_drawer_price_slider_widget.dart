@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:tradeupapp/constants/app_colors.dart';
-import 'package:tradeupapp/widgets/system_widgets/system_header_section_widget.dart';
+import 'package:tradeupapp/widgets/general/general_header_section_widget.dart';
 
 class DrawerPriceSliderHome extends StatefulWidget {
   const DrawerPriceSliderHome({super.key});
@@ -19,7 +19,7 @@ class _DrawerPriceSliderHomeState extends State<DrawerPriceSliderHome> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         //Header Section: Prices
-        HeaderSectionSystem(
+        HeaderSectionGeneral(
           title: 'Prices',
           icon: Iconsax.money,
           showViewAll: false,

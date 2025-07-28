@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:tradeupapp/widgets/system_widgets/system_icon_widget.dart';
+import 'package:tradeupapp/widgets/general/general_icon_widget.dart';
 
-class BookmarkedToggleButtonSystem extends StatefulWidget {
-  const BookmarkedToggleButtonSystem({
+class BookmarkedToggleButtonGeneral extends StatefulWidget {
+  const BookmarkedToggleButtonGeneral({
     super.key,
     this.initialState = false,
     this.onChanged,
@@ -12,12 +12,12 @@ class BookmarkedToggleButtonSystem extends StatefulWidget {
   final ValueChanged<bool>? onChanged;
 
   @override
-  State<BookmarkedToggleButtonSystem> createState() =>
-      _BookmarkedToggleButtonSystemState();
+  State<BookmarkedToggleButtonGeneral> createState() =>
+      _BookmarkedToggleButtonGeneralState();
 }
 
-class _BookmarkedToggleButtonSystemState
-    extends State<BookmarkedToggleButtonSystem>
+class _BookmarkedToggleButtonGeneralState
+    extends State<BookmarkedToggleButtonGeneral>
     with SingleTickerProviderStateMixin {
   late bool isBookmarked;
 
@@ -43,7 +43,7 @@ class _BookmarkedToggleButtonSystemState
         transitionBuilder: (child, animation) {
           return ScaleTransition(scale: animation, child: child);
         },
-        child: IconSystem(
+        child: IconGeneral(
           width: 48,
           height: 48,
           key: ValueKey<bool>(isBookmarked),

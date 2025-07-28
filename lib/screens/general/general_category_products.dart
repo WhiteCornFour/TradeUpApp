@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tradeupapp/models/category_model.dart';
-import 'package:tradeupapp/widgets/system_widgets/system_category_head_banner_widget.dart';
-import 'package:tradeupapp/widgets/system_widgets/system_grid_view_product_vertical_list_widget.dart';
+import 'package:tradeupapp/widgets/general/general_category_head_banner_widget.dart';
+import 'package:tradeupapp/widgets/general/general_grid_view_product_vertical_list_widget.dart';
 
-class CategoryProductsSystem extends StatelessWidget {
-  const CategoryProductsSystem({super.key});
+class CategoryProductsGeneral extends StatelessWidget {
+  const CategoryProductsGeneral({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +16,7 @@ class CategoryProductsSystem extends StatelessWidget {
         child: Column(
           children: [
             //Head Banner
-            CategoryHeadBannerSystem(
+            CategoryHeadBannerGeneral(
               title: category.name,
               imagePath: category.imagePath,
               overlayColor: category.colorStrong,
@@ -24,7 +24,7 @@ class CategoryProductsSystem extends StatelessWidget {
             SizedBox(height: 30),
 
             //Grid View List Product
-            GridViewProductVerticalListSystem(itemCount: 10),
+            GridViewProductVerticalListGeneral(itemCount: 10),
             SizedBox(height: 30),
           ],
         ),

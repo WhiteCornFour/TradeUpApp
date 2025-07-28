@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class IconSystem extends StatelessWidget {
-  const IconSystem({
+class IconGeneral extends StatelessWidget {
+  const IconGeneral({
     super.key,
     required this.icon,
     this.width,

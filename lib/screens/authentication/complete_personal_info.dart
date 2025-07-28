@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:tradeupapp/constants/app_colors.dart';
 import 'package:tradeupapp/firebase/database_service.dart';
 import 'package:tradeupapp/screens/main_app/index.dart';
-import 'package:tradeupapp/utils/snackbar_helper.dart';
+import 'package:tradeupapp/widgets/general/general_snackbar_helper.dart';
 import 'package:tradeupapp/widgets/authentication_widgets/login_widgets/login_text_field_widget.dart';
 
 class CompletePersonalInfoAuthentication extends StatefulWidget {
@@ -27,14 +27,17 @@ class _CompletePersonalInfoAuthenticationState
     //Kiểm tra thông tin người dùng nhập vô
     String resultCheck = _checkInputData();
     if (resultCheck != 'NoError') {
-      SnackbarHelper.showCustomSnackBar(context, resultCheck);
+      SnackbarHelperGeneral.showCustomSnackBar(context, resultCheck);
       return;
     }
 
     //Lấy email từ người dùng Google đã đăng nhập
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) {
-      SnackbarHelper.showCustomSnackBar(context, "User is not logged in.");
+      SnackbarHelperGeneral.showCustomSnackBar(
+        context,
+        "User is not logged in.",
+      );
       return;
     }
 
@@ -48,7 +51,10 @@ class _CompletePersonalInfoAuthenticationState
     );
 
     if (!mounted) return;
-    SnackbarHelper.showCustomSnackBar(context, 'Sign Up Form Complete!!!');
+    SnackbarHelperGeneral.showCustomSnackBar(
+      context,
+      'Sign Up Form Complete!!!',
+    );
     Get.offAll(() => MainAppIndex());
   }
 

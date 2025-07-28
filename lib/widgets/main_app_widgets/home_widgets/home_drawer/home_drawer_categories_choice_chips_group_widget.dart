@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:tradeupapp/models/category_model.dart';
-import 'package:tradeupapp/screens/main_app/system/system_all_categories.dart';
+import 'package:tradeupapp/screens/general/general_all_categories.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/home_widgets/home_drawer/home_drawer_choice_chips_widget.dart';
-import 'package:tradeupapp/widgets/system_widgets/system_header_section_widget.dart';
+import 'package:tradeupapp/widgets/general/general_header_section_widget.dart';
 
 class DrawerCategoriesChoiceChipsGroupHome extends StatefulWidget {
   final List<CategoryModel> categories;
@@ -29,12 +29,12 @@ class _DrawerCategoriesChoiceChipsGroupHomeState
     return Column(
       children: [
         //Header Section: Categories
-        HeaderSectionSystem(
+        HeaderSectionGeneral(
           title: 'Categories',
           icon: Iconsax.category,
           paddingHorizontal: 0,
           paddingVertical: 0,
-          onTap: () => Get.to(() => AllCategoriesSystem()),
+          onTap: () => Get.to(() => AllCategoriesGeneral()),
         ),
         const SizedBox(height: 12),
 

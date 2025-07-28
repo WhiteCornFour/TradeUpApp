@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:tradeupapp/constants/app_colors.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/home_widgets/home_drawer/home_drawer_choice_chips_widget.dart';
-import 'package:tradeupapp/widgets/system_widgets/system_header_section_widget.dart';
+import 'package:tradeupapp/widgets/general/general_header_section_widget.dart';
 
 class DrawerConditionChoiceChipsGroupHome extends StatefulWidget {
   const DrawerConditionChoiceChipsGroupHome({super.key});
@@ -23,7 +23,7 @@ class _DrawerConditionChoiceChipsGroupHomeState
     return Column(
       children: [
         //Header Section: Condition
-        HeaderSectionSystem(
+        HeaderSectionGeneral(
           title: 'Condition',
           icon: Iconsax.refresh,
           showViewAll: false,

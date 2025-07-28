@@ -4,7 +4,7 @@ import 'package:iconsax/iconsax.dart';
 import 'package:tradeupapp/screens/main_app/shop/shop_product_detail.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/shop_pop_menu/shop_pop_menu_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/shop_post_card/shop_post_card_widget.dart';
-import 'package:tradeupapp/widgets/system_widgets/system_search_app_bar_widget.dart';
+import 'package:tradeupapp/widgets/general/general_search_app_bar_widget.dart';
 
 class Shop extends StatefulWidget {
   const Shop({super.key});
@@ -49,7 +49,7 @@ class _Shop extends State<Shop> {
                         IconButton(
                           icon: Icon(Iconsax.search_normal),
                           color: Colors.black,
-                          onPressed: () => showSystemSearch(context),
+                          onPressed: () => showSystemSearchGeneral(context),
                         ),
                         IconButton(
                           icon: Icon(Iconsax.shop),

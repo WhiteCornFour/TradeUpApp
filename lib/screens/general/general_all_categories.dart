@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:tradeupapp/data/category_data.dart';
-import 'package:tradeupapp/screens/main_app/system/system_category_products.dart';
-import 'package:tradeupapp/widgets/system_widgets/system_category_card_button_widget.dart';
-import 'package:tradeupapp/widgets/system_widgets/system_custom_app_bar_widget.dart';
+import 'package:tradeupapp/screens/general/general_category_products.dart';
+import 'package:tradeupapp/widgets/general/general_category_card_button_widget.dart';
+import 'package:tradeupapp/widgets/general/general_custom_app_bar_widget.dart';
 
-class AllCategoriesSystem extends StatelessWidget {
-  const AllCategoriesSystem({super.key});
+class AllCategoriesGeneral extends StatelessWidget {
+  const AllCategoriesGeneral({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBarSystem(
+      appBar: CustomAppBarGeneral(
         showBackArrow: false,
         backgroundColor: Colors.white,
         leadingIcon: Iconsax.arrow_left_2,
@@ -37,11 +37,14 @@ class AllCategoriesSystem extends StatelessWidget {
               mainAxisSpacing: 16,
               mainAxisExtent: 125,
             ),
-            itemBuilder: (context, index) => CategoryCardButtonSystem(
+            itemBuilder: (context, index) => CategoryCardButtonGeneral(
               category: categories[index],
               showBorder: true,
               onTap: () {
-               Get.to(() => CategoryProductsSystem(), arguments: categories[index]);
+                Get.to(
+                  () => CategoryProductsGeneral(),
+                  arguments: categories[index],
+                );
               },
             ),
           ),

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import 'package:tradeupapp/utils/back_button.dart';
+import 'package:tradeupapp/widgets/general/general_back_button.dart';
 
-class CustomAppBarSystem extends StatelessWidget
+class CustomAppBarGeneral extends StatelessWidget
     implements PreferredSizeWidget {
-  const CustomAppBarSystem({
+  const CustomAppBarGeneral({
     super.key,
     this.title,
     this.actions,
@@ -29,7 +29,7 @@ class CustomAppBarSystem extends StatelessWidget
         automaticallyImplyLeading: false,
         backgroundColor: backgroundColor,
         leading: showBackArrow
-            ? BackButtonCustom()
+            ? BackButtonCustomGeneral()
             : leadingIcon != null
             ? IconButton(
                 onPressed: leadingOnPressed,

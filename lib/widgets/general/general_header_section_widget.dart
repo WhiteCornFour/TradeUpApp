@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:tradeupapp/constants/app_colors.dart';
 
-class HeaderSectionSystem extends StatelessWidget {
-  const HeaderSectionSystem({
+class HeaderSectionGeneral extends StatelessWidget {
+  const HeaderSectionGeneral({
     super.key,
     required this.title,
     this.onTap,

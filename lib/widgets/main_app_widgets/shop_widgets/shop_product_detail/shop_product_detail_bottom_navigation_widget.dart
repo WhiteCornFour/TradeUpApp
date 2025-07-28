@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:tradeupapp/constants/app_colors.dart';
-import 'package:tradeupapp/widgets/system_widgets/system_button_widget.dart';
+import 'package:tradeupapp/widgets/general/general_button_widget.dart';
 
 class ShopProductDetailBottomNavigation extends StatelessWidget {
   const ShopProductDetailBottomNavigation({super.key});
@@ -40,7 +40,7 @@ class ShopProductDetailBottomNavigation extends StatelessWidget {
           Expanded(
             child: SizedBox(
               height: 52,
-              child: ButtonSystem(
+              child: ButtonGeneral(
                 width: double.infinity,
                 text: 'Check Out',
                 icon: Iconsax.check,

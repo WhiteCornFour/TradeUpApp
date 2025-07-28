@@ -3,13 +3,13 @@ import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:tradeupapp/constants/app_colors.dart';
 import 'package:tradeupapp/data/category_data.dart';
-import 'package:tradeupapp/screens/main_app/system/system_search_product.dart';
+import 'package:tradeupapp/screens/general/general_search_product.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/home_widgets/home_drawer/home_drawer_categories_choice_chips_group_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/home_widgets/home_drawer/home_drawer_condition_choice_chips_group_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/home_widgets/home_drawer/home_drawer_price_slider_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/home_widgets/home_search_bar_widget.dart';
-import 'package:tradeupapp/widgets/system_widgets/system_button_widget.dart';
-import 'package:tradeupapp/widgets/system_widgets/system_header_section_widget.dart';
+import 'package:tradeupapp/widgets/general/general_button_widget.dart';
+import 'package:tradeupapp/widgets/general/general_header_section_widget.dart';
 
 class DrawerHome extends StatelessWidget {
   const DrawerHome({super.key});
@@ -33,7 +33,7 @@ class DrawerHome extends StatelessWidget {
             //Search Bar
             SizedBox(height: 12),
             //Header Section: Search Bar
-            HeaderSectionSystem(
+            HeaderSectionGeneral(
               title: 'Search Bar',
               icon: Iconsax.search_favorite,
               paddingHorizontal: 0,
@@ -59,12 +59,12 @@ class DrawerHome extends StatelessWidget {
             //Distance(optional)
 
             //Apply Button
-            ButtonSystem(
+            ButtonGeneral(
               height: 52,
               width: double.infinity,
               text: 'Apply',
               backgroundColor: AppColors.header,
-              onPressed: () => Get.to(() => SearchProductSystem()),
+              onPressed: () => Get.to(() => SearchProductGeneral()),
             ),
           ],
         ),

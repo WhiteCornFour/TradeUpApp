@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tradeupapp/models/category_model.dart';
-import 'package:tradeupapp/screens/main_app/system/system_category_products.dart';
+import 'package:tradeupapp/screens/general/general_category_products.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/home_widgets/home_category_card_widget.dart';
 
 class CategoryGroupHome extends StatelessWidget {
@@ -46,7 +46,7 @@ class CategoryGroupHome extends StatelessWidget {
               category: categories[0],
               onTap: () {
                 Get.to(
-                  () => CategoryProductsSystem(),
+                  () => CategoryProductsGeneral(),
                   arguments: categories[0],
                 );
               },
@@ -62,7 +62,7 @@ class CategoryGroupHome extends StatelessWidget {
                       category: categories[1],
                       onTap: () {
                         Get.to(
-                          () => CategoryProductsSystem(),
+                          () => CategoryProductsGeneral(),
                           arguments: categories[1],
                         );
                       },
@@ -76,7 +76,7 @@ class CategoryGroupHome extends StatelessWidget {
                       category: categories[2],
                       onTap: () {
                         Get.to(
-                          () => CategoryProductsSystem(),
+                          () => CategoryProductsGeneral(),
                           arguments: categories[2],
                         );
                       },
@@ -115,7 +115,7 @@ class CategoryGroupHome extends StatelessWidget {
                       category: categories[0],
                       onTap: () {
                         Get.to(
-                          () => CategoryProductsSystem(),
+                          () => CategoryProductsGeneral(),
                           arguments: categories[0],
                         );
                       },
@@ -129,7 +129,7 @@ class CategoryGroupHome extends StatelessWidget {
                       category: categories[1],
                       onTap: () {
                         Get.to(
-                          () => CategoryProductsSystem(),
+                          () => CategoryProductsGeneral(),
                           arguments: categories[1],
                         );
                       },
@@ -149,7 +149,7 @@ class CategoryGroupHome extends StatelessWidget {
                       category: categories[2],
                       onTap: () {
                         Get.to(
-                          () => CategoryProductsSystem(),
+                          () => CategoryProductsGeneral(),
                           arguments: categories[2],
                         );
                       },
@@ -163,7 +163,7 @@ class CategoryGroupHome extends StatelessWidget {
                       category: categories[3],
                       onTap: () {
                         Get.to(
-                          () => CategoryProductsSystem(),
+                          () => CategoryProductsGeneral(),
                           arguments: categories[3],
                         );
                       },
@@ -201,7 +201,7 @@ class CategoryGroupHome extends StatelessWidget {
                     category: categories[0],
                     onTap: () {
                       Get.to(
-                        () => CategoryProductsSystem(),
+                        () => CategoryProductsGeneral(),
                         arguments: categories[0],
                       );
                     },
@@ -215,7 +215,7 @@ class CategoryGroupHome extends StatelessWidget {
                     category: categories[1],
                     onTap: () {
                       Get.to(
-                        () => CategoryProductsSystem(),
+                        () => CategoryProductsGeneral(),
                         arguments: categories[1],
                       );
                     },
@@ -231,7 +231,7 @@ class CategoryGroupHome extends StatelessWidget {
               category: categories[2],
               onTap: () {
                 Get.to(
-                  () => CategoryProductsSystem(),
+                  () => CategoryProductsGeneral(),
                   arguments: categories[2],
                 );
               },

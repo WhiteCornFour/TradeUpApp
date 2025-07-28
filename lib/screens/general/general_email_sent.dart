@@ -5,14 +5,14 @@ import 'package:tradeupapp/widgets/main_app_widgets/email_sent_widgets/email_sen
 import 'package:tradeupapp/widgets/main_app_widgets/email_sent_widgets/email_sent_open_gmail_button_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/email_sent_widgets/email_sent_skip_button_widget.dart';
 
-class EmailSent extends StatefulWidget {
-  const EmailSent({super.key, required this.destination});
+class EmailSentGeneral extends StatefulWidget {
+  const EmailSentGeneral({super.key, required this.destination});
   final Widget destination;
   @override
-  State<EmailSent> createState() => _EmailSentState();
+  State<EmailSentGeneral> createState() => _EmailSentGeneralState();
 }
 
-class _EmailSentState extends State<EmailSent> {
+class _EmailSentGeneralState extends State<EmailSentGeneral> {
   void _previousScreen() {
     Navigator.of(context).pop();
   }
@@ -52,9 +52,7 @@ class _EmailSentState extends State<EmailSent> {
                         width: 300,
                         decoration: const BoxDecoration(
                           image: DecorationImage(
-                            image: AssetImage(
-                              'assets/images/emailsent.jpg',
-                            ),
+                            image: AssetImage('assets/images/emailsent.jpg'),
                             fit: BoxFit.fill,
                           ),
                         ),

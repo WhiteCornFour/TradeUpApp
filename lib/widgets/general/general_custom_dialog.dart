@@ -32,7 +32,7 @@ import 'package:tradeupapp/constants/app_colors.dart';
 //     );
 //   }
 // }
-class CustomDialog {
+class CustomDialogGeneral {
   static void show(
     BuildContext context,
     String header,

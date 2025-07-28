@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class CategoryHeadBannerSystem extends StatelessWidget
+class CategoryHeadBannerGeneral extends StatelessWidget
     implements PreferredSizeWidget {
-  const CategoryHeadBannerSystem({
+  const CategoryHeadBannerGeneral({
     super.key,
     required this.title,
     required this.imagePath,

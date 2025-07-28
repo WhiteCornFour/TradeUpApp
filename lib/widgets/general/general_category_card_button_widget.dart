@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:tradeupapp/models/category_model.dart';
 
-class CategoryCardButtonSystem extends StatelessWidget {
-  const CategoryCardButtonSystem({
+class CategoryCardButtonGeneral extends StatelessWidget {
+  const CategoryCardButtonGeneral({
     super.key,
     required this.category,
     this.onTap,

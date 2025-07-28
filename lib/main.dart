@@ -6,7 +6,7 @@ import 'package:tradeupapp/screens/authentication/login.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:tradeupapp/screens/authentication/on_boarding.dart';
 import 'package:tradeupapp/screens/main_app/index.dart';
-import 'package:tradeupapp/screens/main_app/system/system_category_products.dart';
+import 'package:tradeupapp/screens/general/general_category_products.dart';
 
 import 'firebase_options.dart';
 
@@ -29,7 +29,7 @@ void main() async {
       getPages: [
         GetPage(
           name: '/category/:categoryName',
-          page: () => CategoryProductsSystem(),
+          page: () => CategoryProductsGeneral(),
         ),
       ],
     ),

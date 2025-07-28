@@ -7,9 +7,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:tradeupapp/constants/app_colors.dart';
 import 'package:tradeupapp/firebase/database_service.dart';
 import 'package:tradeupapp/models/user_model.dart';
-import 'package:tradeupapp/utils/back_button.dart';
-import 'package:tradeupapp/utils/custom_dialog.dart';
-import 'package:tradeupapp/utils/snackbar_helper.dart';
+import 'package:tradeupapp/widgets/general/general_back_button.dart';
+import 'package:tradeupapp/widgets/general/general_custom_dialog.dart';
+import 'package:tradeupapp/widgets/general/general_snackbar_helper.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/user_profile_widgets/edit_profile_widgets/edit_profile_button_submit.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/user_profile_widgets/edit_profile_widgets/edit_profile_tagname_custom_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/user_profile_widgets/edit_profile_widgets/edit_profile_text_field.dart';
@@ -271,7 +271,7 @@ class _EditProfileState extends State<EditProfile> {
     // Validate thông tin
     String? validationMessage = validateUserInfoBeforeUpdate();
     if (validationMessage != null) {
-      SnackbarHelper.showCustomSnackBar(context, validationMessage);
+      SnackbarHelperGeneral.showCustomSnackBar(context, validationMessage);
       return;
     }
 
@@ -288,7 +288,7 @@ class _EditProfileState extends State<EditProfile> {
     if (image != null) {
       url = await uploadToCloudinary(image!);
       if (url == null) {
-        SnackbarHelper.showCustomSnackBar(
+        SnackbarHelperGeneral.showCustomSnackBar(
           context,
           'Failed to upload image. Please try again.',
           backgroundColor: Colors.red,
@@ -322,7 +322,7 @@ class _EditProfileState extends State<EditProfile> {
       imageURL = updatedUser.avtURL;
     });
     // Thông báo
-    SnackbarHelper.showCustomSnackBar(
+    SnackbarHelperGeneral.showCustomSnackBar(
       context,
       'Your profile has been updated successfully.',
       backgroundColor: Colors.green,
@@ -349,7 +349,7 @@ class _EditProfileState extends State<EditProfile> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       //Button back priveous page
-                      BackButtonCustom(),
+                      BackButtonCustomGeneral(),
 
                       const SizedBox(height: 40),
                       //Upload image user
@@ -409,7 +409,7 @@ class _EditProfileState extends State<EditProfile> {
               //Button Cofirm
               ButtonSubmitEditProfile(
                 onPressed: () {
-                  CustomDialog.show(
+                  CustomDialogGeneral.show(
                     context,
                     'Confirm Update',
                     'Are you sure you want to update your profile information? These changes will be saved and visible to others.',

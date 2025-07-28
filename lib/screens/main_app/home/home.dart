@@ -5,15 +5,15 @@ import 'package:tradeupapp/constants/app_colors.dart';
 import 'package:tradeupapp/firebase/database_service.dart';
 import 'package:tradeupapp/models/category_model.dart';
 import 'package:tradeupapp/models/user_model.dart';
-import 'package:tradeupapp/screens/main_app/system/system_all_categories.dart';
+import 'package:tradeupapp/screens/general/general_all_categories.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/home_widgets/home_sort_option_group/home_sort_option_group_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/home_widgets/home_category_group_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/home_widgets/home_drawer/home_drawer_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/home_widgets/home_header_widget.dart';
 import 'package:tradeupapp/data/category_data.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/home_widgets/home_searching_group/home_searching_group_widget.dart';
-import 'package:tradeupapp/widgets/system_widgets/system_header_section_widget.dart';
-import 'package:tradeupapp/widgets/system_widgets/system_grid_view_product_vertical_list_widget.dart';
+import 'package:tradeupapp/widgets/general/general_header_section_widget.dart';
+import 'package:tradeupapp/widgets/general/general_grid_view_product_vertical_list_widget.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -82,10 +82,10 @@ class _Home extends State<Home> {
                   SearchingGroupHome(itemCount: 138),
 
                   //Header Section: Sort by Category
-                  HeaderSectionSystem(
+                  HeaderSectionGeneral(
                     title: 'Sort by Category',
                     icon: Iconsax.category,
-                    onTap: () => Get.to(() => AllCategoriesSystem()),
+                    onTap: () => Get.to(() => AllCategoriesGeneral()),
                   ),
 
                   SizedBox(
@@ -145,7 +145,7 @@ class _Home extends State<Home> {
                   const SizedBox(height: 20),
 
                   //Header Section: Discover
-                  HeaderSectionSystem(
+                  HeaderSectionGeneral(
                     title: 'Discover',
                     icon: Iconsax.ticket_star,
                   ),
@@ -156,7 +156,7 @@ class _Home extends State<Home> {
                   SizedBox(height: 15),
 
                   //GridView Products
-                  GridViewProductVerticalListSystem(itemCount: 4),
+                  GridViewProductVerticalListGeneral(itemCount: 4),
 
                   SizedBox(height: 30),
                 ],

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/home_widgets/home_drawer/home_drawer_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/home_widgets/home_search_bar_widget.dart';
-import 'package:tradeupapp/widgets/system_widgets/system_search_app_bar_widget.dart';
+import 'package:tradeupapp/widgets/general/general_search_app_bar_widget.dart';
 
 class SearchingGroupBarAndFilterHome extends StatelessWidget {
   const SearchingGroupBarAndFilterHome({super.key});
@@ -14,7 +14,7 @@ class SearchingGroupBarAndFilterHome extends StatelessWidget {
         Expanded(
           child: SearchBarHome(
             isReadOnly: true,
-            onTap: () => showSystemSearch(context),
+            onTap: () => showSystemSearchGeneral(context),
           ),
         ),
 

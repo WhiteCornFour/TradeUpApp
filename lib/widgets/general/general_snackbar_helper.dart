@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class SnackbarHelper {
+class SnackbarHelperGeneral {
   static void showCustomSnackBar(
     BuildContext context,
     String message, {

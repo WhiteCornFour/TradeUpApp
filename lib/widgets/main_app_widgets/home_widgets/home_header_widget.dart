@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:tradeupapp/utils/snackbar_helper.dart';
+import 'package:tradeupapp/widgets/general/general_snackbar_helper.dart';
 
 class HeaderHome extends StatelessWidget {
   const HeaderHome({
@@ -76,7 +76,7 @@ class HeaderHome extends StatelessWidget {
                 if (role == 2) {
                   print('Unlocked Business');
                 } else {
-                  SnackbarHelper.showCustomSnackBar(
+                  SnackbarHelperGeneral.showCustomSnackBar(
                     context,
                     'Please turn on Bussiness mode in your Profile before using it.',
                   );

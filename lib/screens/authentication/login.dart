@@ -9,7 +9,7 @@ import 'package:tradeupapp/screens/authentication/forgot_password.dart';
 import 'package:tradeupapp/screens/authentication/register.dart';
 import 'package:tradeupapp/screens/debug/debug.dart';
 import 'package:tradeupapp/screens/main_app/index.dart';
-import 'package:tradeupapp/utils/snackbar_helper.dart';
+import 'package:tradeupapp/widgets/general/general_snackbar_helper.dart';
 import 'package:tradeupapp/widgets/authentication_widgets/login_widgets/login_text_field_widget.dart';
 
 class Login extends StatefulWidget {
@@ -47,7 +47,10 @@ class _Login extends State<Login> {
       //Kiem tra tai khoan da verify chưa
       if (user != null && user.emailVerified) {
         if (!mounted) return;
-        SnackbarHelper.showCustomSnackBar(context, 'Sign in sucessfull!!!');
+        SnackbarHelperGeneral.showCustomSnackBar(
+          context,
+          'Sign in sucessfull!!!',
+        );
         await Future.delayed(Duration(seconds: 2)); //Chờ 2 giây
         Get.offAll(() => MainAppIndex());
       } else {
@@ -56,7 +59,7 @@ class _Login extends State<Login> {
       }
     } on FirebaseAuthException catch (_) {
       if (!mounted) return;
-      SnackbarHelper.showCustomSnackBar(
+      SnackbarHelperGeneral.showCustomSnackBar(
         context,
         "Something went wrong!",
         backgroundColor: Colors.green,
@@ -72,7 +75,7 @@ class _Login extends State<Login> {
 
       if (user == null) {
         if (!mounted) return;
-        SnackbarHelper.showCustomSnackBar(
+        SnackbarHelperGeneral.showCustomSnackBar(
           context,
           "User not found after sign in!",
         );
@@ -104,7 +107,7 @@ class _Login extends State<Login> {
       if (userDoc.exists) {
         //Đã có thông tin thì vào trang chính
         if (!mounted) return;
-        SnackbarHelper.showCustomSnackBar(
+        SnackbarHelperGeneral.showCustomSnackBar(
           context,
           'Sign in sucessfull!!!',
           backgroundColor: Colors.green,
@@ -117,7 +120,10 @@ class _Login extends State<Login> {
       }
     } catch (e) {
       if (!mounted) return;
-      SnackbarHelper.showCustomSnackBar(context, "Google SignIn failed!");
+      SnackbarHelperGeneral.showCustomSnackBar(
+        context,
+        "Google SignIn failed!",
+      );
     }
   }
 

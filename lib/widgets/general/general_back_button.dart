@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:tradeupapp/constants/app_colors.dart';
 
-class BackButtonCustom extends StatelessWidget {
-  const BackButtonCustom({super.key});
+class BackButtonCustomGeneral extends StatelessWidget {
+  const BackButtonCustomGeneral({super.key});
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -10,11 +10,7 @@ class BackButtonCustom extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min, // không chiếm hết chiều ngang
         children: [
-          Icon(
-            Icons.arrow_back_ios,
-            color: AppColors.header,
-            size: 20,
-          ), 
+          Icon(Icons.arrow_back_ios, color: AppColors.header, size: 20),
           Text(
             'Back',
             style: TextStyle(
