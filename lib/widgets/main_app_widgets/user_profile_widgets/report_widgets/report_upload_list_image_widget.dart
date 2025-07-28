@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:tradeupapp/assets/colors/app_colors.dart';
+import 'package:tradeupapp/constants/app_colors.dart';
 
 class UploadImageReport extends StatefulWidget {
   final VoidCallback onPressed;
@@ -36,7 +36,7 @@ class _UploadImageReportState extends State<UploadImageReport> {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
                   image: const DecorationImage(
-                    image: AssetImage('lib/assets/images/noimageavailable.png'),
+                    image: AssetImage('assets/images/noimageavailable.png'),
                     fit: BoxFit.fill,
                   ),
                 ),

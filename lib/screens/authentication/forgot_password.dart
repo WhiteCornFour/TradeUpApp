@@ -72,7 +72,7 @@ class _ForgotpasswordState extends State<Forgotpassword> {
                   decoration: BoxDecoration(
                     image: DecorationImage(
                       image: AssetImage(
-                        "lib/assets/images/logo-transparent.png",
+                        "assets/images/logo-transparent.png",
                       ),
                       fit: BoxFit.fill,
                     ),

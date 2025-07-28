@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tradeupapp/assets/colors/app_colors.dart';
+import 'package:tradeupapp/constants/app_colors.dart';
 
 class BackButtonCustom extends StatelessWidget {
   const BackButtonCustom({super.key});

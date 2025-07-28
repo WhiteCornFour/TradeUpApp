@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:tradeupapp/assets/colors/app_colors.dart';
+import 'package:tradeupapp/constants/app_colors.dart';
 import 'package:tradeupapp/screens/main_app/shop/shop_product_detail.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/home_widgets/home_image_container_widget.dart';
 import 'package:tradeupapp/widgets/system_widgets/system_book_marked_toggle_icon_widget.dart';
@@ -47,7 +47,7 @@ class ProductCardVerticalHome extends StatelessWidget {
                   //Thumbnail Image
                   ImageContainerHome(
                     height: 180,
-                    imageUrl: 'lib/assets/images/sample_images/sample.png',
+                    imageUrl: 'assets/images/sample_images/sample.png',
                     applyImageRadius: true,
                   ),
 

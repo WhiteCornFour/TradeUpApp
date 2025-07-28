@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tradeupapp/assets/colors/app_colors.dart';
+import 'package:tradeupapp/constants/app_colors.dart';
 
 //------------Demo dung Dialog Custom------------------
 // class Dialog1 extends StatelessWidget {
@@ -64,7 +64,7 @@ class CustomDialog {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(16),
                   child: Image.asset(
-                    "lib/assets/images/$image",
+                    "assets/images/$image",
                     fit: BoxFit.fill,
                     width: 200,
                     height: 150,
