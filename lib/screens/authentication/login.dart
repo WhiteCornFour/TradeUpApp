@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:tradeupapp/assets/colors/app_colors.dart';
+import 'package:tradeupapp/constants/app_colors.dart';
 import 'package:tradeupapp/firebase/auth_service.dart';
 import 'package:tradeupapp/screens/authentication/complete_personal_info.dart';
 import 'package:tradeupapp/screens/authentication/forgot_password.dart';
@@ -148,7 +148,7 @@ class _Login extends State<Login> {
                             Get.to(() => DebugMenu());
                           },
                           child: Image.asset(
-                            "lib/assets/images/logo-transparent.png",
+                            "assets/images/logo-transparent.png",
                             width: 150,
                             height: 150,
                           ),
@@ -250,7 +250,7 @@ class _Login extends State<Login> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Image.asset(
-                            "lib/assets/images/google_icon.png",
+                            "assets/images/google_icon.png",
                             width: 24,
                             height: 24,
                           ),

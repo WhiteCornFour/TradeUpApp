@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:readmore/readmore.dart';
-import 'package:tradeupapp/assets/colors/app_colors.dart';
+import 'package:tradeupapp/constants/app_colors.dart';
 import 'package:tradeupapp/data/category_data.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/shop_product_detail/shop_product_detail_bottom_navigation_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/shop_product_detail/shop_product_detail_image_slider_widget.dart';
@@ -43,13 +43,13 @@ class _ProductDetailShopState extends State<ProductDetailShop> {
                     children: [
                       ProductDetailImageSliderShop(
                         firstImage:
-                            'lib/assets/images/sample_images/sample2.jpg',
+                            'assets/images/sample_images/sample2.jpg',
                         imageList: [
-                          'lib/assets/images/sample_images/sample4.jpg',
-                          'lib/assets/images/sample_images/sample3.jpg',
-                          'lib/assets/images/sample_images/sample4.jpg',
-                          'lib/assets/images/sample_images/sample2.jpg',
-                          'lib/assets/images/sample_images/sample4.jpg',
+                          'assets/images/sample_images/sample4.jpg',
+                          'assets/images/sample_images/sample3.jpg',
+                          'assets/images/sample_images/sample4.jpg',
+                          'assets/images/sample_images/sample2.jpg',
+                          'assets/images/sample_images/sample4.jpg',
                         ],
                       ),
 

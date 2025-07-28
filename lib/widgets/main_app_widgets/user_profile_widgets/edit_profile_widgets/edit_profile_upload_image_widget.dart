@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:tradeupapp/assets/colors/app_colors.dart';
+import 'package:tradeupapp/constants/app_colors.dart';
 
 class UploadImageEditProfile extends StatelessWidget {
   final VoidCallback onPressedUploadImage;
@@ -26,7 +26,7 @@ class UploadImageEditProfile extends StatelessWidget {
       avatarProvider = NetworkImage(imageUrl!);
     } else {
       avatarProvider =
-          const AssetImage('lib/assets/images/avatar-user.png');
+          const AssetImage('assets/images/avatar-user.png');
     }
 
     return Center(

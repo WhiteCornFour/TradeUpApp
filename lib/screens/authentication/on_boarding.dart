@@ -22,19 +22,19 @@ class OnBoarding extends StatelessWidget {
             onPageChanged: controller.updatePageIndicator,
             children: [
               OnBoardingPage(
-                image: 'lib/assets/images/on_boarding_images/product.gif',
+                image: 'assets/images/on_boarding_images/product.gif',
                 title: 'Discover unique products',
                 subTitle:
                     'From tech gadgets to trending outfits, discover what suits you best in just a tap.',
               ),
               OnBoardingPage(
-                image: 'lib/assets/images/on_boarding_images/adding.gif',
+                image: 'assets/images/on_boarding_images/adding.gif',
                 title: 'List or shop in just a few steps',
                 subTitle:
                     'Buy or sell instantly with a smooth, trusted experience.',
               ),
               OnBoardingPage(
-                image: 'lib/assets/images/on_boarding_images/working.gif',
+                image: 'assets/images/on_boarding_images/working.gif',
                 title: 'Join a friendly community',
                 subTitle:
                     'Connect with verified users and build lasting trade relationships.',

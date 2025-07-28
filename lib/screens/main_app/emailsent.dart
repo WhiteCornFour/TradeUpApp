@@ -1,6 +1,6 @@
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/material.dart';
-import 'package:tradeupapp/assets/colors/app_colors.dart';
+import 'package:tradeupapp/constants/app_colors.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/email_sent_widgets/email_sent_bottom_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/email_sent_widgets/email_sent_open_gmail_button_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/email_sent_widgets/email_sent_skip_button_widget.dart';
@@ -53,7 +53,7 @@ class _EmailSentState extends State<EmailSent> {
                         decoration: const BoxDecoration(
                           image: DecorationImage(
                             image: AssetImage(
-                              'lib/assets/images/emailsent.jpg',
+                              'assets/images/emailsent.jpg',
                             ),
                             fit: BoxFit.fill,
                           ),

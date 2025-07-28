@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tradeupapp/assets/colors/app_colors.dart';
+import 'package:tradeupapp/constants/app_colors.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/home_widgets/home_searching_group/home_searching_group_bar_and_filter.dart';
 
 class SearchingGroupHome extends StatelessWidget {
@@ -80,7 +80,7 @@ class SearchingGroupHome extends StatelessWidget {
           child: SizedBox(
             height: 184,
             child: Image.asset(
-              'lib/assets/images/girl_white_shirt_holding_something.png',
+              'assets/images/girl_white_shirt_holding_something.png',
               fit: BoxFit.contain,
             ),
           ),

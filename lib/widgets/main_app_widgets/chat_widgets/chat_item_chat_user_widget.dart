@@ -27,7 +27,7 @@ class ItemChatUserChat extends StatelessWidget {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 image: DecorationImage(
-                  image: AssetImage("lib/assets/images/logo.png"),
+                  image: AssetImage("assets/images/logo.png"),
                   fit: BoxFit.cover,
                 ),
               ),

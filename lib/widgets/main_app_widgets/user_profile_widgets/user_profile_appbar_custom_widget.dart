@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tradeupapp/assets/colors/app_colors.dart';
+import 'package:tradeupapp/constants/app_colors.dart';
 import 'package:tradeupapp/screens/main_app/profile/edit_profile/edit_profile.dart';
 
 class AppbarCustomUserProfile extends StatelessWidget
@@ -44,7 +44,7 @@ class AppbarCustomUserProfile extends StatelessWidget
                   image: DecorationImage(
                     image: hasImage
                         ? NetworkImage(imageURL!)
-                        : const AssetImage('lib/assets/images/avatar-user.png')
+                        : const AssetImage('assets/images/avatar-user.png')
                               as ImageProvider,
                     fit: BoxFit.cover,
                   ),

@@ -72,9 +72,9 @@ class _Shop extends State<Shop> {
                     PostCardShop(
                       onPressed: () => Get.to(() => ProductDetailShop()),
                       imageUrls: [
-                        'lib/assets/images/sample_images/sample2.jpg',
-                        'lib/assets/images/sample_images/sample3.jpg',
-                        'lib/assets/images/sample_images/sample4.jpg',
+                        'assets/images/sample_images/sample2.jpg',
+                        'assets/images/sample_images/sample3.jpg',
+                        'assets/images/sample_images/sample4.jpg',
                       ],
                       description:
                           'JBL Flip 6 is a portable waterproof speaker with bold sound. '
@@ -90,7 +90,7 @@ class _Shop extends State<Shop> {
 
                     PostCardShop(
                       onPressed: () => {print('Post card tap')},
-                      imageUrls: ['lib/assets/images/sample_images/sample.png'],
+                      imageUrls: ['assets/images/sample_images/sample.png'],
                       description:
                           'This is my old laptop but still use very good. If you want it you can contact with me.',
                       userName: 'John Doe',

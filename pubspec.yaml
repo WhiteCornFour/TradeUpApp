@@ -72,41 +72,42 @@ flutter:
   # the material Icons class.
   uses-material-design: true
   assets:
-    - lib/assets/images/
-    - lib/assets/images/on_boarding_images/
-    - lib/assets/images/sample_images/
-    - lib/assets/images/categories_background_images/
+    - assets/images/
+    - assets/images/on_boarding_images/
+    - assets/images/sample_images/
+    - assets/images/categories_background_images/
+
   fonts:
     - family: Roboto-Thin
       fonts:
-        - asset: lib/assets/fonts/Roboto-Thin.ttf
+        - asset: assets/fonts/Roboto-Thin.ttf
     - family: Roboto-ThinItalic
       fonts:
-        - asset: lib/assets/fonts/Roboto-ThinItalic.ttf
+        - asset: assets/fonts/Roboto-ThinItalic.ttf
     - family: Roboto-Light
       fonts:
-        - asset: lib/assets/fonts/Roboto-Light.ttf
+        - asset: assets/fonts/Roboto-Light.ttf
     - family: Roboto-LightItalic
       fonts:
-        - asset: lib/assets/fonts/Roboto-LightItalic.ttf
+        - asset: assets/fonts/Roboto-LightItalic.ttf
     - family: Roboto-Regular
       fonts:
-        - asset: lib/assets/fonts/Roboto-Regular.ttf
+        - asset: assets/fonts/Roboto-Regular.ttf
     - family: Roboto-Medium
       fonts:
-        - asset: lib/assets/fonts/Roboto-Medium.ttf
+        - asset: assets/fonts/Roboto-Medium.ttf
     - family: Roboto-MediumItalic
       fonts:
-        - asset: lib/assets/fonts/Roboto-MediumItalic.ttf
+        - asset: assets/fonts/Roboto-MediumItalic.ttf
     - family: Roboto-Bold
       fonts:
-        - asset: lib/assets/fonts/Roboto-Bold.ttf
+        - asset: assets/fonts/Roboto-Bold.ttf
     - family: Roboto-BoldItalic
       fonts:
-        - asset: lib/assets/fonts/Roboto-BoldItalic.ttf
+        - asset: assets/fonts/Roboto-BoldItalic.ttf
     - family: Roboto-Black
       fonts:
-        - asset: lib/assets/fonts/Roboto-Black.ttf
+        - asset: assets/fonts/Roboto-Black.ttf
 
   # To add assets to your application, add an assets section, like this:
   # assets:

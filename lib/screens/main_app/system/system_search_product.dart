@@ -17,7 +17,7 @@ class SearchProductSystem extends StatelessWidget {
               title: 'Search Results',
               subTitle: 'Found 4 results for keyword "iPhone"',
               imagePath:
-                  'lib/assets/images/categories_background_images/appliances_background.jpg',
+                  'assets/images/categories_background_images/appliances_background.jpg',
               overlayColor: Colors.deepPurple,
               height: 220,
             ),

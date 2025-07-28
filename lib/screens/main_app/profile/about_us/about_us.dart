@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tradeupapp/assets/colors/app_colors.dart';
+import 'package:tradeupapp/constants/app_colors.dart';
 import 'package:tradeupapp/utils/back_button.dart';
 
 class AboutUs extends StatefulWidget {
@@ -43,7 +43,7 @@ class _AboutUsState extends State<AboutUs> {
                     height: 300,
                     decoration: const BoxDecoration(
                       image: DecorationImage(
-                        image: AssetImage('lib/assets/images/aboutus.jpg'),
+                        image: AssetImage('assets/images/aboutus.jpg'),
                         fit: BoxFit.cover,
                       ),
                     ),

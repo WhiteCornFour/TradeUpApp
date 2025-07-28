@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tradeupapp/assets/colors/app_colors.dart';
+import 'package:tradeupapp/constants/app_colors.dart';
 import 'package:tradeupapp/firebase/auth_service.dart';
 import 'package:tradeupapp/screens/main_app/emailsent.dart';
 import 'package:tradeupapp/screens/main_app/index.dart';
@@ -86,7 +86,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                     decoration: BoxDecoration(
                       image: DecorationImage(
                         image: AssetImage(
-                          'lib/assets/images/changepassword-vector.jpg',
+                          'assets/images/changepassword-vector.jpg',
                         ),
                         fit: BoxFit.fill,
                       ),

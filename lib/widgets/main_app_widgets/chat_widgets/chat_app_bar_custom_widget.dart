@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tradeupapp/assets/colors/app_colors.dart';
+import 'package:tradeupapp/constants/app_colors.dart';
 
 class AppBarCustomChat extends StatelessWidget implements PreferredSizeWidget {
   const AppBarCustomChat({super.key});
@@ -34,7 +34,7 @@ class AppBarCustomChat extends StatelessWidget implements PreferredSizeWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(100),
                   image: DecorationImage(
-                    image: AssetImage("lib/assets/images/logo.png"),
+                    image: AssetImage("assets/images/logo.png"),
                     fit: BoxFit.fill,
                   ),
                 ),

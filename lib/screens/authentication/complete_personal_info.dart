@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:tradeupapp/assets/colors/app_colors.dart';
+import 'package:tradeupapp/constants/app_colors.dart';
 import 'package:tradeupapp/firebase/database_service.dart';
 import 'package:tradeupapp/screens/main_app/index.dart';
 import 'package:tradeupapp/utils/snackbar_helper.dart';
@@ -77,7 +77,7 @@ class _CompletePersonalInfoAuthenticationState
               children: [
                 //Image Gif
                 Image.asset(
-                  "lib/assets/images/complete_profile.gif",
+                  "assets/images/complete_profile.gif",
                   height: MediaQuery.of(context).size.height * 0.35,
                   width: MediaQuery.of(context).size.width * 0.7,
                 ),

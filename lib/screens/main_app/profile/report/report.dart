@@ -6,7 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
-import 'package:tradeupapp/assets/colors/app_colors.dart';
+import 'package:tradeupapp/constants/app_colors.dart';
 import 'package:tradeupapp/models/report_model.dart';
 import 'package:tradeupapp/utils/back_button.dart';
 import 'package:tradeupapp/utils/custom_dialog.dart';
@@ -251,7 +251,7 @@ class _ReportState extends State<Report> {
                     height: 220,
                     decoration: BoxDecoration(
                       image: DecorationImage(
-                        image: AssetImage('lib/assets/images/report.png'),
+                        image: AssetImage('assets/images/report.png'),
                       ),
                     ),
                   ),

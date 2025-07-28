@@ -124,7 +124,7 @@ class _RegisterState extends State<Register> {
                   decoration: BoxDecoration(
                     image: DecorationImage(
                       image: AssetImage(
-                        "lib/assets/images/logo-transparent.png",
+                        "assets/images/logo-transparent.png",
                       ),
                       fit: BoxFit.fill,
                     ),
