@@ -35,6 +35,18 @@ class _ProfileState extends State<Profile> {
     return null;
   }
 
+  void _showDialogLogout() {
+    CustomDialogGeneral.show(
+      context,
+      'Log Out',
+      'Are you sure you want to log out?',
+      () {
+        _logout();
+      },
+      numberOfButton: 2,
+    );
+  }
+
   void _logout() async {
     try {
       //Sign Out bình thường
@@ -136,7 +148,16 @@ class _ProfileState extends State<Profile> {
 
         if (!snapshot.hasData || snapshot.data == null) {
           return const Scaffold(
-            body: Center(child: Text('Cannot load user data!')),
+            body: Center(
+              child: Text(
+                'Cannot load user data!',
+                style: TextStyle(
+                  color: AppColors.header,
+                  fontFamily: 'Roboto-Black',
+                  fontSize: 20,
+                ),
+              ),
+            ),
           );
         }
 
@@ -210,7 +231,7 @@ class _ProfileState extends State<Profile> {
                         label: 'Change password',
                       ),
                       CategoryFuncUserProfile(
-                        onTap: _logout,
+                        onTap: _showDialogLogout,
                         icon: Icons.logout,
                         label: 'Log out',
                       ),

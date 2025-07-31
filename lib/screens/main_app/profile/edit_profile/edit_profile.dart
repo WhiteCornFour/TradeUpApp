@@ -38,14 +38,12 @@ class _EditProfileState extends State<EditProfile> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getDataUser();
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     _tagName.dispose();
     _fullname.dispose();
@@ -61,7 +59,7 @@ class _EditProfileState extends State<EditProfile> {
       final user = UserModal.fromMap(userData);
       if (user.tagName == null) {
         _tagName.text =
-            '@user${DateTime.now().day}${DateTime.now().month}${DateTime.now().year}${DateTime.now().second}${DateTime.now().millisecond}${DateTime.now().microsecond}';
+            '@user${DateTime.now().day}${DateTime.now().month}${DateTime.now().millisecond}${DateTime.now().microsecond}';
       } else {
         _tagName.text = user.tagName!;
       }

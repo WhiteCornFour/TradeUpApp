@@ -50,11 +50,12 @@ class _Login extends State<Login> {
         SnackbarHelperGeneral.showCustomSnackBar(
           context,
           'Sign in sucessfull!!!',
+          backgroundColor: Colors.green,
         );
         await Future.delayed(Duration(seconds: 2)); //Chờ 2 giây
         Get.offAll(() => MainAppIndex());
       } else {
-        Get.to(() => Login());
+        Get.replace(() => Login());
         await AuthServices().signOut();
       }
     } on FirebaseAuthException catch (_) {
@@ -62,7 +63,7 @@ class _Login extends State<Login> {
       SnackbarHelperGeneral.showCustomSnackBar(
         context,
         "Something went wrong!",
-        backgroundColor: Colors.green,
+        backgroundColor: Colors.red,
       );
     }
   }
@@ -109,7 +110,7 @@ class _Login extends State<Login> {
         if (!mounted) return;
         SnackbarHelperGeneral.showCustomSnackBar(
           context,
-          'Sign in sucessfull!!!',
+          'Sign in sucessfull!',
           backgroundColor: Colors.green,
         );
         await Future.delayed(Duration(seconds: 2)); //Chờ 2 giây
@@ -211,7 +212,7 @@ class _Login extends State<Login> {
                           minWidth: double.infinity,
                           height: 50,
                           onPressed: signIn,
-                          color: AppColors.header,
+                          color: AppColors.background,
                           elevation: 0,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
@@ -221,7 +222,7 @@ class _Login extends State<Login> {
                             style: TextStyle(
                               fontFamily: 'Roboto-Bold',
                               fontSize: 15,
-                              color: Colors.white,
+                              color: AppColors.text,
                             ),
                           ),
                         ),
@@ -243,7 +244,7 @@ class _Login extends State<Login> {
                       onPressed: signInWithGoogle,
                       style: OutlinedButton.styleFrom(
                         backgroundColor: Colors.grey.shade200,
-                        side: BorderSide(color: Colors.black, width: 1),
+                        side: BorderSide(color: AppColors.background, width: 1),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),

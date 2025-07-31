@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:tradeupapp/firebase/auth_service.dart';
-import 'package:tradeupapp/firebase/database_service.dart';
-import 'package:tradeupapp/screens/authentication/login.dart';
-import 'package:tradeupapp/screens/general/general_email_sent.dart';
-import 'package:tradeupapp/widgets/general/general_snackbar_helper.dart';
+import 'package:get/get.dart';
+import 'package:tradeupapp/screens/authentication/controllers/register_controller.dart';
 import 'package:tradeupapp/widgets/authentication_widgets/register_widgets/register_bottom_widget.dart';
 import 'package:tradeupapp/widgets/authentication_widgets/register_widgets/register_button_widget.dart';
 import 'package:tradeupapp/widgets/authentication_widgets/register_widgets/register_text_field_widget.dart';
@@ -15,97 +12,11 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
-  final TextEditingController _yourNameController = TextEditingController();
-  final TextEditingController _userNameController = TextEditingController();
-  final TextEditingController _passWordController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _phoneNumberController = TextEditingController();
-
-  final auth = AuthServices();
-  final database = DatabaseService();
-
-  @override
-  void dispose() {
-    _yourNameController.dispose();
-    _userNameController.dispose();
-    _passWordController.dispose();
-    _emailController.dispose();
-    _phoneNumberController.dispose();
-    super.dispose();
-  }
-
-  void _handleRegister() async {
-    final yourName = _yourNameController.text.trim();
-    final passWord = _passWordController.text.trim();
-    final email = _emailController.text.trim();
-    final phoneNumber = _phoneNumberController.text.trim();
-
-    //Kiem tra thong tin nguoi dung nhap vao
-    String resultCheck = _checkInputData();
-    if (resultCheck != 'NoError') {
-      SnackbarHelperGeneral.showCustomSnackBar(context, resultCheck);
-      return;
-    }
-    //Kiem tra email hien tai co trung hay khong?
-    final emailExists = await auth.checkEmailExists(email);
-    if (emailExists) {
-      SnackbarHelperGeneral.showCustomSnackBar(
-        context,
-        "Email has been registered before!",
-      );
-    }
-
-    try {
-      await auth.signUp(email: email, password: passWord);
-      await database.addUser(
-        yourName: yourName,
-        passWord: passWord,
-        email: email,
-        phoneNumber: phoneNumber,
-      );
-      SnackbarHelperGeneral.showCustomSnackBar(
-        context,
-        "Registration successful! Please check your email for verification.",
-        backgroundColor: Colors.green,
-        seconds: 1,
-      );
-      //Chuyen sang trang email sent
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => EmailSentGeneral(destination: Login()),
-        ),
-      );
-    } catch (e) {
-      print("Error: $e");
-    }
-  }
-
-  //Function check infor of user
-  String _checkInputData() {
-    if (_yourNameController.text.isEmpty) {
-      return 'Please enter your name!';
-    }
-    if (_passWordController.text.isEmpty ||
-        _passWordController.text.length < 8) {
-      return 'Password must be at least 8 characters!';
-    }
-    if (_emailController.text.isEmpty ||
-        !_emailController.text.contains('@') ||
-        !_emailController.text.contains('.')) {
-      return 'Please enter a valid email!';
-    }
-    if (_phoneNumberController.text.isEmpty ||
-        _phoneNumberController.text.length != 10 ||
-        !RegExp(r'^[0-9]+$').hasMatch(_phoneNumberController.text)) {
-      return 'Please enter a valid 10-digit phone number!';
-    }
-
-    return 'NoError';
-  }
+  final registerController = Get.put(RegisterController());
 
   @override
   Widget build(BuildContext context) {
+    registerController.context = context;
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -116,6 +27,7 @@ class _RegisterState extends State<Register> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(height: 50),
+
               Center(
                 child: Container(
                   height: 150,
@@ -128,7 +40,9 @@ class _RegisterState extends State<Register> {
                   ),
                 ),
               ),
+
               SizedBox(height: 20),
+
               Text(
                 "Register",
                 style: TextStyle(
@@ -148,33 +62,37 @@ class _RegisterState extends State<Register> {
                 ),
               ),
               SizedBox(height: 10),
+
+              //your name
               TextFieldRegister(
-                controller: _yourNameController,
+                controller: registerController.yourNameController,
                 name: "Your name",
                 obscureText: false,
               ),
-              // TextInput(
-              //   controller: _userNameController,
-              //   name: "Username",
-              //   obscureText: false,
-              // ),
+
+              //Email
               TextFieldRegister(
-                controller: _emailController,
+                controller: registerController.emailController,
                 name: "Email",
                 obscureText: false,
               ),
+
+              //Password
               TextFieldRegister(
-                controller: _passWordController,
+                controller: registerController.passwordController,
                 name: "Password",
                 obscureText: true,
               ),
 
+              //Phone number
               TextFieldRegister(
-                controller: _phoneNumberController,
+                controller: registerController.phonenumberController,
                 name: "Phone number",
                 obscureText: false,
               ),
-              ButtonRegister(onPressed: _handleRegister),
+
+              ButtonRegister(onPressed: registerController.handleRegister),
+
               BottomRegister(
                 onPressed: () {
                   Navigator.pop(context);
