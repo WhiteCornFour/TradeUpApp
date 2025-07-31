@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:tradeupapp/firebase/auth_service.dart';
-import 'package:tradeupapp/screens/authentication/login.dart';
-import 'package:tradeupapp/screens/general/general_email_sent.dart';
-import 'package:tradeupapp/widgets/general/general_back_button.dart';
-import 'package:tradeupapp/widgets/general/general_snackbar_helper.dart';
+import 'package:get/get.dart';
+import 'package:tradeupapp/screens/authentication/controllers/forgot_password_controller.dart';
 import 'package:tradeupapp/widgets/authentication_widgets/forgotpassword_widgets/forgot_password_button_widget.dart';
 import 'package:tradeupapp/widgets/authentication_widgets/forgotpassword_widgets/forgot_password_text_field_widget.dart';
+import 'package:tradeupapp/widgets/general/general_back_button.dart';
 
 class Forgotpassword extends StatefulWidget {
   const Forgotpassword({super.key});
@@ -15,46 +13,11 @@ class Forgotpassword extends StatefulWidget {
 }
 
 class _ForgotpasswordState extends State<Forgotpassword> {
-  final TextEditingController _emailFPController = TextEditingController();
-
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    _emailFPController.clear();
-    super.dispose();
-  }
-
-  final auth = AuthServices();
-  void _handleForgotPassWord() async {
-    final email = _emailFPController.text.trim();
-    if (email.isEmpty || !email.contains('@') || !email.contains('.')) {
-      SnackbarHelperGeneral.showCustomSnackBar(
-        context,
-        'Please enter a valid email!',
-      );
-      return;
-    }
-    try {
-      await auth.forgotPassword(email);
-      SnackbarHelperGeneral.showCustomSnackBar(
-        context,
-        'Password reset email has been sent!',
-        backgroundColor: Colors.green,
-        seconds: 3,
-      );
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => EmailSentGeneral(destination: Login()),
-        ),
-      );
-    } catch (e) {
-      print('Error: $e');
-    }
-  }
+  final forgotPasswordController = Get.put(ForgotPasswordController());
 
   @override
   Widget build(BuildContext context) {
+    forgotPasswordController.context = context;
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -66,6 +29,7 @@ class _ForgotpasswordState extends State<Forgotpassword> {
             children: [
               SizedBox(height: 10),
               BackButtonCustomGeneral(),
+
               SizedBox(height: 40),
               Center(
                 child: Container(
@@ -79,6 +43,7 @@ class _ForgotpasswordState extends State<Forgotpassword> {
                   ),
                 ),
               ),
+
               SizedBox(height: 40),
               Text(
                 'Forgot password?',
@@ -88,6 +53,7 @@ class _ForgotpasswordState extends State<Forgotpassword> {
                   fontFamily: 'Roboto-Bold',
                 ),
               ),
+
               SizedBox(height: 5),
               Text(
                 'Enter the email associated with your account\nend we will send an email with instructions to\nreset your password.',
@@ -97,13 +63,17 @@ class _ForgotpasswordState extends State<Forgotpassword> {
                   color: Colors.black,
                 ),
               ),
+
               SizedBox(height: 20),
               TextFieldForgotPassword(
-                controller: _emailFPController,
+                controller: forgotPasswordController.emailFPController,
                 name: "Email",
                 obscureText: false,
               ),
-              ButtonForgotPassword(onPressed: _handleForgotPassWord),
+
+              ButtonForgotPassword(
+                onPressed: forgotPasswordController.handleForgotPassWord,
+              ),
             ],
           ),
         ),

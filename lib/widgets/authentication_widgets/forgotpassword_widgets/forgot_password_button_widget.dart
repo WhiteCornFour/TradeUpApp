@@ -17,7 +17,7 @@ class ButtonForgotPassword extends StatelessWidget {
           minWidth: double.infinity,
           height: 50,
           onPressed: onPressed,
-          color: AppColors.header,
+          color: AppColors.background,
           elevation: 0,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
@@ -27,7 +27,7 @@ class ButtonForgotPassword extends StatelessWidget {
             style: TextStyle(
               fontWeight: FontWeight.w600,
               fontSize: 15,
-              color: Colors.white,
+              color: AppColors.text,
             ),
           ),
         ),

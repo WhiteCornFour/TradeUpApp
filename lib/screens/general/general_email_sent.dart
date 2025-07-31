@@ -1,3 +1,4 @@
+import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/material.dart';
 import 'package:tradeupapp/constants/app_colors.dart';
@@ -18,10 +19,11 @@ class _EmailSentGeneralState extends State<EmailSentGeneral> {
   }
 
   void _changeToOtherScreen() {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => widget.destination),
-    );
+    // Navigator.pushReplacement(
+    //   context,
+    //   MaterialPageRoute(builder: (context) => widget.destination),
+    // );
+    Get.offAll(widget.destination);
   }
 
   void _handleOpenGmailApp() async {

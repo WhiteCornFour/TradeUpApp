@@ -17,7 +17,7 @@ class ButtonRegister extends StatelessWidget {
           minWidth: double.infinity,
           height: 50,
           onPressed: onPressed,
-          color: AppColors.header,
+          color: AppColors.background,
           elevation: 0,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
@@ -25,9 +25,9 @@ class ButtonRegister extends StatelessWidget {
           child: Text(
             "Sign Up",
             style: TextStyle(
-              fontWeight: FontWeight.w600,
-              fontSize: 15,
-              color: Colors.white,
+              fontFamily: 'Roboto-Black',
+              fontSize: 17,
+              color: AppColors.text,
             ),
           ),
         ),
