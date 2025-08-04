@@ -31,6 +31,10 @@ void main() async {
           name: '/category/:categoryName',
           page: () => CategoryProductsGeneral(),
         ),
+        GetPage(
+          name: '/login', // ➤ Thêm dòng này
+          page: () => Login(), // ➤ Thay bằng widget màn hình login của bạn
+        ),
       ],
     ),
   );

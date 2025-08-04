@@ -27,7 +27,7 @@ class _CompletePersonalInfoAuthenticationState
     //Kiểm tra thông tin người dùng nhập vô
     String resultCheck = _checkInputData();
     if (resultCheck != 'NoError') {
-      SnackbarHelperGeneral.showCustomSnackBar(context, resultCheck);
+      SnackbarHelperGeneral.showCustomSnackBar( resultCheck);
       return;
     }
 
@@ -35,7 +35,7 @@ class _CompletePersonalInfoAuthenticationState
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) {
       SnackbarHelperGeneral.showCustomSnackBar(
-        context,
+        
         "User is not logged in.",
       );
       return;
@@ -52,7 +52,7 @@ class _CompletePersonalInfoAuthenticationState
 
     if (!mounted) return;
     SnackbarHelperGeneral.showCustomSnackBar(
-      context,
+      
       'Sign Up Form Complete!!!',
     );
     Get.offAll(() => MainAppIndex());

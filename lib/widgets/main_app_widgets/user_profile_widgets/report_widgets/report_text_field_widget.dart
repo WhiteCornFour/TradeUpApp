@@ -27,7 +27,6 @@ class TextFieldReport extends StatelessWidget {
           maxLines: maxLines,
           maxLength: maxLength,
           obscureText: obscureText,
-          autofocus: false,
           decoration: InputDecoration(
             contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
             hint: Text(

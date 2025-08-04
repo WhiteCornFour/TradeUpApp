@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:tradeupapp/constants/app_colors.dart';
-import 'package:tradeupapp/firebase/auth_service.dart';
-import 'package:tradeupapp/screens/general/general_email_sent.dart';
-import 'package:tradeupapp/screens/main_app/index.dart';
+import 'package:tradeupapp/screens/main_app/profile/change_password/controller/change_password_controller.dart';
 import 'package:tradeupapp/widgets/general/general_back_button.dart';
-import 'package:tradeupapp/widgets/general/general_snackbar_helper.dart';
+import 'package:tradeupapp/widgets/main_app_widgets/user_profile_widgets/change_password_widgets/change_password_button_submit_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/user_profile_widgets/change_password_widgets/change_password_text_field_widget.dart';
 
 class ChangePassword extends StatefulWidget {
@@ -15,59 +14,11 @@ class ChangePassword extends StatefulWidget {
 }
 
 class _ChangePasswordState extends State<ChangePassword> {
-  final TextEditingController _controller = TextEditingController();
-
-  final auth = AuthServices();
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  void _handleResetPassword() async {
-    //kiem tra email nhap vao co hop le hay khong
-    if (!_controller.text.contains('@') || !_controller.text.contains('.')) {
-      SnackbarHelperGeneral.showCustomSnackBar(
-        context,
-        'Please enter a valid email!',
-      );
-      return;
-    }
-    try {
-      //kiem tra email nay co ton tai tren database hay khong
-      final methods = await auth.checkEmailExists(_controller.text);
-      if (methods) {
-        SnackbarHelperGeneral.showCustomSnackBar(
-          context,
-          "This email has not been registered!",
-        );
-        return;
-      }
-      //Gui mot email de reset password
-      await auth.resetPassword(email: _controller.text);
-      SnackbarHelperGeneral.showCustomSnackBar(
-        context,
-        "Please check your email!.",
-        backgroundColor: Colors.green,
-      );
-      //Chuyển sang trang email sent
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => EmailSentGeneral(destination: MainAppIndex()),
-        ),
-      );
-    } catch (e) {
-      SnackbarHelperGeneral.showCustomSnackBar(
-        context,
-        "An error occurred. Please try again later.",
-      );
-    }
-  }
+  final changePasswordController = Get.put(ChangePasswordController());
 
   @override
   Widget build(BuildContext context) {
+    changePasswordController.context = context;
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -117,27 +68,11 @@ class _ChangePasswordState extends State<ChangePassword> {
                 SizedBox(height: 15),
                 TextFieldChangePassword(
                   label: 'Email',
-                  controller: _controller,
+                  controller: changePasswordController.emailController,
                 ),
                 SizedBox(height: 10),
-                Center(
-                  child: MaterialButton(
-                    minWidth: double.infinity,
-                    height: 50,
-                    color: AppColors.background,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    onPressed: _handleResetPassword,
-                    child: Text(
-                      'Send Instructions',
-                      style: TextStyle(
-                        color: AppColors.text,
-                        fontFamily: 'Roboto-Black',
-                        fontSize: 15,
-                      ),
-                    ),
-                  ),
+                ButtonSubmitChangePassword(
+                  onPressed: changePasswordController.handleResetPassword,
                 ),
               ],
             ),

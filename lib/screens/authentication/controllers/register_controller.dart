@@ -35,7 +35,7 @@ class RegisterController extends GetxController {
     //Kiem tra thong tin nguoi dung nhap vao
     String resultCheck = _checkInputData();
     if (resultCheck != 'NoError') {
-      SnackbarHelperGeneral.showCustomSnackBar(context, resultCheck);
+      SnackbarHelperGeneral.showCustomSnackBar(resultCheck);
       return;
     }
     //Kiem tra email hien tai co trung hay khong?
@@ -43,7 +43,6 @@ class RegisterController extends GetxController {
     if (emailExists) {
       SnackbarHelperGeneral.showCustomSnackBar(
         // ignore: use_build_context_synchronously
-        context,
         "Email has been registered before!",
       );
     }
@@ -58,7 +57,6 @@ class RegisterController extends GetxController {
       );
       SnackbarHelperGeneral.showCustomSnackBar(
         // ignore: use_build_context_synchronously
-        context,
         "Registration successful! Please check your email for verification.",
         backgroundColor: Colors.green,
         seconds: 1,
@@ -72,8 +70,12 @@ class RegisterController extends GetxController {
         ),
       );
     } catch (e) {
-      // ignore: avoid_print
-      print("Error: $e");
+      SnackbarHelperGeneral.showCustomSnackBar(
+        // ignore: use_build_context_synchronously
+        'Error: $e',
+        backgroundColor: Colors.red,
+        seconds: 1,
+      );
     }
   }
 

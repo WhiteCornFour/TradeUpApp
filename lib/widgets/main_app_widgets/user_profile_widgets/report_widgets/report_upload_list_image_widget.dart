@@ -5,11 +5,13 @@ import 'package:tradeupapp/constants/app_colors.dart';
 class UploadImageReport extends StatefulWidget {
   final VoidCallback onPressed;
   final List<File> imageList;
+  final int numberImageUploaded;
 
   const UploadImageReport({
     super.key,
     required this.onPressed,
     required this.imageList,
+    required this.numberImageUploaded,
   });
 
   @override
@@ -66,7 +68,7 @@ class _UploadImageReportState extends State<UploadImageReport> {
                               onTap: () => _removeImage(file),
                               child: Container(
                                 padding: const EdgeInsets.all(4),
-                                decoration: BoxDecoration(
+                                decoration: const BoxDecoration(
                                   color: Colors.black45,
                                   shape: BoxShape.circle,
                                 ),
@@ -85,20 +87,34 @@ class _UploadImageReportState extends State<UploadImageReport> {
                 ),
               ),
         const SizedBox(width: 10),
-        MaterialButton(
-          color: AppColors.header,
-          shape: ContinuousRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          onPressed: widget.onPressed,
-          child: const Text(
-            'Upload Now',
-            style: TextStyle(
-              color: AppColors.text,
-              fontFamily: 'Roboto-Black',
-              fontSize: 15,
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '${widget.numberImageUploaded.toString()}/5',
+              style: TextStyle(
+                color: AppColors.header,
+                fontSize: 17,
+                fontFamily: 'Roboto-Regular',
+              ),
             ),
-          ),
+            SizedBox(height: 5),
+            MaterialButton(
+              color: AppColors.header,
+              shape: ContinuousRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              onPressed: widget.onPressed,
+              child: const Text(
+                'Upload Now',
+                style: TextStyle(
+                  color: AppColors.text,
+                  fontFamily: 'Roboto-Black',
+                  fontSize: 15,
+                ),
+              ),
+            ),
+          ],
         ),
       ],
     );
