@@ -48,7 +48,6 @@ class _Login extends State<Login> {
       if (user != null && user.emailVerified) {
         if (!mounted) return;
         SnackbarHelperGeneral.showCustomSnackBar(
-          context,
           'Sign in sucessfull!!!',
           backgroundColor: Colors.green,
         );
@@ -61,7 +60,6 @@ class _Login extends State<Login> {
     } on FirebaseAuthException catch (_) {
       if (!mounted) return;
       SnackbarHelperGeneral.showCustomSnackBar(
-        context,
         "Something went wrong!",
         backgroundColor: Colors.red,
       );
@@ -77,7 +75,6 @@ class _Login extends State<Login> {
       if (user == null) {
         if (!mounted) return;
         SnackbarHelperGeneral.showCustomSnackBar(
-          context,
           "User not found after sign in!",
         );
         return;
@@ -91,7 +88,7 @@ class _Login extends State<Login> {
       //
       //   await FirebaseAuth.instance.signOut(); //Sign out khỏi tài khoản Google
       //   SnackbarHelper.showCustomSnackBar(
-      //     context,
+      //
       //     "This email was registered manually. Please sign in with Email & Password.",
       //   );
       //   return;
@@ -109,9 +106,9 @@ class _Login extends State<Login> {
         //Đã có thông tin thì vào trang chính
         if (!mounted) return;
         SnackbarHelperGeneral.showCustomSnackBar(
-          context,
           'Sign in sucessfull!',
           backgroundColor: Colors.green,
+          seconds: 2,
         );
         await Future.delayed(Duration(seconds: 2)); //Chờ 2 giây
         Get.offAll(() => MainAppIndex());
@@ -121,10 +118,7 @@ class _Login extends State<Login> {
       }
     } catch (e) {
       if (!mounted) return;
-      SnackbarHelperGeneral.showCustomSnackBar(
-        context,
-        "Google SignIn failed!",
-      );
+      SnackbarHelperGeneral.showCustomSnackBar("Google SignIn failed!");
     }
   }
 

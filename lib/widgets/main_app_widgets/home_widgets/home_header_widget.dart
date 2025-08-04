@@ -77,7 +77,7 @@ class HeaderHome extends StatelessWidget {
                   print('Unlocked Business');
                 } else {
                   SnackbarHelperGeneral.showCustomSnackBar(
-                    context,
+                   
                     'Please turn on Bussiness mode in your Profile before using it.',
                   );
                   // hoặc show snackbar nếu cần

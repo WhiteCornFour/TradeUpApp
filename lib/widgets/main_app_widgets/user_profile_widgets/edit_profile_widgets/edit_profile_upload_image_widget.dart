@@ -25,8 +25,7 @@ class UploadImageEditProfile extends StatelessWidget {
     } else if (hasNetworkImage) {
       avatarProvider = NetworkImage(imageUrl!);
     } else {
-      avatarProvider =
-          const AssetImage('assets/images/avatar-user.png');
+      avatarProvider = const AssetImage('assets/images/avatar-user.png');
     }
 
     return Center(
@@ -37,10 +36,7 @@ class UploadImageEditProfile extends StatelessWidget {
             height: 120,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              image: DecorationImage(
-                image: avatarProvider,
-                fit: BoxFit.cover,
-              ),
+              image: DecorationImage(image: avatarProvider, fit: BoxFit.cover),
               border: Border.all(color: Colors.grey.shade300, width: 2),
             ),
           ),

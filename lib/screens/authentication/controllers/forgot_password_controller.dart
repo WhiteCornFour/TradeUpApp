@@ -21,7 +21,7 @@ class ForgotPasswordController extends GetxController {
     final email = emailFPController.text.trim();
     if (email.isEmpty || !email.contains('@') || !email.contains('.')) {
       SnackbarHelperGeneral.showCustomSnackBar(
-        context,
+        
         'Please enter a valid email!',
       );
       return;
@@ -30,19 +30,27 @@ class ForgotPasswordController extends GetxController {
       await auth.forgotPassword(email);
       emailFPController.text = '';
       SnackbarHelperGeneral.showCustomSnackBar(
-        context,
+        // ignore: use_build_context_synchronously
+        
         'Password reset email has been sent!',
         backgroundColor: Colors.green,
         seconds: 3,
       );
       Navigator.push(
+        // ignore: use_build_context_synchronously
         context,
         MaterialPageRoute(
           builder: (context) => EmailSentGeneral(destination: Login()),
         ),
       );
     } catch (e) {
-      print('Error: $e');
+      SnackbarHelperGeneral.showCustomSnackBar(
+        // ignore: use_build_context_synchronously
+        
+        'Error: $e',
+        backgroundColor: Colors.red,
+        seconds: 1,
+      );
     }
   }
 }

@@ -1,37 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tradeupapp/constants/app_colors.dart';
 
-//------------Demo dung Dialog Custom------------------
-// class Dialog1 extends StatelessWidget {
-//   const Dialog1({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     void backFunc() {
-//       Navigator.of(context).pop();
-//     }
-
-//     return Scaffold(
-//       body: Container(
-//         margin: EdgeInsets.symmetric(vertical: 50),
-//         width: double.infinity,
-//         color: Colors.amberAccent,
-//         child: MaterialButton(
-//           onPressed: () {
-//             CustomDialog.show(
-//               context,
-//               'String',
-//               'Test',
-//               backFunc,
-//               image: 'warning.jpg',
-//             );
-//           },
-//           child: Text("Mở hộp thoại"),
-//         ),
-//       ),
-//     );
-//   }
-// }
 class CustomDialogGeneral {
   static void show(
     BuildContext context,
