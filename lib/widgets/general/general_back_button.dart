@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:tradeupapp/constants/app_colors.dart';
 
 class BackButtonCustomGeneral extends StatelessWidget {
@@ -9,7 +8,7 @@ class BackButtonCustomGeneral extends StatelessWidget {
     return GestureDetector(
       onTap: () => Navigator.pop(context),
       child: Row(
-        mainAxisSize: MainAxisSize.min, // không chiếm hết chiều ngang
+        mainAxisSize: MainAxisSize.min,
         children: [
           Icon(Icons.arrow_back_ios, color: AppColors.header, size: 20),
           Text(

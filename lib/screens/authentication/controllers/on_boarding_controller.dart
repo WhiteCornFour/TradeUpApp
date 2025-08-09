@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tradeupapp/screens/authentication/login.dart';
 
 class OnBoardingController extends GetxController {
+  //Có thể gọi ra controller ở bất kỳ đâu mà ko cần gọi lại
   static OnBoardingController get instance => Get.find();
 
   ///Variables

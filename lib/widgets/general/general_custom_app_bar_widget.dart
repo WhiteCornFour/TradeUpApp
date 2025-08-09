@@ -23,9 +23,7 @@ class CustomAppBarGeneral extends StatelessWidget
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16),
-      child: AppBar(
+    return  AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: backgroundColor,
         leading: showBackArrow
@@ -37,8 +35,8 @@ class CustomAppBarGeneral extends StatelessWidget
               )
             : null,
         title: title,
+        titleSpacing: 16,
         actions: actions,
-      ),
     );
   }
 
