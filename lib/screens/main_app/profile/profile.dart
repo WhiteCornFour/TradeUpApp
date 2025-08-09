@@ -22,11 +22,11 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
   final profileController = Get.put(ProfileController());
 
-  @override
-  void initState() {
-    super.initState();
-    profileController.loadUser();
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   profileController.loadUser();
+  // }
 
   void _handleBusinessMode(bool value) {
     if (value) {

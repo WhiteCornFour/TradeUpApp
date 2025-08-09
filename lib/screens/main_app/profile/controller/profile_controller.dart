@@ -15,6 +15,14 @@ class ProfileController extends GetxController {
   final isLoading = false.obs;
 
   late BuildContext context;
+  //Khai báo biến database
+  final db = DatabaseService();
+  @override
+  void onInit() {
+    listenUser();
+    super.onInit();
+  }
+
   //load user data from firebase
   Future<void> loadUser() async {
     isLoading.value = true;
@@ -33,6 +41,22 @@ class ProfileController extends GetxController {
     } finally {
       isLoading.value = false;
     }
+  }
+
+  void listenUser() {
+    final currentUser = FirebaseAuth.instance.currentUser;
+    if (currentUser == null) return;
+
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(currentUser.uid)
+        .snapshots()
+        .listen((doc) {
+          if (doc.exists) {
+            user.value = UserModal.fromMap(doc.data()!);
+            isBusinessMode.value = user.value?.role != 1;
+          }
+        });
   }
 
   // Đăng xuất
@@ -68,10 +92,11 @@ class ProfileController extends GetxController {
       final currentUser = FirebaseAuth.instance.currentUser;
       if (currentUser == null) throw Exception("User not logged in");
 
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(currentUser.uid)
-          .update({'role': role});
+      // await FirebaseFirestore.instance
+      //     .collection('users')
+      //     .doc(currentUser.uid)
+      //     .update({'role': role});
+      await db.updateUserRoleDB(currentUser.uid, role);
 
       isBusinessMode.value = role != 1;
       await loadUser(); // reload dữ liệu người dùng

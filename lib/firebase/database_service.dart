@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/widgets.dart';
+import 'package:tradeupapp/models/user_model.dart';
 
 class DatabaseService {
-  //Ham them 1 user vao firebase khi nguoi dung dang ky thanh cong
+  //RegisterController: Ham them 1 user vao firebase khi nguoi dung dang ky thanh cong
   Future<void> addUser({
     required String yourName,
     required String passWord,
@@ -61,6 +61,54 @@ class DatabaseService {
       }
     } catch (e) {
       print('Loi khi load user: $e');
+      return null;
+    }
+  }
+
+  //ProfileController: Hàm cập nhật role của người dùng sang bussiness khi truyền vào idUser
+  Future<void> updateUserRoleDB(String idUser, int role) async {
+    await FirebaseFirestore.instance.collection('users').doc(idUser).update({
+      'role': role,
+    });
+  }
+
+  //EditProfileController: Hàm cập nhật thông tin user
+  Future<void> updateDataUser(Map<String, dynamic> data, String idUser) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(idUser)
+          .update(data);
+    } catch (e) {
+      print('Error updateDataUser: $e');
+    }
+  }
+
+  //ReportController: Hàm thêm 1 report mới vào db
+  Future<void> addNewReport(Map<String, dynamic> data) async {
+    try {
+      await FirebaseFirestore.instance.collection('reports').add(data);
+    } catch (e) {
+      print('Error addNewReport: $e');
+    }
+  }
+
+  //ChatRoomController: Hàm fetch thông tin của user khi truyền vào id
+  Future<UserModal?> fetchUserModelById(String idUser) async {
+    try {
+      final docSnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(idUser)
+          .get();
+
+      if (docSnapshot.exists) {
+        return UserModal.fromMap(docSnapshot.data()!);
+      } else {
+        print('User not found');
+        return null;
+      }
+    } catch (e) {
+      print('Error fetching user: $e');
       return null;
     }
   }

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:tradeupapp/firebase/database_service.dart';
 import 'package:tradeupapp/models/chat_room_model.dart';
 import 'package:tradeupapp/models/user_model.dart';
 
@@ -11,7 +12,8 @@ class ChatRoomController extends GetxController {
   final isLoading = false.obs;
   //Lưu ds lọc
   var filteredChatRooms = <ChatRoomModel>[].obs;
-
+  //Khai báo biến database
+  final db = DatabaseService();
   @override
   void onInit() {
     super.onInit();
@@ -50,7 +52,7 @@ class ChatRoomController extends GetxController {
               final otherUserId = room.idUser1 == uid
                   ? room.idUser2
                   : room.idUser1;
-              final user = await fetchUserModelById(otherUserId);
+              final user = await db.fetchUserModelById(otherUserId);
               if (user != null) {
                 room.otherUserName = user.fullName;
                 room.otherUserAvatar = user.avtURL;
@@ -68,26 +70,6 @@ class ChatRoomController extends GetxController {
             isLoading.value = false;
           },
         );
-  }
-
-  //load thong tin image va fullname cua nguoi duoc nhan
-  Future<UserModal?> fetchUserModelById(String idUser) async {
-    try {
-      final docSnapshot = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(idUser)
-          .get();
-
-      if (docSnapshot.exists) {
-        return UserModal.fromMap(docSnapshot.data()!);
-      } else {
-        print('User not found');
-        return null;
-      }
-    } catch (e) {
-      print('Error fetching user: $e');
-      return null;
-    }
   }
 
   void filterChatRoomsByName(String query) {
