@@ -37,7 +37,6 @@ class _ProfileState extends State<Profile> {
         () {
           profileController.updateUserRole(2);
           SnackbarHelperGeneral.showCustomSnackBar(
-     
             'You are now in Business Mode',
             backgroundColor: Colors.green,
           );
@@ -160,7 +159,7 @@ class _ProfileState extends State<Profile> {
                       label: 'Change password',
                     ),
                     CategoryFuncUserProfile(
-                      onTap: profileController.logout,
+                      onTap: profileController.handleLogout,
                       icon: Icons.logout,
                       label: 'Log out',
                     ),

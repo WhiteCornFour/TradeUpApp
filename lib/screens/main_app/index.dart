@@ -2,7 +2,7 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:tradeupapp/constants/app_colors.dart';
-import 'package:tradeupapp/screens/main_app/chat/chat.dart';
+import 'package:tradeupapp/screens/main_app/chat/chat_room.dart';
 import 'package:tradeupapp/screens/main_app/home/home.dart';
 import 'package:tradeupapp/screens/main_app/shop/shop.dart';
 import 'package:tradeupapp/screens/main_app/news/news.dart';
@@ -17,7 +17,7 @@ class MainAppIndex extends StatefulWidget {
 
 class _Index extends State<MainAppIndex> {
   final navigationKey = GlobalKey<CurvedNavigationBarState>();
-  int index = 0;
+  int index = 0; //thứ tự trang
 
   final screens = [Home(), Chat(), Shop(), News(), Profile()];
 

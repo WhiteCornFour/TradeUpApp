@@ -29,7 +29,7 @@ class _Home extends State<Home> {
   int _currentPage = 0; //Update dot indicator index
 
   Future<UserModal?> _loadUserFuture() async {
-    final userData = await DatabaseService().loadCurrentUser();
+    final userData = await DatabaseService().fetchDataCurrentUser();
     if (userData != null) {
       return UserModal.fromMap(userData);
     }
