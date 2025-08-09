@@ -111,7 +111,7 @@ class _EditProfileState extends State<EditProfile> {
               ),
 
               //Button Cofirm
-              ButtonSubmitEditProfile(
+              ButtonSubmitEditProfile(          
                 onPressed: () {
                   CustomDialogGeneral.show(
                     context,

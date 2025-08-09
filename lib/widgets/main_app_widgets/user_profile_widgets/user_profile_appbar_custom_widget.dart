@@ -41,23 +41,45 @@ class AppbarCustomUserProfile extends StatelessWidget
                 height: 60,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  image: DecorationImage(
-                    image: hasImage
-                        ? NetworkImage(imageURL!)
-                        : const AssetImage('assets/images/avatar-user.png')
-                              as ImageProvider,
-                    fit: BoxFit.cover,
-                  ),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.2), // màu bóng mờ
+                      color: Colors.black.withOpacity(0.2),
                       spreadRadius: 2,
                       blurRadius: 6,
-                      offset: Offset(0, 3), // dịch bóng xuống dưới
+                      offset: Offset(0, 3),
                     ),
                   ],
                 ),
+                child: ClipOval(
+                  child: hasImage
+                      ? Image.network(
+                          imageURL!,
+                          fit: BoxFit.cover,
+                          loadingBuilder: (context, child, loadingProgress) {
+                            if (loadingProgress == null) {
+                              // Ảnh load xong
+                              return child;
+                            }
+                            // Đang load => hiện ảnh mặc định hoặc shimmer
+                            return Image.asset(
+                              'assets/images/avatar-user.png',
+                              fit: BoxFit.cover,
+                            );
+                          },
+                          errorBuilder: (context, error, stackTrace) {
+                            return Image.asset(
+                              'assets/images/avatar-user.png',
+                              fit: BoxFit.cover,
+                            );
+                          },
+                        )
+                      : Image.asset(
+                          'assets/images/avatar-user.png',
+                          fit: BoxFit.cover,
+                        ),
+                ),
               ),
+
               const SizedBox(width: 10),
 
               // User Info

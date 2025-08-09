@@ -37,6 +37,13 @@ class _Home extends State<Home> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       homeController.loadUser();
     });
+
+  Future<UserModal?> _loadUserFuture() async {
+    final userData = await DatabaseService().fetchDataCurrentUser();
+    if (userData != null) {
+      return UserModal.fromMap(userData);
+    }
+    return null;
   }
 
   @override

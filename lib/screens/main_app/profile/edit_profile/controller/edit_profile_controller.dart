@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart' hide Location;
@@ -29,12 +28,14 @@ class EditProfileController extends GetxController {
   final imageFile = Rxn<File>(); // File ảnh mới
   final imageURL = ''.obs; // URL ảnh từ Firebase
 
+  //Khai báo biến database
+  final db = DatabaseService();
   // Load dữ liệu người dùng
   Future<void> loadUser() async {
     isLoading.value = true;
-    
+
     try {
-      final data = await DatabaseService().loadCurrentUser();
+      final data = await DatabaseService().fetchDataCurrentUser();
       if (data != null) {
         user.value = UserModal.fromMap(data);
       }
@@ -49,7 +50,6 @@ class EditProfileController extends GetxController {
       imageURL.value = userData.avtURL ?? '';
     } catch (e) {
       SnackbarHelperGeneral.showCustomSnackBar(
-
         'Error: $e',
         backgroundColor: Colors.red,
         seconds: 1,
@@ -230,30 +230,30 @@ class EditProfileController extends GetxController {
 
     String? validationMessage = _validateUserInfoBeforeUpdate();
     if (validationMessage != null) {
-      SnackbarHelperGeneral.showCustomSnackBar( validationMessage);
+      SnackbarHelperGeneral.showCustomSnackBar(validationMessage);
       return;
     }
 
-    final userDoc = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(currentUser!.uid)
-        .get();
+    // final userDoc = await FirebaseFirestore.instance
+    //     .collection('users')
+    //     .doc(currentUser!.uid)
+    //     .get();
+    final currentUserModel = await db.fetchUserModelById(currentUser!.uid);
 
-    final currentUserModel = UserModal.fromMap(userDoc.data()!);
-
+    //final currentUserModel = UserModal.fromMap(userDoc.data()!);
     String? url;
     if (imageFile.value != null) {
       url = await _uploadToCloudinary(imageFile.value!);
       if (url == null) {
         SnackbarHelperGeneral.showCustomSnackBar(
-
           'Failed to upload image. Please try again.',
           backgroundColor: Colors.red,
         );
         return;
       }
     } else {
-      url = currentUserModel.avtURL;
+      // url = currentUserModel.avtURL;
+      url = currentUserModel!.avtURL;
     }
 
     final updatedUser = UserModal(
@@ -265,19 +265,19 @@ class EditProfileController extends GetxController {
       address: addressController.text.trim(),
       phoneNumber: phoneNumberController.text.trim(),
       tagName: tagNameController.text.trim(),
-      role: currentUserModel.role,
+      role: currentUserModel!.role,
       rating: currentUserModel.rating,
     );
 
-    await FirebaseFirestore.instance
-        .collection('users')
-        .doc(currentUser.uid)
-        .update(updatedUser.toMap());
+    // await FirebaseFirestore.instance
+    //     .collection('users')
+    //     .doc(currentUser.uid)
+    //     .update(updatedUser.toMap());
+    await db.updateDataUser(updatedUser.toMap(), currentUser.uid);
 
     loadUser();
 
     SnackbarHelperGeneral.showCustomSnackBar(
-
       'Your profile has been updated successfully.',
       backgroundColor: Colors.green,
     );
