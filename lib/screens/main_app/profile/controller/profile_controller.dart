@@ -6,6 +6,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:tradeupapp/firebase/auth_service.dart';
 import 'package:tradeupapp/firebase/database_service.dart';
 import 'package:tradeupapp/models/user_model.dart';
+import 'package:tradeupapp/widgets/general/general_custom_dialog.dart';
 import 'package:tradeupapp/widgets/general/general_snackbar_helper.dart';
 
 class ProfileController extends GetxController {
@@ -18,14 +19,13 @@ class ProfileController extends GetxController {
   Future<void> loadUser() async {
     isLoading.value = true;
     try {
-      final data = await DatabaseService().loadCurrentUser();
+      final data = await DatabaseService().fetchDataCurrentUser();
       if (data != null) {
         user.value = UserModal.fromMap(data);
         isBusinessMode.value = user.value?.role != 1;
       }
     } catch (e) {
       SnackbarHelperGeneral.showCustomSnackBar(
-
         'Error: $e',
         backgroundColor: Colors.red,
         seconds: 1,
@@ -36,7 +36,7 @@ class ProfileController extends GetxController {
   }
 
   // Đăng xuất
-  Future<void> logout() async {
+  Future<void> _logout() async {
     try {
       await authServices.value.signOut();
       await GoogleSignIn().signOut();
@@ -48,6 +48,18 @@ class ProfileController extends GetxController {
         seconds: 1,
       );
     }
+  }
+
+  void handleLogout() {
+    CustomDialogGeneral.show(
+      context,
+      'Log out',
+      'Are you sure you want to log out?',
+      () {
+        _logout();
+      },
+      numberOfButton: 2,
+    );
   }
 
   // Cập nhật Role người dùng
@@ -65,7 +77,6 @@ class ProfileController extends GetxController {
       await loadUser(); // reload dữ liệu người dùng
     } catch (e) {
       SnackbarHelperGeneral.showCustomSnackBar(
-
         'Error: $e',
         backgroundColor: Colors.red,
         seconds: 1,

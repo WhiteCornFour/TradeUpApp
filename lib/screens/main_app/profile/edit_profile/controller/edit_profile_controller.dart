@@ -32,9 +32,9 @@ class EditProfileController extends GetxController {
   // Load dữ liệu người dùng
   Future<void> loadUser() async {
     isLoading.value = true;
-    
+
     try {
-      final data = await DatabaseService().loadCurrentUser();
+      final data = await DatabaseService().fetchDataCurrentUser();
       if (data != null) {
         user.value = UserModal.fromMap(data);
       }
@@ -49,7 +49,6 @@ class EditProfileController extends GetxController {
       imageURL.value = userData.avtURL ?? '';
     } catch (e) {
       SnackbarHelperGeneral.showCustomSnackBar(
-
         'Error: $e',
         backgroundColor: Colors.red,
         seconds: 1,
@@ -230,7 +229,7 @@ class EditProfileController extends GetxController {
 
     String? validationMessage = _validateUserInfoBeforeUpdate();
     if (validationMessage != null) {
-      SnackbarHelperGeneral.showCustomSnackBar( validationMessage);
+      SnackbarHelperGeneral.showCustomSnackBar(validationMessage);
       return;
     }
 
@@ -246,7 +245,6 @@ class EditProfileController extends GetxController {
       url = await _uploadToCloudinary(imageFile.value!);
       if (url == null) {
         SnackbarHelperGeneral.showCustomSnackBar(
-
           'Failed to upload image. Please try again.',
           backgroundColor: Colors.red,
         );
@@ -277,7 +275,6 @@ class EditProfileController extends GetxController {
     loadUser();
 
     SnackbarHelperGeneral.showCustomSnackBar(
-
       'Your profile has been updated successfully.',
       backgroundColor: Colors.green,
     );
