@@ -12,6 +12,7 @@ class AllCategoriesGeneral extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: CustomAppBarGeneral(
         showBackArrow: false,
         backgroundColor: Colors.white,

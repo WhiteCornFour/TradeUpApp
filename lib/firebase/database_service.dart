@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:tradeupapp/models/product_model.dart';
 
 class DatabaseService {
   Future<void> addUser({
@@ -59,6 +60,28 @@ class DatabaseService {
     } catch (e) {
       print('Loi khi load user: $e');
       return null;
+    }
+  }
+
+  Future<void> addProduct(ProductModel product) async {
+    try {
+      //Tạo ID mới cho sản phẩm
+      final docRef = FirebaseFirestore.instance.collection('products').doc();
+
+      //Set ID cho sản phẩm trước khi lưu
+      product.id = docRef.id;
+
+      //Đảm bảo giá trị price là double
+      if (product.productPrice != null) {
+        product.productPrice = product.productPrice!.toDouble();
+      }
+
+      //Lưu dữ liệu lên Firestore
+      await docRef.set(product.toMap());
+
+      print("✅ Thêm sản phẩm thành công: ${docRef.id}");
+    } catch (e) {
+      print("❌ Lỗi khi thêm sản phẩm: $e");
     }
   }
 }

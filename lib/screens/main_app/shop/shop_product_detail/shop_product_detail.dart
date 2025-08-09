@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:readmore/readmore.dart';
 import 'package:tradeupapp/constants/app_colors.dart';
@@ -73,7 +74,9 @@ class _ProductDetailShopState extends State<ProductDetailShop> {
                         left: 0,
                         right: 0,
                         child: CustomAppBarGeneral(
-                          showBackArrow: true,
+                          showBackArrow: false,
+                          leadingIcon: Iconsax.arrow_left_2,
+                          leadingOnPressed: Get.back,
                           actions: [
                             Padding(
                               padding: const EdgeInsets.only(right: 10),

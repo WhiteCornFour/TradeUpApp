@@ -8,7 +8,7 @@ class BackButtonCustomGeneral extends StatelessWidget {
     return GestureDetector(
       onTap: () => Navigator.pop(context, true),
       child: Row(
-        mainAxisSize: MainAxisSize.min, // không chiếm hết chiều ngang
+        mainAxisSize: MainAxisSize.min,
         children: [
           Icon(Icons.arrow_back_ios, color: AppColors.header, size: 20),
           Text(

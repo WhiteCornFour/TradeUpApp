@@ -12,17 +12,19 @@ class ButtonGeneral extends StatelessWidget {
     this.icon,
     this.iconDistance = 12,
     this.isOutlined = false,
+    this.fontSize = 16,
   });
 
   final String text;
   final VoidCallback? onPressed;
   final Color backgroundColor;
   final double borderRadius;
-  final double width;
+  final double? width;
   final double height;
   final double iconDistance;
   final IconData? icon;
   final bool isOutlined;
+  final double fontSize;
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +54,7 @@ class ButtonGeneral extends StatelessWidget {
             Text(
               text,
               style: TextStyle(
-                fontSize: 16,
+                fontSize: fontSize,
                 fontFamily: 'Roboto-Bold',
                 color: contentColor,
               ),

@@ -35,7 +35,6 @@ class _CompletePersonalInfoAuthenticationState
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) {
       SnackbarHelperGeneral.showCustomSnackBar(
-        
         "User is not logged in.",
       );
       return;
@@ -52,7 +51,6 @@ class _CompletePersonalInfoAuthenticationState
 
     if (!mounted) return;
     SnackbarHelperGeneral.showCustomSnackBar(
-      
       'Sign Up Form Complete!!!',
     );
     Get.offAll(() => MainAppIndex());

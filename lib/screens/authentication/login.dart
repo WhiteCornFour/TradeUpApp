@@ -1,15 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tradeupapp/constants/app_colors.dart';
-import 'package:tradeupapp/firebase/auth_service.dart';
-import 'package:tradeupapp/screens/authentication/complete_personal_info.dart';
+import 'package:tradeupapp/screens/authentication/controllers/login_controller.dart';
 import 'package:tradeupapp/screens/authentication/forgot_password.dart';
 import 'package:tradeupapp/screens/authentication/register.dart';
 import 'package:tradeupapp/screens/debug/debug.dart';
-import 'package:tradeupapp/screens/main_app/index.dart';
-import 'package:tradeupapp/widgets/general/general_snackbar_helper.dart';
 import 'package:tradeupapp/widgets/authentication_widgets/login_widgets/login_text_field_widget.dart';
 
 class Login extends StatefulWidget {
@@ -19,108 +14,7 @@ class Login extends StatefulWidget {
 }
 
 class _Login extends State<Login> {
-  final TextEditingController controllerEmail = TextEditingController();
-  final TextEditingController controllerPassword = TextEditingController();
-
-  @override
-  void dispose() {
-    controllerEmail.clear();
-    controllerPassword.clear();
-    super.dispose();
-  }
-
-  //Nhan thông tin của User mới từ Register gửi qua
-  String errorMessage = '';
-
-  void signIn() async {
-    final email = controllerEmail.text.trim();
-    final password = controllerPassword.text.trim();
-    try {
-      //Đăng nhập
-      final credential = await AuthServices().signIn(
-        email: email,
-        password: password,
-      );
-      //Reload lấy thông tin mới nhất
-      final user = credential.user;
-      await user?.reload();
-      //Kiem tra tai khoan da verify chưa
-      if (user != null && user.emailVerified) {
-        if (!mounted) return;
-        SnackbarHelperGeneral.showCustomSnackBar(
-          'Sign in sucessfull!!!',
-          backgroundColor: Colors.green,
-        );
-        await Future.delayed(Duration(seconds: 2)); //Chờ 2 giây
-        Get.offAll(() => MainAppIndex());
-      } else {
-        Get.replace(() => Login());
-        await AuthServices().signOut();
-      }
-    } on FirebaseAuthException catch (_) {
-      if (!mounted) return;
-      SnackbarHelperGeneral.showCustomSnackBar(
-        "Something went wrong!",
-        backgroundColor: Colors.red,
-      );
-    }
-  }
-
-  void signInWithGoogle() async {
-    try {
-      //Đăng nhập Google
-      final userCredential = await authServices.value.signInWithGoogle();
-      final user = userCredential.user;
-
-      if (user == null) {
-        if (!mounted) return;
-        SnackbarHelperGeneral.showCustomSnackBar(
-          "User not found after sign in!",
-        );
-        return;
-      }
-
-      // //Kiểm tra nếu email đã tồn tại với phương thức khác
-      // final signInMethods = await FirebaseAuth.instance
-      //     .fetchSignInMethodsForEmail(user.email!);
-
-      // if (signInMethods.contains('password')) {
-      //
-      //   await FirebaseAuth.instance.signOut(); //Sign out khỏi tài khoản Google
-      //   SnackbarHelper.showCustomSnackBar(
-      //
-      //     "This email was registered manually. Please sign in with Email & Password.",
-      //   );
-      //   return;
-      // }
-
-      final uid = user.uid;
-
-      //Kiểm tra xem đã có thông tin trong Firestore chưa
-      final userDoc = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(uid)
-          .get();
-
-      if (userDoc.exists) {
-        //Đã có thông tin thì vào trang chính
-        if (!mounted) return;
-        SnackbarHelperGeneral.showCustomSnackBar(
-          'Sign in sucessfull!',
-          backgroundColor: Colors.green,
-          seconds: 2,
-        );
-        await Future.delayed(Duration(seconds: 2)); //Chờ 2 giây
-        Get.offAll(() => MainAppIndex());
-      } else {
-        //Chưa đủ thông tin chuyển sang trang điền thông tin
-        Get.to(() => const CompletePersonalInfoAuthentication());
-      }
-    } catch (e) {
-      if (!mounted) return;
-      SnackbarHelperGeneral.showCustomSnackBar("Google SignIn failed!");
-    }
-  }
+  final loginController = Get.put(LoginController());
 
   @override
   Widget build(BuildContext context) {
@@ -170,11 +64,11 @@ class _Login extends State<Login> {
                         Column(
                           children: <Widget>[
                             TextFieldLogin(
-                              controller: controllerEmail,
+                              controller: loginController.controllerEmail,
                               label: 'Email',
                             ),
                             TextFieldLogin(
-                              controller: controllerPassword,
+                              controller: loginController.controllerPassword,
                               label: 'Password',
                               obscureText: true,
                             ),
@@ -205,7 +99,7 @@ class _Login extends State<Login> {
                         MaterialButton(
                           minWidth: double.infinity,
                           height: 50,
-                          onPressed: signIn,
+                          onPressed: loginController.signIn,
                           color: AppColors.background,
                           elevation: 0,
                           shape: RoundedRectangleBorder(
@@ -235,7 +129,7 @@ class _Login extends State<Login> {
                   Container(
                     margin: EdgeInsets.symmetric(horizontal: 36),
                     child: OutlinedButton(
-                      onPressed: signInWithGoogle,
+                      onPressed: loginController.signInWithGoogle,
                       style: OutlinedButton.styleFrom(
                         backgroundColor: Colors.grey.shade200,
                         side: BorderSide(color: AppColors.background, width: 1),

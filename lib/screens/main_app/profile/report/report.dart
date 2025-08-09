@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import 'package:tradeupapp/constants/app_colors.dart';
-
 import 'package:tradeupapp/screens/main_app/profile/report/controller/report_controller.dart';
 import 'package:tradeupapp/widgets/general/general_back_button.dart';
 import 'package:tradeupapp/widgets/general/general_custom_dialog.dart';
-
 import 'package:tradeupapp/widgets/main_app_widgets/user_profile_widgets/report_widgets/report_submit_button_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/user_profile_widgets/report_widgets/report_text_field_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/user_profile_widgets/report_widgets/report_upload_list_image_widget.dart';

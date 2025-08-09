@@ -9,7 +9,7 @@ final List<CategoryModel> categories = [
     112,
     Colors.blue[100]!,
     Colors.blue[600]!,
-    'lib/assets/images/categories_background_images/electronics_background.jpg',
+    'assets/images/categories_background_images/electronics_background.jpg',
   ),
   CategoryModel.listItem(
     'Vehicles',
@@ -17,7 +17,7 @@ final List<CategoryModel> categories = [
     78,
     Colors.orange[100]!,
     Colors.orange[600]!,
-    'lib/assets/images/categories_background_images/vehicles_background.jpg',
+    'assets/images/categories_background_images/vehicles_background.jpg',
   ),
   CategoryModel.listItem(
     'Appliances',
@@ -25,7 +25,7 @@ final List<CategoryModel> categories = [
     54,
     Colors.green[100]!,
     Colors.green[600]!,
-    'lib/assets/images/categories_background_images/appliances_background.jpg',
+    'assets/images/categories_background_images/appliances_background.jpg',
   ),
   CategoryModel.listItem(
     'Fashion',
@@ -33,7 +33,7 @@ final List<CategoryModel> categories = [
     98,
     Colors.purple[100]!,
     Colors.purple[600]!,
-    'lib/assets/images/categories_background_images/electronics_background.jpg',
+    'assets/images/categories_background_images/electronics_background.jpg',
   ),
   CategoryModel.listItem(
     'Phones',
@@ -41,7 +41,7 @@ final List<CategoryModel> categories = [
     134,
     Colors.teal[100]!,
     Colors.teal[600]!,
-    'lib/assets/images/categories_background_images/electronics_background.jpg',
+    'assets/images/categories_background_images/electronics_background.jpg',
   ),
   CategoryModel.listItem(
     'Computers',
@@ -49,7 +49,7 @@ final List<CategoryModel> categories = [
     88,
     Colors.lightBlue[100]!,
     Colors.blue[600]!,
-    'lib/assets/images/categories_background_images/electronics_background.jpg',
+    'assets/images/categories_background_images/electronics_background.jpg',
   ),
   CategoryModel.listItem(
     'Sports',
@@ -57,7 +57,7 @@ final List<CategoryModel> categories = [
     43,
     Colors.red[100]!,
     Colors.red[600]!,
-    'lib/assets/images/categories_background_images/electronics_background.jpg',
+    'assets/images/categories_background_images/electronics_background.jpg',
   ),
   CategoryModel.listItem(
     'Books',
@@ -65,7 +65,7 @@ final List<CategoryModel> categories = [
     61,
     Colors.brown[100]!,
     Colors.brown[600]!,
-    'lib/assets/images/categories_background_images/electronics_background.jpg',
+    'assets/images/categories_background_images/electronics_background.jpg',
   ),
   CategoryModel.listItem(
     'Toys',
@@ -73,7 +73,7 @@ final List<CategoryModel> categories = [
     49,
     Colors.yellow[100]!,
     Colors.yellow[800]!,
-    'lib/assets/images/categories_background_images/electronics_background.jpg',
+    'assets/images/categories_background_images/electronics_background.jpg',
   ),
   CategoryModel.listItem(
     'Beauty',
@@ -81,7 +81,7 @@ final List<CategoryModel> categories = [
     72,
     Colors.pink[100]!,
     Colors.pink[400]!,
-    'lib/assets/images/categories_background_images/electronics_background.jpg',
+    'assets/images/categories_background_images/electronics_background.jpg',
   ),
   CategoryModel.listItem(
     'Furniture',
@@ -89,7 +89,7 @@ final List<CategoryModel> categories = [
     35,
     Colors.cyan[100]!,
     Colors.cyan[600]!,
-    'lib/assets/images/categories_background_images/electronics_background.jpg',
+    'assets/images/categories_background_images/electronics_background.jpg',
   ),
   CategoryModel.listItem(
     'Food',
@@ -97,7 +97,7 @@ final List<CategoryModel> categories = [
     58,
     Colors.lime[100]!,
     Colors.lime[700]!,
-    'lib/assets/images/categories_background_images/electronics_background.jpg',
+    'assets/images/categories_background_images/electronics_background.jpg',
   ),
   CategoryModel.listItem(
     'Pets',
@@ -105,7 +105,7 @@ final List<CategoryModel> categories = [
     26,
     Colors.indigo[100]!,
     Colors.indigo[600]!,
-    'lib/assets/images/categories_background_images/electronics_background.jpg',
+    'assets/images/categories_background_images/electronics_background.jpg',
   ),
   CategoryModel.listItem(
     'Others',
@@ -113,6 +113,6 @@ final List<CategoryModel> categories = [
     12,
     Colors.grey[200]!,
     Colors.grey[600]!,
-    'lib/assets/images/categories_background_images/electronics_background.jpg',
+    'assets/images/categories_background_images/electronics_background.jpg',
   ),
 ];
