@@ -9,6 +9,7 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:tradeupapp/constants/app_colors.dart';
+import 'package:tradeupapp/firebase/database_service.dart';
 import 'package:tradeupapp/models/report_model.dart';
 import 'package:tradeupapp/widgets/general/general_snackbar_helper.dart';
 
@@ -17,6 +18,9 @@ class ReportController extends GetxController {
   final tagnameTargetController = TextEditingController();
   RxList<File> imageList = <File>[].obs;
   late final BuildContext context;
+
+  //Khai báo biến database
+  final db = DatabaseService();
 
   @override
   void onClose() {
@@ -54,7 +58,6 @@ class ReportController extends GetxController {
     } else {
       SnackbarHelperGeneral.showCustomSnackBar(
         // ignore: use_build_context_synchronously
-        
         'Upload failed: ${response.statusCode}',
         backgroundColor: Colors.red,
       );
@@ -67,7 +70,6 @@ class ReportController extends GetxController {
     final currentUser = FirebaseAuth.instance.currentUser;
     if (contentFeedBackController.text.isEmpty) {
       SnackbarHelperGeneral.showCustomSnackBar(
-        
         'Enter the details of what you want to report!',
         backgroundColor: Colors.red,
       );
@@ -82,7 +84,6 @@ class ReportController extends GetxController {
           url = await uploadToCloudinary(imageFile);
           if (url == null) {
             SnackbarHelperGeneral.showCustomSnackBar(
-              
               'Failed to upload image. Please try again.',
               backgroundColor: Colors.red,
             );
@@ -103,20 +104,20 @@ class ReportController extends GetxController {
         status: 0,
         createdAt: Timestamp.now().toString(),
       );
+      
       //Thêm report lên firebase
-      await FirebaseFirestore.instance
-          .collection('reports')
-          .add(reportData.toMap());
+      // await FirebaseFirestore.instance
+      //     .collection('reports')
+      //     .add(reportData.toMap());
+      await db.addNewReport(reportData.toMap());
       // Clear UI
       _clearTextField();
       SnackbarHelperGeneral.showCustomSnackBar(
-        
         'Your report has been submitted successfully.',
         backgroundColor: Colors.green,
       );
     } catch (e) {
       SnackbarHelperGeneral.showCustomSnackBar(
-        
         'Something went wrong. Please try again.',
         backgroundColor: Colors.red,
       );
@@ -195,7 +196,6 @@ class ReportController extends GetxController {
   Future<void> _pickImageFromGallery() async {
     if (imageList.length > 4) {
       SnackbarHelperGeneral.showCustomSnackBar(
-        
         'Only 5 images are allowed for upload!',
         backgroundColor: Colors.orange,
       );
@@ -216,7 +216,6 @@ class ReportController extends GetxController {
   Future<void> _pickImageFromCamera() async {
     if (imageList.length > 4) {
       SnackbarHelperGeneral.showCustomSnackBar(
-        
         'Only 5 images are allowed for upload!',
         backgroundColor: Colors.orange,
       );

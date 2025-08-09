@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart' hide Location;
@@ -29,6 +28,8 @@ class EditProfileController extends GetxController {
   final imageFile = Rxn<File>(); // File ảnh mới
   final imageURL = ''.obs; // URL ảnh từ Firebase
 
+  //Khai báo biến database
+  final db = DatabaseService();
   // Load dữ liệu người dùng
   Future<void> loadUser() async {
     isLoading.value = true;
@@ -233,13 +234,13 @@ class EditProfileController extends GetxController {
       return;
     }
 
-    final userDoc = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(currentUser!.uid)
-        .get();
+    // final userDoc = await FirebaseFirestore.instance
+    //     .collection('users')
+    //     .doc(currentUser!.uid)
+    //     .get();
+    final currentUserModel = await db.fetchUserModelById(currentUser!.uid);
 
-    final currentUserModel = UserModal.fromMap(userDoc.data()!);
-
+    //final currentUserModel = UserModal.fromMap(userDoc.data()!);
     String? url;
     if (imageFile.value != null) {
       url = await _uploadToCloudinary(imageFile.value!);
@@ -251,7 +252,8 @@ class EditProfileController extends GetxController {
         return;
       }
     } else {
-      url = currentUserModel.avtURL;
+      // url = currentUserModel.avtURL;
+      url = currentUserModel!.avtURL;
     }
 
     final updatedUser = UserModal(
@@ -263,14 +265,15 @@ class EditProfileController extends GetxController {
       address: addressController.text.trim(),
       phoneNumber: phoneNumberController.text.trim(),
       tagName: tagNameController.text.trim(),
-      role: currentUserModel.role,
+      role: currentUserModel!.role,
       rating: currentUserModel.rating,
     );
 
-    await FirebaseFirestore.instance
-        .collection('users')
-        .doc(currentUser.uid)
-        .update(updatedUser.toMap());
+    // await FirebaseFirestore.instance
+    //     .collection('users')
+    //     .doc(currentUser.uid)
+    //     .update(updatedUser.toMap());
+    await db.updateDataUser(updatedUser.toMap(), currentUser.uid);
 
     loadUser();
 

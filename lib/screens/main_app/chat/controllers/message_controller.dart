@@ -27,32 +27,35 @@ class MessageController extends GetxController {
   final imageFile = Rxn<File>();
   //isLoadingButton
   var isLoadingButton = false.obs;
+  //Khai báo biến database
+  final db = DatabaseService();
 
   MessageController({required this.idOtherUser, required this.idChatRoom});
 
   @override
-  void onInit() {
-    _fetchUserModelById(idOtherUser);
+  void onInit() async {
+    user.value = await db.fetchUserModelById(idOtherUser);
+    // _fetchUserModelById(idOtherUser);
     _fetchAllMessages();
     super.onInit();
   }
 
-  Future<void> _fetchUserModelById(String idUser) async {
-    try {
-      final docSnapshot = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(idUser)
-          .get();
+  // Future<void> _fetchUserModelById(String idUser) async {
+  //   try {
+  //     final docSnapshot = await FirebaseFirestore.instance
+  //         .collection('users')
+  //         .doc(idUser)
+  //         .get();
 
-      if (docSnapshot.exists) {
-        user.value = UserModal.fromMap(docSnapshot.data()!);
-      } else {
-        print('User not found');
-      }
-    } catch (e) {
-      print('Error fetching user: $e');
-    }
-  }
+  //     if (docSnapshot.exists) {
+  //       user.value = UserModal.fromMap(docSnapshot.data()!);
+  //     } else {
+  //       print('User not found');
+  //     }
+  //   } catch (e) {
+  //     print('Error fetching user: $e');
+  //   }
+  // }
 
   void _fetchAllMessages() {
     if (idChatRoom.isEmpty) {
