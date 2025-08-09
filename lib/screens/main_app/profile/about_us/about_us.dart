@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tradeupapp/constants/app_colors.dart';
 import 'package:tradeupapp/widgets/general/general_back_button.dart';
 
 class AboutUs extends StatelessWidget {

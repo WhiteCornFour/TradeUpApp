@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:tradeupapp/constants/app_colors.dart';
 
 class BackButtonCustomGeneral extends StatelessWidget {

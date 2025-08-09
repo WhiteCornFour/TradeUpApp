@@ -4,7 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:tradeupapp/firebase/database_service.dart';
 import 'package:tradeupapp/models/chat_room_model.dart';
-import 'package:tradeupapp/models/user_model.dart';
 
 class ChatRoomController extends GetxController {
   final searchController = TextEditingController();

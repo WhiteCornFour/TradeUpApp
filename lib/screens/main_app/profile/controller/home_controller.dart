@@ -14,7 +14,7 @@ class HomeController extends GetxController {
 
   Future<void> loadUser() async {
     isLoading.value = true;
-    final userData = await DatabaseService().loadCurrentUser();
+    final userData = await DatabaseService().fetchDataCurrentUser();
     if (userData != null) {
       user.value = UserModal.fromMap(userData);
     }

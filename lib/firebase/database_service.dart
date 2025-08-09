@@ -85,6 +85,8 @@ class DatabaseService {
       print("✅ Thêm sản phẩm thành công: ${docRef.id}");
     } catch (e) {
       print("❌ Lỗi khi thêm sản phẩm: $e");
+    }
+  }
 
   //ProfileController: Hàm cập nhật role của người dùng sang bussiness khi truyền vào idUser
   Future<void> updateUserRoleDB(String idUser, int role) async {

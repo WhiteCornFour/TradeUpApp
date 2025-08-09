@@ -23,27 +23,16 @@ class Home extends StatefulWidget {
 
 class _Home extends State<Home> {
   final List<CategoryModel> allCategories = categories;
-
   final PageController _pageController = PageController(viewportFraction: 0.92);
-  int _currentPage = 0; //Update dot indicator index
-
+  int _currentPage = 0;
   final homeController = Get.put(HomeController());
 
   @override
   void initState() {
     super.initState();
-    //Hoãn lại tác vụ đến khi UI render xong mới chạy, 
-    //Tránh việc sửa state khi widget đang build.
     WidgetsBinding.instance.addPostFrameCallback((_) {
       homeController.loadUser();
     });
-
-  Future<UserModal?> _loadUserFuture() async {
-    final userData = await DatabaseService().fetchDataCurrentUser();
-    if (userData != null) {
-      return UserModal.fromMap(userData);
-    }
-    return null;
   }
 
   @override
@@ -87,23 +76,17 @@ class _Home extends State<Home> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Welcome + Avatar + Wishlist
                 HeaderHome(
                   userName: user.fullName ?? 'Cannot Find User Name',
                   userAvatar: user.avtURL ?? '',
                   role: user.role ?? 0,
                 ),
-
-                //Searching Group
                 SearchingGroupHome(itemCount: 138),
-
-                //Header Section: Sort by Category
                 HeaderSectionGeneral(
                   title: 'Sort by Category',
                   icon: Iconsax.category,
                   onTap: () => Get.to(() => AllCategoriesGeneral()),
                 ),
-
                 SizedBox(
                   height: 210,
                   child: PageView(
@@ -135,8 +118,6 @@ class _Home extends State<Home> {
                     ],
                   ),
                 ),
-
-                //Dot Indicator
                 SizedBox(
                   height: 16,
                   child: Row(
@@ -157,24 +138,16 @@ class _Home extends State<Home> {
                     }),
                   ),
                 ),
-
                 const SizedBox(height: 20),
-
-                //Header Section: Discover
                 HeaderSectionGeneral(
                   title: 'Discover',
                   icon: Iconsax.ticket_star,
                 ),
-                SizedBox(height: 10),
-
-                //Sort Option Button
+                const SizedBox(height: 10),
                 SortOptionGroupHome(),
-                SizedBox(height: 15),
-
-                //GridView Products
+                const SizedBox(height: 15),
                 GridViewProductVerticalListGeneral(itemCount: 4),
-
-                SizedBox(height: 30),
+                const SizedBox(height: 30),
               ],
             ),
           ),
