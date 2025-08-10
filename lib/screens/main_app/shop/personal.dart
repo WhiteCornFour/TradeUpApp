@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:tradeupapp/constants/app_colors.dart';
 import 'package:tradeupapp/firebase/auth_service.dart';
 import 'package:tradeupapp/screens/main_app/shop/controllers/personal_controller.dart';
-import 'package:tradeupapp/screens/main_app/shop/shop_product_detail.dart';
+import 'package:tradeupapp/screens/main_app/shop/shop_product_detail/shop_product_detail.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/personal/personal_appbar_custom_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/personal/personal_avt_user_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/personal/personal_button_add_new_feed_widget.dart';
