@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:tradeupapp/firebase/auth_service.dart';
 import 'package:tradeupapp/screens/main_app/shop/personal.dart';
+import 'package:tradeupapp/screens/main_app/shop/shop_add_product/shop_add_product.dart';
 import 'package:tradeupapp/widgets/general/general_snackbar_helper.dart';
 
 class HeaderHome extends StatelessWidget {
@@ -88,7 +89,6 @@ class HeaderHome extends StatelessWidget {
                   SnackbarHelperGeneral.showCustomSnackBar(
                     'Please turn on Bussiness mode in your Profile before using it.',
                   );
-                  // hoặc show snackbar nếu cần
                 }
               },
             ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:tradeupapp/screens/main_app/shop/shop_product_detail.dart';
+import 'package:tradeupapp/screens/main_app/shop/shop_product_detail/shop_product_detail.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/shop_pop_menu/shop_pop_menu_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/shop_post_card/shop_post_card_widget.dart';
 import 'package:tradeupapp/widgets/general/general_search_app_bar_widget.dart';
@@ -17,6 +17,7 @@ class _Shop extends State<Shop> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       resizeToAvoidBottomInset: false,
       body: SafeArea(
         bottom: false,

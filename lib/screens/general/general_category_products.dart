@@ -12,6 +12,7 @@ class CategoryProductsGeneral extends StatelessWidget {
     final CategoryModel category = Get.arguments as CategoryModel;
 
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Column(
           children: [

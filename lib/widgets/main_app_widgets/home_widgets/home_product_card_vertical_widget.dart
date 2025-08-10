@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:tradeupapp/constants/app_colors.dart';
-import 'package:tradeupapp/screens/main_app/shop/shop_product_detail.dart';
+import 'package:tradeupapp/screens/main_app/shop/shop_product_detail/shop_product_detail.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/home_widgets/home_image_container_widget.dart';
 import 'package:tradeupapp/widgets/general/general_book_marked_toggle_icon_widget.dart';
 
