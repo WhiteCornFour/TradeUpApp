@@ -8,6 +8,7 @@ import 'package:tradeupapp/screens/authentication/on_boarding.dart';
 import 'package:tradeupapp/screens/main_app/chat/message.dart';
 import 'package:tradeupapp/screens/main_app/index.dart';
 import 'package:tradeupapp/screens/general/general_category_products.dart';
+import 'package:tradeupapp/screens/main_app/shop/personal.dart';
 
 import 'firebase_options.dart';
 
