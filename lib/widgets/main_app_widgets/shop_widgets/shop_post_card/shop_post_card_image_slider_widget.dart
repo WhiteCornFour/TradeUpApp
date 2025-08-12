@@ -51,6 +51,7 @@ class _PostCardImageSliderShopState extends State<PostCardImageSliderShop> {
                   width: double.infinity,
                   height: 400,
                   applyImageRadius: false,
+                  isNetworkImage: true,
                 );
               }).toList(),
             ),

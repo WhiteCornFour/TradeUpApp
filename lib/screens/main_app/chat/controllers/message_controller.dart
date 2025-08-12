@@ -59,6 +59,7 @@ class MessageController extends GetxController {
 
   void _fetchAllMessages() {
     if (idChatRoom.isEmpty) {
+      // ignore: avoid_print
       print('Id Chat room is Empty!');
       return;
     }
@@ -82,6 +83,7 @@ class MessageController extends GetxController {
             isLoading.value = false;
           },
           onError: (e) {
+            // ignore: avoid_print
             print("Error: $e");
             isLoading.value = false;
           },
@@ -132,6 +134,7 @@ class MessageController extends GetxController {
       await DatabaseService().addNewMessage(message.toJson(), idChatRoom);
       isLoadingButton.value = false;
     } catch (e) {
+      // ignore: avoid_print
       print('Error: $e');
     } finally {
       // Dọn dẹp controller sau khi gửi
