@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:tradeupapp/constants/app_colors.dart';
 import 'package:tradeupapp/firebase/auth_service.dart';
 import 'package:tradeupapp/screens/main_app/shop/controllers/personal_controller.dart';
 import 'package:tradeupapp/screens/main_app/shop/shop_product_detail/shop_product_detail.dart';
+import 'package:tradeupapp/widgets/general/general_custom_dialog.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/personal/personal_appbar_custom_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/personal/personal_avt_user_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/personal/personal_button_add_new_feed_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/personal/personal_button_chat_with_user_widget.dart';
+import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/personal/personal_dialog_rating_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/personal/personal_information_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/shop_post_card/shop_post_card_widget.dart';
 
@@ -28,6 +31,38 @@ class _PersonalState extends State<Personal> {
   void initState() {
     personalController = Get.put(PersonalController(idUser: widget.idUser));
     super.initState();
+  }
+
+  //hàm covert thời gian của createAt
+  String _formatIsoToNgayGio(String iso) {
+    if (iso.isEmpty) return 'Unknown';
+    final date = DateTime.parse(iso).toLocal();
+    final ngay = DateFormat('d/M/yyyy').format(date);
+    final gio = DateFormat('HH:mm').format(date);
+    return '$ngay at $gio';
+  }
+
+  //Show dialog de rating
+  void _showDialogRating(BuildContext context) {
+    DialogRatingPersonal.show(
+      context,
+      onSubmit: (ratingPoint) {
+        personalController.handleUpdateRating(ratingPoint);
+      },
+    );
+  }
+
+  //Show dialog de xac nhan chat voi user
+  void _showDialogChatWithUser() {
+    CustomDialogGeneral.show(
+      context,
+      'Confirm to Start Chat',
+      'Are you sure you want to start a conversation with ${personalController.userData.value!.fullName!}?',
+      () {
+        personalController.handleSendMessage();
+      },
+      numberOfButton: 2,
+    );
   }
 
   @override
@@ -68,8 +103,9 @@ class _PersonalState extends State<Personal> {
                       return InformationPersonal(
                         fullname: user.fullName ?? 'user123',
                         tagName: user.tagName ?? '@user123',
-                        rating: user.rating.toString(),
+                        rating: personalController.rating.toString(),
                         bio: user.bio ?? '',
+                        totalReview: user.totalReviews.toString(),
                       );
                     }
                     return InformationPersonal(
@@ -77,14 +113,22 @@ class _PersonalState extends State<Personal> {
                       tagName: "Loading...",
                       rating: 'Loading...',
                       bio: 'Loading...',
+                      totalReview: '',
                     );
                   }),
 
                   //Button chat with user
                   isVisibleButton == 0
-                      ? ButtonChatWithUserPersonal()
+                      ? ButtonChatWithUserPersonal(
+                          idUser: 'Hihi',
+                          onPressedChat: _showDialogChatWithUser,
+                          onPressedRating: () {
+                            _showDialogRating(context);
+                          },
+                        )
                       : SizedBox(),
 
+                  SizedBox(height: 10),
                   //Product list
                   Align(
                     alignment: Alignment.topLeft,
@@ -102,30 +146,43 @@ class _PersonalState extends State<Personal> {
                   SizedBox(height: 10),
                   //Danh sach cac bai feed cua user nay
                   Expanded(
-                    child: ListView.builder(
-                      itemCount: 10,
-                      physics: BouncingScrollPhysics(),
-                      itemBuilder: (context, index) {
-                        return PostCardShop(
-                          onPressed: () => Get.to(() => ProductDetailShop()),
-                          imageUrls: [
-                            'assets/images/sample_images/sample2.jpg',
-                            'assets/images/sample_images/sample3.jpg',
-                            'assets/images/sample_images/sample4.jpg',
-                          ],
-                          description:
-                              'JBL Flip 6 is a portable waterproof speaker with bold sound. '
-                              '\nWith its racetrack-shaped driver, this speaker delivers high output and booming bass. '
-                              '\nIt features PartyBoost for pairing multiple speakers and has up to 12 hours of battery life. '
-                              '\nContact throug bio.',
-                          userName: 'Kathe Timber',
-                          userAvatar:
-                              'https://media.istockphoto.com/id/1317804578/photo/one-businesswoman-headshot-smiling-at-the-camera.jpg?s=612x612&w=0&k=20&c=EqR2Lffp4tkIYzpqYh8aYIPRr-gmZliRHRxcQC5yylY=',
-                          timeAgo: '1 minute ago',
-                          likeCount: 123,
+                    child: Obx(() {
+                      if (personalController.productList.isEmpty) {
+                        return Center(
+                          child: Center(
+                            child: Text(
+                              'No posts available.',
+                              style: TextStyle(
+                                color: AppColors.header,
+                                fontFamily: 'Roboto-Medium',
+                                fontSize: 19,
+                              ),
+                            ),
+                          ),
                         );
-                      },
-                    ),
+                      }
+                      return ListView.builder(
+                        itemCount: personalController.productList.length,
+                        physics: BouncingScrollPhysics(),
+                        itemBuilder: (context, index) {
+                          final product = personalController.productList[index];
+                          return PostCardShop(
+                            onPressed: () {
+                              Get.to(() => ProductDetailShop());
+                            },
+                            imageUrls: product.imageList ?? [],
+                            description: product.productDescription ?? '',
+                            userName:
+                                personalController.userData.value?.fullName ??
+                                '',
+                            userAvatar:
+                                personalController.userData.value?.avtURL ?? '',
+                            timeAgo: _formatIsoToNgayGio(product.createdAt!),
+                            likeCount: 123,
+                          );
+                        },
+                      );
+                    }),
                   ),
                 ],
               ),
