@@ -7,7 +7,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:tradeupapp/screens/authentication/on_boarding.dart';
 import 'package:tradeupapp/screens/main_app/index.dart';
 import 'package:tradeupapp/screens/general/general_category_products.dart';
-
 import 'firebase_options.dart';
 
 void main() async {
@@ -42,6 +41,7 @@ void main() async {
 
 void checkFirebaseConnected() async {
   bool isConnected = Firebase.apps.isNotEmpty;
+  // ignore: avoid_print
   print('Firebase connected: $isConnected');
 }
 

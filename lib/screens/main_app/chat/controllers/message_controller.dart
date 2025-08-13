@@ -35,6 +35,16 @@ class MessageController extends GetxController {
   @override
   void onInit() async {
     user.value = await db.fetchUserModelById(idOtherUser);
+
+    //Kiểm tra nếu thông tin của người dùng là null thì ẩn lun phòng
+    if (user.value == null) {
+      handleDeleteChatRoom();
+      SnackbarHelperGeneral.showCustomSnackBar(
+        'Unable to open the chat room because the other user'
+        's information is no longer available.',
+        backgroundColor: Colors.red,
+      );
+    }
     // _fetchUserModelById(idOtherUser);
     _fetchAllMessages();
     super.onInit();

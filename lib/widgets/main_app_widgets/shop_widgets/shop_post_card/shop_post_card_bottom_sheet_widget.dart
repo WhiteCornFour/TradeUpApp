@@ -6,65 +6,67 @@ class PostCardBottomSheetShop extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 350,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const SizedBox(height: 20),
-          Container(
-            width: 40,
-            height: 4,
-            decoration: BoxDecoration(
-              color: Colors.grey.shade300,
-              borderRadius: BorderRadius.circular(4),
+    return SafeArea(
+      child: SizedBox(
+        height: 350,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const SizedBox(height: 20),
+            Container(
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: Colors.grey.shade300,
+                borderRadius: BorderRadius.circular(4),
+              ),
             ),
-          ),
-          const SizedBox(height: 20),
+            const SizedBox(height: 20),
 
-          _buildSheetItem(
-            icon: Icons.bookmark_outline,
-            title: 'Save',
-            onTap: () {
-              Navigator.pop(context);
-              print('Saved');
-            },
-          ),
-          _buildSheetItem(
-            icon: Iconsax.user,
-            title: 'View Account',
-            onTap: () {
-              Navigator.pop(context);
-              print('View Account');
-            },
-          ),
-          _buildSheetItem(
-            icon: Iconsax.message,
-            title: 'Chat',
-            onTap: () {
-              Navigator.pop(context);
-              print('Chat');
-            },
-          ),
-          _buildSheetItem(
-            icon: Icons.share,
-            title: 'Share',
-            onTap: () {
-              Navigator.pop(context);
-              print('Share');
-            },
-          ),
-          _buildSheetItem(
-            icon: Iconsax.warning_2,
-            title: 'Report',
-            isDestructive: true,
-            onTap: () {
-              Navigator.pop(context);
-              print('Report');
-            },
-          ),
-          const SizedBox(height: 12),
-        ],
+            _buildSheetItem(
+              icon: Icons.bookmark_outline,
+              title: 'Save',
+              onTap: () {
+                Navigator.pop(context);
+                print('Saved');
+              },
+            ),
+            _buildSheetItem(
+              icon: Iconsax.user,
+              title: 'View Account',
+              onTap: () {
+                Navigator.pop(context);
+                print('View Account');
+              },
+            ),
+            _buildSheetItem(
+              icon: Iconsax.message,
+              title: 'Chat',
+              onTap: () {
+                Navigator.pop(context);
+                print('Chat');
+              },
+            ),
+            _buildSheetItem(
+              icon: Icons.share,
+              title: 'Share',
+              onTap: () {
+                Navigator.pop(context);
+                print('Share');
+              },
+            ),
+            _buildSheetItem(
+              icon: Iconsax.warning_2,
+              title: 'Report',
+              isDestructive: true,
+              onTap: () {
+                Navigator.pop(context);
+                print('Report');
+              },
+            ),
+            const SizedBox(height: 12),
+          ],
+        ),
       ),
     );
   }

@@ -133,11 +133,15 @@ class _ProfileState extends State<Profile> {
                       icon: Icons.history,
                       label: 'Buy history',
                     ),
-                    CategoryFuncUserProfile(
-                      onTap: () {},
-                      icon: Icons.history,
-                      label: 'Sales history',
-                    ),
+
+                    user.role == 2
+                        ? CategoryFuncUserProfile(
+                            onTap: () {},
+                            icon: Icons.history,
+                            label: 'Sales history',
+                          )
+                        : SizedBox(),
+
                     CategoryFuncUserProfile(
                       onTap: () =>
                           profileController.navigatorFunc(const Report()),
@@ -147,6 +151,7 @@ class _ProfileState extends State<Profile> {
                   ],
                 ),
                 const SizedBox(height: 7),
+
                 // Account Section
                 CategoryFuncProfile(
                   title: 'Account',
