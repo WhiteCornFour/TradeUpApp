@@ -4,6 +4,7 @@ import 'package:iconsax/iconsax.dart';
 import 'package:tradeupapp/constants/app_colors.dart';
 import 'package:tradeupapp/models/product_model.dart';
 import 'package:tradeupapp/screens/main_app/shop/shop_product_detail/shop_product_detail.dart';
+import 'package:tradeupapp/widgets/general/general_search_app_bar_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/home_widgets/home_image_container_widget.dart';
 import 'package:tradeupapp/widgets/general/general_book_marked_toggle_icon_widget.dart';
 
@@ -19,8 +20,10 @@ class ProductCardVerticalHome extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // print(product.userId);
     final userName = userIdToUserName[product.userId] ?? 'Unknown User';
+    print('Product: ${product.productName}, userId: ${product.userId}');
+    print('Mapped name: ${homeController.getUserNameById(product.userId)}');
+
     return GestureDetector(
       onTap: () {
         Get.to(() => ProductDetailShop());

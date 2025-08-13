@@ -5,7 +5,12 @@ import 'package:tradeupapp/widgets/main_app_widgets/home_widgets/home_drawer/hom
 import 'package:tradeupapp/widgets/general/general_header_section_widget.dart';
 
 class DrawerConditionChoiceChipsGroupHome extends StatefulWidget {
-  const DrawerConditionChoiceChipsGroupHome({super.key});
+  final ValueChanged<String>? onSelectionChanged;
+
+  const DrawerConditionChoiceChipsGroupHome({
+    super.key,
+    this.onSelectionChanged,
+  });
 
   @override
   State<DrawerConditionChoiceChipsGroupHome> createState() =>
@@ -14,9 +19,15 @@ class DrawerConditionChoiceChipsGroupHome extends StatefulWidget {
 
 class _DrawerConditionChoiceChipsGroupHomeState
     extends State<DrawerConditionChoiceChipsGroupHome> {
-  String selectedCondition = 'New';
+  String selectedCondition = '';
 
-  final List<String> conditions = ['New', 'Used', 'Refurbished'];
+  final List<String> conditions = [
+    'Brand New',
+    'Like New',
+    'Refurbished',
+    'Used - Good',
+    'Used - Acceptable',
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -44,6 +55,7 @@ class _DrawerConditionChoiceChipsGroupHomeState
                 setState(() {
                   selectedCondition = condition;
                 });
+                widget.onSelectionChanged?.call(selectedCondition);
               },
             );
           }).toList(),

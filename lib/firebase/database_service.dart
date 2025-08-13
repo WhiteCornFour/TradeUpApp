@@ -305,6 +305,7 @@ class DatabaseService {
 
       List<UserModal> users = snapshot.docs.map((doc) {
         final data = doc.data() as Map<String, dynamic>;
+        print('Doc ID: ${doc.id}, Data: $data');
         return UserModal.fromMap(data, docId: doc.id);
       }).toList();
 
@@ -354,20 +355,22 @@ class DatabaseService {
   }
 
   //Lấy danh sách lịch sử tìm kiếm của người dùng
-  Future<List<SearchHistoryModel>> getUserSearchHistory(String userId) async {
+  Stream<List<SearchHistoryModel>> getUserSearchHistory(String userId) {
     try {
-      final snapshot = await FirebaseFirestore.instance
+      return FirebaseFirestore.instance
           .collection('searchHistory')
           .where('userId', isEqualTo: userId)
           .orderBy('createdAt', descending: true)
-          .get();
-
-      return snapshot.docs
-          .map((doc) => SearchHistoryModel.fromMap(doc.data()))
-          .toList();
+          .snapshots()
+          .map((snapshot) {
+            return snapshot.docs.map((doc) {
+              return SearchHistoryModel.fromMap(doc.data());
+            }).toList();
+          });
     } catch (e) {
       print('Error getting user search history: $e');
-      return [];
+      // Trả về Stream rỗng nếu có lỗi
+      return Stream.value([]);
     }
   }
 

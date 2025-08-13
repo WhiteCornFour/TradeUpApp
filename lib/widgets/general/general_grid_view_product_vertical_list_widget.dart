@@ -8,6 +8,7 @@ class GridViewProductVerticalListGeneral extends StatelessWidget {
   const GridViewProductVerticalListGeneral({
     super.key,
     required this.productList,
+    required this.userIdToUserName,
     this.crossAxisCount = 2,
     this.crossAxisSpacing = 16,
     this.mainAxisSpacing = 16,
@@ -16,6 +17,7 @@ class GridViewProductVerticalListGeneral extends StatelessWidget {
 
   final List<ProductModel> productList;
   final int crossAxisCount;
+  final Map<String, String> userIdToUserName;
   final double crossAxisSpacing;
   final double mainAxisSpacing;
   final double mainAxisExtent;
@@ -23,7 +25,6 @@ class GridViewProductVerticalListGeneral extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final homeController = Get.find<HomeController>();
-
     if (productList.isEmpty) {
       //Hiển thị thông báo khi không có sản phẩm
       return SizedBox(

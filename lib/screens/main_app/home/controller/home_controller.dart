@@ -18,7 +18,7 @@ class HomeController extends GetxController {
   //Danh sách User lấy từ Firebase
   var userList = <UserModal>[].obs;
 
-  //Map userId -> userName
+  //Map cho User Id va User Name
   var userIdToUserName = <String, String>{}.obs;
 
   //Danh sách sản phẩm đã lọc theo gợi ý, tối đa 10 sản phẩm (dùng cho Sort Option Group)
@@ -47,7 +47,7 @@ class HomeController extends GetxController {
   void onInit() {
     super.onInit();
     loadUser();
-    loadUsers();
+    loadUsersAndMap();
     loadProducts();
     loadCategories();
     updateCategoryCounts();
@@ -66,28 +66,18 @@ class HomeController extends GetxController {
   }
 
   //Hàm load thông tin danh sách toàn bộ User
-  Future<void> loadUsers() async {
-    try {
-      isLoading.value = true;
-      final users = await db.getAllUsers();
-      userList.assignAll(users);
-      updateUserIdToNameMap(); // cập nhật map userId -> userName sau khi có dữ liệu userList
+  Future<void> loadUsersAndMap() async {
+    final users = await db.getAllUsers();
+    userList.assignAll(users);  
 
-      // print('User List:');
-      // for (var u in userList) {
-      //   print('UserId: ${u.userId}, UserName: ${u.fullName}');
-      // }
-
-      // // In ra map userIdToUserName
-      // print('UserId -> UserName Map:');
-      // userIdToUserName.forEach((key, value) {
-      //   print('UserId: $key -> UserName: $value');
-      // });
-    } catch (e) {
-      print('Error loading users: $e');
-    } finally {
-      isLoading.value = false;
+    // Cập nhật map ngay sau khi userList có dữ liệu
+    userIdToUserName.clear();
+    for (var u in users) {
+      if (u.userId != null && u.fullName != null) {
+        userIdToUserName[u.userId!] = u.fullName!;
+      }
     }
+    userIdToUserName.refresh(); // để Obx nhận thay đổi
   }
 
   //Hàm load thông tin danh sách Product
@@ -119,7 +109,7 @@ class HomeController extends GetxController {
     }
   }
 
-  Future<void> loadSearchHistory() async {
+  void loadSearchHistory() {
     try {
       isLoading(true);
       final id = user.value?.userId;
@@ -128,21 +118,21 @@ class HomeController extends GetxController {
         print("User ID is null, cannot load search history");
         return;
       }
-      final searchHistory = await db.getUserSearchHistory(id);
-      searchHistoryList.assignAll(searchHistory);
+
+      db.getUserSearchHistory(id).listen((history) {
+        searchHistoryList.assignAll(history);
+      });
     } catch (e) {
       print("Error loading search history: $e");
+    } finally {
+      isLoading(false);
     }
   }
 
-  //Hàm cập nhật tên dựa theo userId khi đã có userList
-  void updateUserIdToNameMap() {
-    userIdToUserName.clear();
-    for (var user in userList) {
-      if (user.userId != null && user.fullName != null) {
-        userIdToUserName[user.userId!] = user.fullName!;
-      }
-    }
+  //Hàm lấy tên user từ userId
+  String getUserNameById(String? userId) {
+    if (userId == null) return 'Unknown User';
+    return userIdToUserName[userId] ?? 'Unknown User';
   }
 
   //Sau khi load categories và products xong, gọi hàm này để cập nhật count cho từng category
@@ -239,7 +229,7 @@ class HomeController extends GetxController {
   ///-------------------------
   /// Search Product Function (Logic hiển thị và chức năng tìm kiểm)
   ///-------------------------
-  
+
   //Lưu lại content mà người dùng Search để hiện thị làm gợi ý
   void saveSearchHistory(String searchContent) {
     //Không có searchContent thi trả về
@@ -262,17 +252,17 @@ class HomeController extends GetxController {
 
   //Hàm xử lý logic tìm kiểm của ứng dụng sau khi người dùng insert keyword
   List<ProductModel> searchProducts(String keyword) {
-  if (keyword.trim().isEmpty) return [];
+    if (keyword.trim().isEmpty) return [];
 
-  //Duyệt qua tất cả các phần đáp ứng các yêu cầu: 
-  return productList.where((product) {
-    //Chuyển hết name, description và keyword sang chữ thường, giúp tìm kiếm không phân biệt hoa/thường.
-    final name = (product.productName ?? '').toLowerCase();
-    final description = (product.productDescription ?? '').toLowerCase();
-    final query = keyword.toLowerCase();
+    //Duyệt qua tất cả các phần đáp ứng các yêu cầu:
+    return productList.where((product) {
+      //Chuyển hết name, description và keyword sang chữ thường, giúp tìm kiếm không phân biệt hoa/thường.
+      final name = (product.productName ?? '').toLowerCase();
+      final description = (product.productDescription ?? '').toLowerCase();
+      final query = keyword.toLowerCase();
 
-    //Kiểm tra có chứa k
-    return name.contains(query) || description.contains(query);
-  }).toList();
-}
+      //Kiểm tra có chứa k
+      return name.contains(query) || description.contains(query);
+    }).toList();
+  }
 }
