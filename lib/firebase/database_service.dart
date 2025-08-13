@@ -479,4 +479,17 @@ class DatabaseService {
       return null;
     }
   }
+
+  //ShopController: fetch 10 data đầu tiên trên firebase
+  Stream<List<ProductModel>> getProductsRealTime({int limit = 10}) {
+    return FirebaseFirestore.instance
+        .collection('products')
+        .orderBy('createdAt', descending: true)
+        // .limit(limit)
+        .snapshots()
+        .map(
+          (event) =>
+              event.docs.map((e) => ProductModel.fromMap(e.data())).toList(),
+        );
+  }
 }

@@ -1,19 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:tradeupapp/screens/main_app/shop/shop_product_detail/shop_product_detail.dart';
+import 'package:intl/intl.dart';
+import 'package:tradeupapp/constants/app_colors.dart';
+import 'package:tradeupapp/firebase/auth_service.dart';
+import 'package:tradeupapp/screens/main_app/shop/controllers/shop_controller.dart';
+import 'package:tradeupapp/screens/main_app/shop/personal.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/shop_pop_menu/shop_pop_menu_widget.dart';
-import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/shop_post_card/shop_post_card_widget.dart';
 import 'package:tradeupapp/widgets/general/general_search_app_bar_widget.dart';
+import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/shop_post_card/shop_post_card_widget.dart';
 
 class Shop extends StatefulWidget {
   const Shop({super.key});
 
   @override
-  State<Shop> createState() => _Shop();
+  State<Shop> createState() => _ShopState();
 }
 
-class _Shop extends State<Shop> {
+class _ShopState extends State<Shop> {
+  final shopController = Get.put(ShopController());
+  final idCurrentUser = AuthServices().currentUser!.uid;
+  //hàm covert thời gian của createAt
+  String _formatIsoToNgayGio(String iso) {
+    if (iso.isEmpty) return 'Unknown';
+    final date = DateTime.parse(iso).toLocal();
+    final ngay = DateFormat('d/M/yyyy').format(date);
+    final gio = DateFormat('HH:mm').format(date);
+    return '$ngay at $gio';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,22 +37,22 @@ class _Shop extends State<Shop> {
       body: SafeArea(
         bottom: false,
         child: SingleChildScrollView(
+          physics: BouncingScrollPhysics(),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              //Search + Market + Menu
+              // Search + Market + Menu
               Padding(
-                padding: EdgeInsets.only(
+                padding: const EdgeInsets.only(
                   left: 30,
                   right: 25,
                   top: 20,
                   bottom: 20,
                 ),
                 child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
+                    const Text(
                       'Feeds',
                       style: TextStyle(
                         fontFamily: 'Roboto-Bold',
@@ -48,62 +63,85 @@ class _Shop extends State<Shop> {
                     Row(
                       children: [
                         IconButton(
-                          icon: Icon(Iconsax.search_normal),
-                          color: Colors.black,
+                          icon: const Icon(Iconsax.search_normal),
+                          color: AppColors.header,
                           onPressed: () => showSystemSearchGeneral(context),
                         ),
                         IconButton(
-                          icon: Icon(Iconsax.shop),
-                          color: Colors.black,
-                          onPressed: () {},
+                          icon: const Icon(Iconsax.shop),
+                          color: AppColors.header,
+                          onPressed: () {
+                            Get.to(Personal(idUser: idCurrentUser));
+                          },
                         ),
-                        PopMenuShop(),
+                        const PopMenuShop(),
                       ],
                     ),
                   ],
                 ),
               ),
 
-              //List of Post Card
-              //Post card
+              // List of Post Card
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 25),
-                child: Column(
-                  children: [
-                    // PostCardShop(
-                    //   onPressed: () => Get.to(() => ProductDetailShop()),
-                    //   imageUrls: [
-                    //     'assets/images/sample_images/sample2.jpg',
-                    //     'assets/images/sample_images/sample3.jpg',
-                    //     'assets/images/sample_images/sample4.jpg',
-                    //   ],
-                    //   description:
-                    //       'JBL Flip 6 is a portable waterproof speaker with bold sound. '
-                    //       '\nWith its racetrack-shaped driver, this speaker delivers high output and booming bass. '
-                    //       '\nIt features PartyBoost for pairing multiple speakers and has up to 12 hours of battery life. '
-                    //       '\nContact throug bio.',
-                    //   userName: 'Kathe Timber',
-                    //   userAvatar:
-                    //       'https://media.istockphoto.com/id/1317804578/photo/one-businesswoman-headshot-smiling-at-the-camera.jpg?s=612x612&w=0&k=20&c=EqR2Lffp4tkIYzpqYh8aYIPRr-gmZliRHRxcQC5yylY=',
-                    //   timeAgo: '1 minute ago',
-                    //   likeCount: 123,
-                    // ),
+                padding: const EdgeInsets.symmetric(horizontal: 25),
+                child: Obx(() {
+                  if (shopController.feedList.isEmpty) {
+                    return Align(
+                      alignment: Alignment.center,
+                      child: Column(
+                        children: [
+                          SizedBox(height: 100),
+                          SizedBox(
+                            height: 300,
+                            width: 500,
+                            child: Image(
+                              image: AssetImage('assets/images/noposts.png'),
+                            ),
+                          ),
+                          Text(
+                            'No feeds available!',
+                            style: TextStyle(
+                              color: AppColors.header,
+                              fontFamily: 'Roboto-Medium',
+                              fontSize: 20,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+                  //Loading chờ load đầy đủ thông tin user
+                  if (shopController.isLoadingUsers.value) {
+                    return Center(
+                      child: CircularProgressIndicator(
+                        backgroundColor: AppColors.background,
+                        color: AppColors.text,
+                      ),
+                    );
+                  }
 
-                    // PostCardShop(
-                    //   onPressed: () => {print('Post card tap')},
-                    //   imageUrls: ['assets/images/sample_images/sample.png'],
-                    //   description:
-                    //       'This is my old laptop but still use very good. If you want it you can contact with me.',
-                    //   userName: 'John Doe',
-                    //   userAvatar:
-                    //       'https://images.unsplash.com/photo-1633332755192-727a05c4013d?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dXNlcnxlbnwwfHwwfHx8MA%3D%3D',
-                    //   timeAgo: '2 hours ago',
-                    //   likeCount: 517,
-                    // ),
-                  ],
-                ),
+                  return ListView.builder(
+                    itemCount: shopController.feedList.length,
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      final feed = shopController.feedList[index];
+                      final user = shopController.usersCache[feed.userId];
+
+                      return PostCardShop(
+                        imageUrls: feed.imageList ?? [],
+                        description: feed.productDescription ?? '',
+                        userName: user?.fullName ?? 'Loading...',
+                        timeAgo: _formatIsoToNgayGio(feed.createdAt ?? ''),
+                        likeCount: 123,
+                        userAvatar: user?.avtURL ?? '',
+                      );
+                    },
+                  );
+                }),
               ),
-              SizedBox(height: 30),
+
+              const SizedBox(height: 30),
             ],
           ),
         ),

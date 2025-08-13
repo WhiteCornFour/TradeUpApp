@@ -72,7 +72,7 @@ class PersonalController extends GetxController {
   void handleSendMessage() async {
     final idCurrentUser = AuthServices().currentUser!.uid;
 
-    String? result = await DatabaseService().checkChatRoomStatus(
+    String? result = await db.checkChatRoomStatus(
       idCurrentUser,
       idUser,
     );
@@ -94,7 +94,7 @@ class PersonalController extends GetxController {
       Get.to(Message(idOtherUser: idUser, idChatRoom: result));
     } else {
       // Không tồn tại phòng → tạo mới
-      String? newId = await DatabaseService().createNewChatRoom(
+      String? newId = await db.createNewChatRoom(
         idCurrentUser,
         idUser,
       );

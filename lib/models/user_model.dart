@@ -9,7 +9,8 @@ class UserModal {
   String? _phoneNumber;
   double? _rating;
   String? _tagName;
-  int? _role;
+  int? _role; //  1 là user || 2 là bussiness
+  
   //Truyền sau
   int? total_reviews;
   int? get totalReviews => total_reviews;

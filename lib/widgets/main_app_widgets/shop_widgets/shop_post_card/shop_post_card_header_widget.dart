@@ -28,11 +28,11 @@ class PostCardHeaderShop extends StatelessWidget {
                 onTap: () {},
                 child: CircleAvatar(
                   radius: 22,
-                  backgroundImage: userAvatar != null
+                  backgroundImage: userAvatar != ''
                       ? NetworkImage(userAvatar!)
                       : null,
                   backgroundColor: Colors.grey[300],
-                  child: userAvatar == null
+                  child: userAvatar == ''
                       ? const Icon(Icons.person, color: Colors.black)
                       : null,
                 ),

@@ -16,7 +16,7 @@ import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/shop_post_card/
 
 class Personal extends StatefulWidget {
   final String idUser;
-
+  
   const Personal({super.key, required this.idUser});
 
   @override
