@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:tradeupapp/models/category_model.dart';
+import 'package:tradeupapp/models/chat_room_model.dart';
 import 'package:tradeupapp/models/product_model.dart';
 import 'package:tradeupapp/models/search_history_model.dart';
 import 'package:tradeupapp/models/user_model.dart';
@@ -17,7 +18,8 @@ class DatabaseService {
     final user = FirebaseAuth.instance.currentUser;
 
     if (user == null) {
-      print("Người dùng chưa đăng nhập");
+      // ignore: avoid_print
+      print("Người dùng chưa đăng nhập addUser");
       return;
     }
 
@@ -27,7 +29,8 @@ class DatabaseService {
     // Kiểm tra xem document đã tồn tại chưa
     final snapshot = await userDoc.get();
     if (snapshot.exists) {
-      print("Người dùng đã tồn tại trong Firestore.");
+      // ignore: avoid_print
+      print("Người dùng đã tồn tại trong Firestore. addUser");
       return;
     }
 
@@ -38,9 +41,12 @@ class DatabaseService {
       'email': email,
       'phoneNumber': phoneNumber,
       'role': role,
+      'rating': 0,
+      'total_rating': 0,
     });
 
-    print("Thêm người dùng thành công.");
+    // ignore: avoid_print
+    print("Thêm người dùng thành công. addUser");
   }
 
   //Load thong tin user hien tai
@@ -48,7 +54,8 @@ class DatabaseService {
     try {
       final currentUser = FirebaseAuth.instance.currentUser;
       if (currentUser == null) {
-        print('Chua dang nhap');
+        // ignore: avoid_print
+        print('Chua dang nhap fetchDataCurrentUser');
         return null;
       }
       //print(currentUser.uid);
@@ -59,11 +66,13 @@ class DatabaseService {
       if (docSnapshot.exists) {
         return docSnapshot.data();
       } else {
-        print('Khong tim thay thong tin cua nguoi dung');
+        // ignore: avoid_print
+        print('Khong tim thay thong tin cua nguoi dung fetchDataCurrentUser');
         return null;
       }
     } catch (e) {
-      print('Loi khi load user: $e');
+      // ignore: avoid_print
+      print('Loi khi load user fetchDataCurrentUser: $e');
       return null;
     }
   }
@@ -105,6 +114,7 @@ class DatabaseService {
           .doc(idUser)
           .update(data);
     } catch (e) {
+      // ignore: avoid_print
       print('Error updateDataUser: $e');
     }
   }
@@ -114,6 +124,7 @@ class DatabaseService {
     try {
       await FirebaseFirestore.instance.collection('reports').add(data);
     } catch (e) {
+      // ignore: avoid_print
       print('Error addNewReport: $e');
     }
   }
@@ -127,13 +138,17 @@ class DatabaseService {
           .get();
 
       if (docSnapshot.exists) {
-        return UserModal.fromMap(docSnapshot.data()!);
+        final user = UserModal.fromMap(docSnapshot.data()!);
+        user.total_reviews = docSnapshot.data()!['total_rating'].toInt();
+        return user;
       } else {
-        print('User not found');
+        // ignore: avoid_print
+        print('User not found fetchUserModelById');
         return null;
       }
     } catch (e) {
-      print('Error fetching user: $e');
+      // ignore: avoid_print
+      print('Error fetching user fetchUserModelById: $e');
       return null;
     }
   }
@@ -141,7 +156,8 @@ class DatabaseService {
   //MessageController: Hàm cập nhật lại status của 1 chat room khi truyền vào một idChatRoom
   Future<void> updateStatusRoom(String idChatRoom, int status) async {
     if (idChatRoom.isEmpty) {
-      print('Khong tim thay $idChatRoom');
+      // ignore: avoid_print
+      print('updateStatusRoom: Khong tim thay $idChatRoom');
       return;
     }
     try {
@@ -150,7 +166,8 @@ class DatabaseService {
           .doc(idChatRoom)
           .update({'status': status});
     } catch (e) {
-      print('Error: $e');
+      // ignore: avoid_print
+      print('Error updateStatusRoom: $e');
     }
   }
 
@@ -174,7 +191,8 @@ class DatabaseService {
         'lastTime': FieldValue.serverTimestamp(),
       });
     } catch (e) {
-      print('Error: $e');
+      // ignore: avoid_print
+      print('Error addNewMessage: $e');
     }
   }
 
@@ -217,6 +235,7 @@ class DatabaseService {
       // 3. Cập nhật lại lastMessage
       await chatRoomRef.update({'lastMessage': lastMessageText});
     } catch (e) {
+      // ignore: avoid_print
       print('Error updateStatusMessage: $e');
     }
   }
@@ -349,6 +368,113 @@ class DatabaseService {
     } catch (e) {
       print('Error getting user search history: $e');
       return [];
+
+  //PersonnalController: fetch danh sách product mà người dùng đã đăng khi truyền vào id người dùng
+  Future<List<ProductModel>> getProductByIdUser(String userId) async {
+    try {
+      final snapshot = await FirebaseFirestore.instance
+          .collection('products')
+          .where('userId', isEqualTo: userId)
+          .get();
+
+      final products = snapshot.docs.map((doc) {
+        return ProductModel.fromMap(doc.data());
+      }).toList();
+
+      return products;
+    } catch (e) {
+      // ignore: avoid_print
+      print('Error fetchFeedsByIdUser: $e');
+      return [];
+    }
+  }
+
+  //PersonalController: Cập nhật lại rating của user khi truyền vào id user và điểm rating
+  Future<void> updateUserRating(
+    String idUser,
+    double ratepoint,
+    int totalRating,
+  ) async {
+    try {
+      FirebaseFirestore.instance.collection('users').doc(idUser).update({
+        'rating': ratepoint,
+        'total_rating': totalRating,
+      });
+    } catch (e) {
+      // ignore: avoid_print
+      print('Error updateUserRating: $e');
+    }
+  }
+
+  //PersonalController: Kiểm tra đã có phòng chat giữa 2 ngươi dùng hay chưa
+  //Phòng chat đó có bị block hay không
+  //Khi người dùng bấm send message ở screen personal
+  Future<String?> checkChatRoomStatus(
+    String idCurrentUser,
+    String idUser2,
+  ) async {
+    try {
+      final snapshot = await FirebaseFirestore.instance
+          .collection('chatRoom')
+          .where(
+            Filter.and(
+              Filter.or(
+                Filter('idUser1', isEqualTo: idCurrentUser),
+                Filter('idUser2', isEqualTo: idCurrentUser),
+              ),
+              Filter.or(
+                Filter('idUser1', isEqualTo: idUser2),
+                Filter('idUser2', isEqualTo: idUser2),
+              ),
+            ),
+          )
+          .get();
+
+      if (snapshot.docs.isNotEmpty) {
+        final doc = snapshot.docs.first;
+        final status = doc['status'] as int;
+
+        if (status == 2) {
+          return "Block";
+        } else {
+          return doc.id; // trả về id phòng nếu không bị block
+        }
+      }
+
+      // Không có phòng nào tồn tại
+      return null;
+    } catch (e) {
+      // ignore: avoid_print
+      print('Error checkChatRoomStatus: $e');
+      return null;
+    }
+  }
+
+  //PersonalController: Tạo chat room mới khi đã kiểm tra phong chưa tồn tại
+  //Truyền vào id của 2 user
+  Future<String?> createNewChatRoom(String idUser1, String idUser2) async {
+    try {
+      // Chuẩn bị data để add
+      final chatRoomData = ChatRoomModel(
+        idUser1: idUser1,
+        idUser2: idUser2,
+        lastMessage:
+            'Let'
+            's start the conversation',
+        lastTime: Timestamp.now(),
+        status: 0,
+      ).toJson();
+
+      // Thêm document và lấy id
+      final docRef = await FirebaseFirestore.instance
+          .collection('chatRoom')
+          .add(chatRoomData);
+
+      return docRef.id; // Trả về id phòng chat vừa tạo
+    } catch (e) {
+      // ignore: avoid_print
+      print('Error createNewChatRoom: $e');
+      return null;
     }
   }
 }

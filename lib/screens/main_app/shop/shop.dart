@@ -70,36 +70,36 @@ class _Shop extends State<Shop> {
                 padding: EdgeInsets.symmetric(horizontal: 25),
                 child: Column(
                   children: [
-                    PostCardShop(
-                      onPressed: () => Get.to(() => ProductDetailShop()),
-                      imageUrls: [
-                        'assets/images/sample_images/sample2.jpg',
-                        'assets/images/sample_images/sample3.jpg',
-                        'assets/images/sample_images/sample4.jpg',
-                      ],
-                      description:
-                          'JBL Flip 6 is a portable waterproof speaker with bold sound. '
-                          '\nWith its racetrack-shaped driver, this speaker delivers high output and booming bass. '
-                          '\nIt features PartyBoost for pairing multiple speakers and has up to 12 hours of battery life. '
-                          '\nContact throug bio.',
-                      userName: 'Kathe Timber',
-                      userAvatar:
-                          'https://media.istockphoto.com/id/1317804578/photo/one-businesswoman-headshot-smiling-at-the-camera.jpg?s=612x612&w=0&k=20&c=EqR2Lffp4tkIYzpqYh8aYIPRr-gmZliRHRxcQC5yylY=',
-                      timeAgo: '1 minute ago',
-                      likeCount: 123,
-                    ),
+                    // PostCardShop(
+                    //   onPressed: () => Get.to(() => ProductDetailShop()),
+                    //   imageUrls: [
+                    //     'assets/images/sample_images/sample2.jpg',
+                    //     'assets/images/sample_images/sample3.jpg',
+                    //     'assets/images/sample_images/sample4.jpg',
+                    //   ],
+                    //   description:
+                    //       'JBL Flip 6 is a portable waterproof speaker with bold sound. '
+                    //       '\nWith its racetrack-shaped driver, this speaker delivers high output and booming bass. '
+                    //       '\nIt features PartyBoost for pairing multiple speakers and has up to 12 hours of battery life. '
+                    //       '\nContact throug bio.',
+                    //   userName: 'Kathe Timber',
+                    //   userAvatar:
+                    //       'https://media.istockphoto.com/id/1317804578/photo/one-businesswoman-headshot-smiling-at-the-camera.jpg?s=612x612&w=0&k=20&c=EqR2Lffp4tkIYzpqYh8aYIPRr-gmZliRHRxcQC5yylY=',
+                    //   timeAgo: '1 minute ago',
+                    //   likeCount: 123,
+                    // ),
 
-                    PostCardShop(
-                      onPressed: () => {print('Post card tap')},
-                      imageUrls: ['assets/images/sample_images/sample.png'],
-                      description:
-                          'This is my old laptop but still use very good. If you want it you can contact with me.',
-                      userName: 'John Doe',
-                      userAvatar:
-                          'https://images.unsplash.com/photo-1633332755192-727a05c4013d?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dXNlcnxlbnwwfHwwfHx8MA%3D%3D',
-                      timeAgo: '2 hours ago',
-                      likeCount: 517,
-                    ),
+                    // PostCardShop(
+                    //   onPressed: () => {print('Post card tap')},
+                    //   imageUrls: ['assets/images/sample_images/sample.png'],
+                    //   description:
+                    //       'This is my old laptop but still use very good. If you want it you can contact with me.',
+                    //   userName: 'John Doe',
+                    //   userAvatar:
+                    //       'https://images.unsplash.com/photo-1633332755192-727a05c4013d?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dXNlcnxlbnwwfHwwfHx8MA%3D%3D',
+                    //   timeAgo: '2 hours ago',
+                    //   likeCount: 517,
+                    // ),
                   ],
                 ),
               ),

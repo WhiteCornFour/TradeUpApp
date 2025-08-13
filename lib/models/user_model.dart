@@ -10,8 +10,10 @@ class UserModal {
   double? _rating;
   String? _tagName;
   int? _role;
-
-  //Constructor
+  //Truyền sau
+  int? total_reviews;
+  int? get totalReviews => total_reviews;
+  // Constructor
   UserModal({
     String? userId,
     String? email,
@@ -24,8 +26,7 @@ class UserModal {
     double? rating,
     String? tagName,
     int? role,
-  }) : _userId = userId,
-       _email = email,
+  }) : _email = email,
        _password = password,
        _fullName = fullName,
        _avtURL = avtURL,
