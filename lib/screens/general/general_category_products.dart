@@ -38,6 +38,7 @@ class CategoryProductsGeneral extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: 10),
               child: GridViewProductVerticalListGeneral(
                 productList: filteredProducts,
+                userIdToUserName: homeController.userIdToUserName,
               ),
             ),
             SizedBox(height: 30),

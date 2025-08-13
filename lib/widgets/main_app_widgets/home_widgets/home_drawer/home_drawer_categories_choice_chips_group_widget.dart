@@ -8,10 +8,12 @@ import 'package:tradeupapp/widgets/general/general_header_section_widget.dart';
 
 class DrawerCategoriesChoiceChipsGroupHome extends StatefulWidget {
   final List<CategoryModel> categories;
+  final ValueChanged<List<String>>? onSelectionChanged;
 
   const DrawerCategoriesChoiceChipsGroupHome({
     super.key,
     required this.categories,
+    this.onSelectionChanged,
   });
 
   @override
@@ -55,6 +57,7 @@ class _DrawerCategoriesChoiceChipsGroupHomeState
                     selectedCategories.add(category.name);
                   }
                 });
+                widget.onSelectionChanged?.call(selectedCategories.toList());
               },
             );
           }).toList(),

@@ -4,14 +4,16 @@ import 'package:tradeupapp/constants/app_colors.dart';
 import 'package:tradeupapp/widgets/general/general_header_section_widget.dart';
 
 class DrawerPriceSliderHome extends StatefulWidget {
-  const DrawerPriceSliderHome({super.key});
+  final void Function(double minPrice, double maxPrice)? onPriceChanged;
+
+  const DrawerPriceSliderHome({super.key, this.onPriceChanged});
 
   @override
   State<DrawerPriceSliderHome> createState() => _DrawerPriceSliderHomeState();
 }
 
 class _DrawerPriceSliderHomeState extends State<DrawerPriceSliderHome> {
-  RangeValues values = const RangeValues(10, 90);
+  RangeValues values = const RangeValues(0, 0);
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +70,7 @@ class _DrawerPriceSliderHomeState extends State<DrawerPriceSliderHome> {
               child: RangeSlider(
                 values: values,
                 min: 0,
-                max: 100,
+                max: 10000,
                 divisions: 20,
                 labels: RangeLabels(
                   '\$${values.start.round()}',
@@ -78,6 +80,8 @@ class _DrawerPriceSliderHomeState extends State<DrawerPriceSliderHome> {
                   setState(() {
                     values = newValues;
                   });
+
+                  widget.onPriceChanged?.call(newValues.start, newValues.end);
                 },
               ),
             ),
