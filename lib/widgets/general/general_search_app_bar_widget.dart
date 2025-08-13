@@ -77,7 +77,10 @@ class CustomSearchDelegate extends SearchDelegate {
     homeController.saveSearchHistory(query);
 
     close(context, null); // Đóng search bar
-    Get.to(() => SearchProductGeneral(), arguments: query); // Truyền query sang
+    Get.to(
+      () => SearchProductGeneral(),
+      arguments: {'type': 'keyword', 'keyword': query},
+    ); // Truyền query sang
   }
 
   //Theme Custom for Search Delegate

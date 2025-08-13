@@ -34,12 +34,12 @@ class _Home extends State<Home> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await homeController.loadUser();
-      homeController.loadUsers();
-      homeController.loadProducts();
-      homeController.loadCategories();
+      await homeController.loadUsersAndMap();
+      await homeController.loadProducts();
+      await homeController.loadCategories();
 
       if (homeController.user.value != null) {
-        await homeController.loadSearchHistory();
+        homeController.loadSearchHistory();
       }
     });
   }
@@ -72,6 +72,11 @@ class _Home extends State<Home> {
       }
 
       final user = homeController.user.value!;
+      final userList = homeController.userList;
+      print("User list:");
+      for (var u in userList) {
+        print("UserId: ${u.userId}, FullName: ${u.fullName}");
+      }
       final productList = homeController.productList;
       final categoryList = homeController.categoryList;
 
@@ -158,13 +163,16 @@ class _Home extends State<Home> {
                 const SizedBox(height: 15),
                 Obx(() {
                   final products = homeController.getFilteredProducts();
+
                   return Padding(
                     padding: EdgeInsets.symmetric(horizontal: 10),
                     child: GridViewProductVerticalListGeneral(
                       productList: products,
+                      userIdToUserName: homeController.userIdToUserName,
                     ),
                   );
                 }),
+
                 const SizedBox(height: 30),
               ],
             ),

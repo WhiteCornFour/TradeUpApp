@@ -4,6 +4,7 @@ import 'package:iconsax/iconsax.dart';
 import 'package:tradeupapp/constants/app_colors.dart';
 import 'package:tradeupapp/screens/general/general_search_product.dart';
 import 'package:tradeupapp/screens/main_app/home/controller/home_controller.dart';
+import 'package:tradeupapp/screens/main_app/home/controller/home_drawer_controller.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/home_widgets/home_drawer/home_drawer_categories_choice_chips_group_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/home_widgets/home_drawer/home_drawer_condition_choice_chips_group_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/home_widgets/home_drawer/home_drawer_price_slider_widget.dart';
@@ -17,6 +18,8 @@ class DrawerHome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final homeController = Get.find<HomeController>();
+    final homeDrawerController = Get.put(HomeDrawerController());
+
     return DraggableScrollableSheet(
       expand: false,
       initialChildSize: 0.85,
@@ -42,19 +45,39 @@ class DrawerHome extends StatelessWidget {
               showViewAll: false,
             ),
             SizedBox(height: 12),
-            SearchBarHome(hintText: 'Enter your keywords'),
+            SearchBarHome(
+              hintText: 'Enter your keywords',
+              onChanged: (value) =>
+                  homeDrawerController.searchKeyword.value = value,
+            ),
             SizedBox(height: 20),
 
             //Categories Tag
-            DrawerCategoriesChoiceChipsGroupHome(categories: homeController.categoryList),
+            DrawerCategoriesChoiceChipsGroupHome(
+              categories: homeController.categoryList,
+              onSelectionChanged: (selectedCategories) {
+                homeDrawerController.selectedCategories.assignAll(
+                  selectedCategories,
+                );
+              },
+            ),
             SizedBox(height: 20),
 
             //Price Bar
-            DrawerPriceSliderHome(),
+            DrawerPriceSliderHome(
+              onPriceChanged: (min, max) {
+                homeDrawerController.minPrice.value = min;
+                homeDrawerController.maxPrice.value = max;
+              },
+            ),
             SizedBox(height: 20),
 
             //Condition
-            DrawerConditionChoiceChipsGroupHome(),
+            DrawerConditionChoiceChipsGroupHome(
+              onSelectionChanged: (value) {
+                homeDrawerController.selectedCondition.value = value;
+              },
+            ),
             SizedBox(height: 20),
 
             //Distance(optional)
@@ -65,7 +88,14 @@ class DrawerHome extends StatelessWidget {
               width: double.infinity,
               text: 'Apply',
               backgroundColor: AppColors.header,
-              onPressed: () => Get.to(() => SearchProductGeneral()),
+              onPressed: () {
+                // Kiểm tra dữ liệu
+                homeDrawerController.searchProductsWithFilters();
+                Get.to(
+                  () => SearchProductGeneral(),
+                  arguments: {'type': 'filter'},
+                );
+              },
             ),
           ],
         ),
