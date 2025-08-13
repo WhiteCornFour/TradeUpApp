@@ -2,15 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:tradeupapp/constants/app_colors.dart';
+import 'package:tradeupapp/models/product_model.dart';
 import 'package:tradeupapp/screens/main_app/shop/shop_product_detail/shop_product_detail.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/home_widgets/home_image_container_widget.dart';
 import 'package:tradeupapp/widgets/general/general_book_marked_toggle_icon_widget.dart';
 
 class ProductCardVerticalHome extends StatelessWidget {
-  const ProductCardVerticalHome({super.key});
+  const ProductCardVerticalHome({
+    super.key,
+    required this.product,
+    required this.userIdToUserName,
+  });
+
+  final ProductModel product;
+  final Map<String, String> userIdToUserName;
 
   @override
   Widget build(BuildContext context) {
+    // print(product.userId);
+    final userName = userIdToUserName[product.userId] ?? 'Unknown User';
     return GestureDetector(
       onTap: () {
         Get.to(() => ProductDetailShop());
@@ -47,39 +57,44 @@ class ProductCardVerticalHome extends StatelessWidget {
                   //Thumbnail Image
                   ImageContainerHome(
                     height: 180,
-                    imageUrl: 'assets/images/sample_images/sample.png',
+                    width: double.infinity,
+                    //Kiểm tra xem có null hoặc empty k
+                    imageUrl: product.imageList?.isNotEmpty == true
+                        ? product.imageList!.first
+                        : '',
+                    isNetworkImage: true,
                     applyImageRadius: true,
                   ),
 
                   //Sale Tag
-                  Positioned(
-                    top: 12,
-                    left: 12,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 4,
-                      ),
-                      decoration: BoxDecoration(
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.8),
-                            blurRadius: 50,
-                            offset: const Offset(0, 2),
-                            spreadRadius: 7,
-                          ),
-                        ],
-                        color: const Color(0xFFFFE248),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Text(
-                        '25%',
-                        style: Theme.of(
-                          context,
-                        ).textTheme.labelLarge!.apply(color: Colors.black),
-                      ),
-                    ),
-                  ),
+                  // Positioned(
+                  //   top: 12,
+                  //   left: 12,
+                  //   child: Container(
+                  //     padding: const EdgeInsets.symmetric(
+                  //       horizontal: 8,
+                  //       vertical: 4,
+                  //     ),
+                  //     decoration: BoxDecoration(
+                  //       boxShadow: [
+                  //         BoxShadow(
+                  //           color: Colors.black.withOpacity(0.8),
+                  //           blurRadius: 50,
+                  //           offset: const Offset(0, 2),
+                  //           spreadRadius: 7,
+                  //         ),
+                  //       ],
+                  //       color: const Color(0xFFFFE248),
+                  //       borderRadius: BorderRadius.circular(8),
+                  //     ),
+                  //     child: Text(
+                  //       '25%',
+                  //       style: Theme.of(
+                  //         context,
+                  //       ).textTheme.labelLarge!.apply(color: Colors.black),
+                  //     ),
+                  //   ),
+                  // ),
 
                   //Favourie Button
                   Positioned(
@@ -101,7 +116,7 @@ class ProductCardVerticalHome extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Legion V3 Pro 16',
+                    product.productName ?? 'Unnamed Product',
                     style: TextStyle(
                       fontSize: 14,
                       fontFamily: 'Roboto-Regular',
@@ -117,7 +132,7 @@ class ProductCardVerticalHome extends StatelessWidget {
                   Row(
                     children: [
                       Text(
-                        'Alice Smith',
+                        userName,
                         style: TextStyle(
                           fontSize: 12,
                           fontFamily: 'Roboto-Light',
@@ -143,9 +158,9 @@ class ProductCardVerticalHome extends StatelessWidget {
                     children: [
                       //Price
                       Text(
-                        '\$100.25',
+                        '\$${product.productPrice?.toStringAsFixed(2) ?? "0.00"}',
                         style: TextStyle(
-                          fontSize: 20,
+                          fontSize: 18,
                           fontFamily: 'Roboto-Bold',
                           color: Colors.black,
                         ),

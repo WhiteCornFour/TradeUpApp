@@ -14,6 +14,7 @@ class ImageContainerHome extends StatelessWidget {
     this.backgroundColor = Colors.white,
     this.isNetworkImage = false,
     this.borderRadius = 16,
+    this.imagePadding = 12,
   });
 
   final double? width, height;
@@ -26,6 +27,9 @@ class ImageContainerHome extends StatelessWidget {
   final bool isNetworkImage;
   final VoidCallback? onPressed;
   final double borderRadius;
+  final double imagePadding;
+
+  bool get hasValidAvatar => imageUrl.trim().isNotEmpty;
 
   @override
   Widget build(BuildContext context) {
@@ -42,12 +46,14 @@ class ImageContainerHome extends StatelessWidget {
         ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(borderRadius),
-          child: Image(
-            fit: fit,
-            image: isNetworkImage
-                ? NetworkImage(imageUrl)
-                : AssetImage(imageUrl) as ImageProvider,
-          ),
+          child: hasValidAvatar
+              ? Padding(
+                  padding: EdgeInsets.all(imagePadding),
+                  child: isNetworkImage
+                      ? Image.network(imageUrl, fit: fit)
+                      : Image.asset(imageUrl, fit: fit),
+                )
+              : const Icon(Icons.person, color: Colors.black),
         ),
       ),
     );

@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:tradeupapp/models/category_model.dart';
 import 'package:tradeupapp/models/chat_room_model.dart';
 import 'package:tradeupapp/models/product_model.dart';
+import 'package:tradeupapp/models/search_history_model.dart';
 import 'package:tradeupapp/models/user_model.dart';
 
 class DatabaseService {
@@ -90,11 +92,10 @@ class DatabaseService {
 
       //Lưu dữ liệu lên Firestore
       await docRef.set(product.toMap());
-      // ignore: avoid_print
-      print("✅ Thêm sản phẩm thành công addProduct: ${docRef.id}");
+
+      print("Adding product successfull: ${docRef.id}");
     } catch (e) {
-      // ignore: avoid_print
-      print("❌ Lỗi khi thêm sản phẩm addProduct: $e");
+      print("Error adding product: $e");
     }
   }
 
@@ -238,6 +239,135 @@ class DatabaseService {
       print('Error updateStatusMessage: $e');
     }
   }
+
+  //Lấy danh sách sản phẩm từ Firebase về
+  Future<List<ProductModel>> getAllProducts() async {
+    try {
+      final snapshot = await FirebaseFirestore.instance
+          .collection('products')
+          .get();
+      return snapshot.docs
+          .map((doc) => ProductModel.fromMap(doc.data()))
+          .toList();
+    } catch (e) {
+      print('Error fetching products: $e');
+      return [];
+    }
+  }
+
+  //Lấy danh sách Category từ Firebase
+  Future<List<CategoryModel>> getAllCategories() async {
+    final snapshot = await FirebaseFirestore.instance
+        .collection('categories')
+        .get();
+
+    final categories = snapshot.docs.map((doc) {
+      return CategoryModel.fromFirestore(doc.data());
+    }).toList();
+
+    return categories;
+  }
+
+  //Đếm số lượng sản phẩm của Category dựa trên Category Name chỉ đếm một loại
+  Map<String, int> countByCategory(
+    List<ProductModel> productList,
+    List<String> categoryNames,
+  ) {
+    Map<String, int> counts = {};
+
+    //Khởi tạo tất cả category count = 0
+    for (var category in categoryNames) {
+      counts[category] = 0;
+    }
+
+    for (var product in productList) {
+      if (product.categoryList != null) {
+        for (var cat in product.categoryList!) {
+          if (counts.containsKey(cat)) {
+            counts[cat] = counts[cat]! + 1;
+          } else {
+            //Nếu category mới chưa có trong map thì tạo mới
+            counts[cat] = 1;
+          }
+        }
+      }
+    }
+
+    return counts;
+  }
+
+  //Lấy tất cả User có trong danh sách
+  Future<List<UserModal>> getAllUsers() async {
+    try {
+      QuerySnapshot snapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .get();
+
+      List<UserModal> users = snapshot.docs.map((doc) {
+        final data = doc.data() as Map<String, dynamic>;
+        return UserModal.fromMap(data, docId: doc.id);
+      }).toList();
+
+      return users;
+    } catch (e) {
+      print('Error getting users: $e');
+      return [];
+    }
+  }
+
+  //Thêm lịch sử search
+  Future<void> addOrUpdateSearchHistory(
+    SearchHistoryModel searchHistory,
+  ) async {
+    try {
+      final querySnapshot = await FirebaseFirestore.instance
+          .collection('searchHistory')
+          .where('userId', isEqualTo: searchHistory.userId)
+          .where('searchContent', isEqualTo: searchHistory.searchContent)
+          .limit(1)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        //Nếu đã tồn tại -> cập nhật createdAt
+        final docId = querySnapshot.docs.first.id;
+        await FirebaseFirestore.instance
+            .collection('searchHistory')
+            .doc(docId)
+            .update({'createdAt': Timestamp.now()});
+        print(
+          "Updated search history time for: ${searchHistory.searchContent}",
+        );
+      } else {
+        //Nếu chưa tồn tại -> thêm mới searchHistory
+        final docRef = FirebaseFirestore.instance
+            .collection('searchHistory')
+            .doc();
+
+        searchHistory.id = docRef.id;
+
+        await docRef.set(searchHistory.toMap());
+        print("Added new search history: ${searchHistory.searchContent}");
+      }
+    } catch (e) {
+      print("Error add/update search history: $e");
+    }
+  }
+
+  //Lấy danh sách lịch sử tìm kiếm của người dùng
+  Future<List<SearchHistoryModel>> getUserSearchHistory(String userId) async {
+    try {
+      final snapshot = await FirebaseFirestore.instance
+          .collection('searchHistory')
+          .where('userId', isEqualTo: userId)
+          .orderBy('createdAt', descending: true)
+          .get();
+
+      return snapshot.docs
+          .map((doc) => SearchHistoryModel.fromMap(doc.data()))
+          .toList();
+    } catch (e) {
+      print('Error getting user search history: $e');
+      return [];
 
   //PersonnalController: fetch danh sách product mà người dùng đã đăng khi truyền vào id người dùng
   Future<List<ProductModel>> getProductByIdUser(String userId) async {

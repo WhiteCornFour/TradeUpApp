@@ -31,7 +31,7 @@ class CategoryHeadBannerGeneral extends StatelessWidget
             borderRadius: const BorderRadius.vertical(
               bottom: Radius.circular(24),
             ),
-            child: Image.asset(imagePath, fit: BoxFit.cover),
+            child: Image.network(imagePath, fit: BoxFit.cover),
           ),
 
           // Soft gradient overlay

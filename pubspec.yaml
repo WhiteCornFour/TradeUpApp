@@ -79,7 +79,6 @@ flutter:
     - assets/images/
     - assets/images/on_boarding_images/
     - assets/images/sample_images/
-    - assets/images/categories_background_images/
 
   fonts:
     - family: Roboto-Thin

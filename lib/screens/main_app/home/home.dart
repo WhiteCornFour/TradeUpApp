@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:tradeupapp/constants/app_colors.dart';
-import 'package:tradeupapp/models/category_model.dart';
+import 'package:tradeupapp/firebase/database_service.dart';
 import 'package:tradeupapp/screens/general/general_all_categories.dart';
-import 'package:tradeupapp/screens/main_app/profile/controller/home_controller.dart';
+import 'package:tradeupapp/screens/main_app/home/controller/home_controller.dart';
+import 'package:tradeupapp/widgets/main_app_widgets/home_widgets/home_dot_indicator_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/home_widgets/home_sort_option_group/home_sort_option_group_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/home_widgets/home_category_group_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/home_widgets/home_drawer/home_drawer_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/home_widgets/home_header_widget.dart';
-import 'package:tradeupapp/data/category_data.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/home_widgets/home_searching_group/home_searching_group_widget.dart';
 import 'package:tradeupapp/widgets/general/general_header_section_widget.dart';
 import 'package:tradeupapp/widgets/general/general_grid_view_product_vertical_list_widget.dart';
@@ -22,22 +22,32 @@ class Home extends StatefulWidget {
 }
 
 class _Home extends State<Home> {
-  final List<CategoryModel> allCategories = categories;
   final PageController _pageController = PageController(viewportFraction: 0.92);
-  int _currentPage = 0;
   final homeController = Get.put(HomeController());
+  final db = DatabaseService();
+
+  //Biến giữ số lượng cho Categories
+  Map<String, int> categoryCounts = {};
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      homeController.loadUser();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await homeController.loadUser();
+      homeController.loadUsers();
+      homeController.loadProducts();
+      homeController.loadCategories();
+
+      if (homeController.user.value != null) {
+        await homeController.loadSearchHistory();
+      }
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Obx(() {
+      //1. Kiểm tra trạng thái Loading
       if (homeController.isLoading.value) {
         return const Scaffold(
           body: Center(
@@ -49,12 +59,29 @@ class _Home extends State<Home> {
         );
       }
 
+      //2.Tất cả điều kiện check dữ liệu
+      String? errorMessage;
       if (homeController.user.value == null) {
-        return const Scaffold(
+        errorMessage = 'Cannot load user data!';
+      } else if (homeController.categoryList.length < 14) {
+        errorMessage = 'Cannot load categories list data!';
+      } else if (homeController.productList.isEmpty) {
+        errorMessage = 'Cannot load product list data!';
+      } else if (homeController.userList.isEmpty) {
+        errorMessage = 'Cannot load users list data!';
+      }
+
+      final user = homeController.user.value!;
+      final productList = homeController.productList;
+      final categoryList = homeController.categoryList;
+
+      //Kiểm tra categoryList đủ phần tử để tránh lỗi sublist out of range
+      if (errorMessage != null) {
+        return Scaffold(
           body: Center(
             child: Text(
-              'Cannot load user data!',
-              style: TextStyle(
+              errorMessage,
+              style: const TextStyle(
                 color: AppColors.header,
                 fontFamily: 'Roboto-Black',
                 fontSize: 20,
@@ -63,9 +90,6 @@ class _Home extends State<Home> {
           ),
         );
       }
-
-      final user = homeController.user.value!;
-      print(user.fullName);
 
       return Scaffold(
         endDrawer: DrawerHome(),
@@ -76,12 +100,15 @@ class _Home extends State<Home> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                //Header include: Avatar, Username, ViewProfile
                 HeaderHome(
                   userName: user.fullName ?? 'Cannot Find User Name',
                   userAvatar: user.avtURL ?? '',
                   role: user.role ?? 0,
                 ),
-                SearchingGroupHome(itemCount: 138),
+                //Search Group
+                SearchingGroupHome(itemCount: productList.length),
+                //Sort by Category
                 HeaderSectionGeneral(
                   title: 'Sort by Category',
                   icon: Iconsax.category,
@@ -93,60 +120,51 @@ class _Home extends State<Home> {
                     controller: _pageController,
                     scrollDirection: Axis.horizontal,
                     onPageChanged: (index) {
-                      setState(() {
-                        _currentPage = index;
-                      });
+                      homeController.currentPage.value = index;
                     },
-                    pageSnapping: true,
+
                     children: [
                       CategoryGroupHome(
-                        categories: allCategories.sublist(0, 3),
+                        categories: categoryList.sublist(0, 3),
                         layoutType: 1,
                       ),
                       CategoryGroupHome(
-                        categories: allCategories.sublist(3, 7),
+                        categories: categoryList.sublist(3, 7),
                         layoutType: 2,
                       ),
                       CategoryGroupHome(
-                        categories: allCategories.sublist(7, 11),
+                        categories: categoryList.sublist(7, 11),
                         layoutType: 2,
                       ),
                       CategoryGroupHome(
-                        categories: allCategories.sublist(11, 14),
+                        categories: categoryList.sublist(11, 14),
                         layoutType: 3,
                       ),
                     ],
                   ),
                 ),
-                SizedBox(
-                  height: 16,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: List.generate(4, (index) {
-                      return AnimatedContainer(
-                        duration: const Duration(milliseconds: 300),
-                        margin: const EdgeInsets.symmetric(horizontal: 4),
-                        width: _currentPage == index ? 12 : 8,
-                        height: _currentPage == index ? 12 : 8,
-                        decoration: BoxDecoration(
-                          color: _currentPage == index
-                              ? AppColors.background
-                              : Colors.grey[400],
-                          shape: BoxShape.circle,
-                        ),
-                      );
-                    }),
-                  ),
-                ),
+                //Dot indicator
+                DotIndicatorHome(),
                 const SizedBox(height: 20),
+                //Discover
                 HeaderSectionGeneral(
                   title: 'Discover',
                   icon: Iconsax.ticket_star,
                 ),
+                //Option Group
                 const SizedBox(height: 10),
                 SortOptionGroupHome(),
+                //List of Product
                 const SizedBox(height: 15),
-                GridViewProductVerticalListGeneral(itemCount: 4),
+                Obx(() {
+                  final products = homeController.getFilteredProducts();
+                  return Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    child: GridViewProductVerticalListGeneral(
+                      productList: products,
+                    ),
+                  );
+                }),
                 const SizedBox(height: 30),
               ],
             ),

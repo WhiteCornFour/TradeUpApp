@@ -2,22 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:tradeupapp/screens/general/general_search_product.dart';
+import 'package:tradeupapp/screens/main_app/home/controller/home_controller.dart';
 
 void showSystemSearchGeneral(BuildContext context) {
   showSearch(context: context, delegate: CustomSearchDelegate());
 }
 
+final homeController = Get.find<HomeController>();
+
 class CustomSearchDelegate extends SearchDelegate {
-  List<String> searchTerms = [
-    'Apple',
-    'Banana',
-    'Pear',
-    'Watermelon',
-    'Oranges',
-    'Blueberries',
-    'Strawberries',
-    'Raspberries',
-  ];
+  //Cập nhật realtime khi searchHistoryList thay đổi
+  List<String> get searchTerms => homeController.searchHistoryList
+      .map((item) => item.searchContent ?? '')
+      .toList();
 
   //Build Action: Delete Search Query
   @override
@@ -42,7 +39,7 @@ class CustomSearchDelegate extends SearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
-    //Search no matter uppercase or not, compare it to searchTerns
+    //Search no matter uppercase or not, compare it to searchTerns, only take 10 first
     final matchQuery = searchTerms
         .where((term) => term.toLowerCase().contains(query.toLowerCase()))
         .toList();
@@ -59,6 +56,7 @@ class CustomSearchDelegate extends SearchDelegate {
   Widget buildSuggestions(BuildContext context) {
     final matchQuery = searchTerms
         .where((term) => term.toLowerCase().contains(query.toLowerCase()))
+        .take(10)
         .toList();
 
     return ListView.builder(
@@ -76,17 +74,10 @@ class CustomSearchDelegate extends SearchDelegate {
       return;
     }
 
-    final match = searchTerms.firstWhere(
-      (term) => term.toLowerCase().contains(query.toLowerCase()),
-      orElse: () => '',
-    );
+    homeController.saveSearchHistory(query);
 
-    if (match.isNotEmpty) {
-      close(context, null);
-      Get.to(() => SearchProductGeneral());
-    } else {
-      super.showResults(context);
-    }
+    close(context, null); // Đóng search bar
+    Get.to(() => SearchProductGeneral(), arguments: query); // Truyền query sang
   }
 
   //Theme Custom for Search Delegate
