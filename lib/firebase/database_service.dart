@@ -368,6 +368,8 @@ class DatabaseService {
     } catch (e) {
       print('Error getting user search history: $e');
       return [];
+    }
+  }
 
   //PersonnalController: fetch danh sách product mà người dùng đã đăng khi truyền vào id người dùng
   Future<List<ProductModel>> getProductByIdUser(String userId) async {
