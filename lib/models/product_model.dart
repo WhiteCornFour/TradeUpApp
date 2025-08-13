@@ -43,7 +43,7 @@ class ProductModel {
   double? get productPrice => _productPrice;
   String? get productDescription => _productDescription;
   String? get selectedCondition => _selectedCondition;
-  List<String>? get categories => _categoryList;
+  List<String>? get categoryList => _categoryList;
   List<String>? get imageList => _imageList;
   String? get productStory => _productStory;
   int? get status => _status;

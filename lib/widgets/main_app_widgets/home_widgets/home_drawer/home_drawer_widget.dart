@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:tradeupapp/constants/app_colors.dart';
-import 'package:tradeupapp/data/category_data.dart';
 import 'package:tradeupapp/screens/general/general_search_product.dart';
+import 'package:tradeupapp/screens/main_app/home/controller/home_controller.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/home_widgets/home_drawer/home_drawer_categories_choice_chips_group_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/home_widgets/home_drawer/home_drawer_condition_choice_chips_group_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/home_widgets/home_drawer/home_drawer_price_slider_widget.dart';
@@ -16,6 +16,7 @@ class DrawerHome extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final homeController = Get.find<HomeController>();
     return DraggableScrollableSheet(
       expand: false,
       initialChildSize: 0.85,
@@ -45,7 +46,7 @@ class DrawerHome extends StatelessWidget {
             SizedBox(height: 20),
 
             //Categories Tag
-            DrawerCategoriesChoiceChipsGroupHome(categories: categories),
+            DrawerCategoriesChoiceChipsGroupHome(categories: homeController.categoryList),
             SizedBox(height: 20),
 
             //Price Bar

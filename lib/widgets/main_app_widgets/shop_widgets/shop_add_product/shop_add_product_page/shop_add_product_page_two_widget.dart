@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:tradeupapp/data/category_data.dart';
+import 'package:tradeupapp/screens/main_app/home/controller/home_controller.dart';
 import 'package:tradeupapp/screens/main_app/shop/shop_add_product/controller/shop_add_product_controller.dart';
 import 'package:tradeupapp/widgets/general/general_snackbar_helper.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/home_widgets/home_drawer/home_drawer_choice_chips_widget.dart';
@@ -18,6 +18,7 @@ class AddProductPageTwoShop extends StatefulWidget {
 
 class _AddProductPageTwoShop extends State<AddProductPageTwoShop> {
   final addProductController = Get.find<AddProductController>();
+  final homeController = Get.find<HomeController>();
 
   @override
   Widget build(BuildContext context) {
@@ -55,35 +56,40 @@ class _AddProductPageTwoShop extends State<AddProductPageTwoShop> {
                 'You can select up to three category tags for your product.',
           ),
           SizedBox(height: 12),
-          Wrap(
-            spacing: 6,
-            runSpacing: 6,
-            children: categories.map((category) {
-              final isSelected = addProductController.categories.contains(
-                category.name,
-              );
-              return DrawerChoiceChipsHome(
-                text: category.name,
-                selected: isSelected,
-                color: category.colorStrong,
-                onSelected: (value) {
-                  setState(() {
-                    if (isSelected) {
-                      addProductController.categories.remove(category.name);
-                    } else {
-                      if (addProductController.categories.length < 3) {
-                        addProductController.categories.add(category.name);
-                      } else if (addProductController.categories.length == 3) {
-                        SnackbarHelperGeneral.showCustomSnackBar(
-                          'Reaching tag limit, please unchoosed one tags before chosing another one!!!',
-                        );
+          Obx(() {
+            final categoryList = homeController.categoryList;
+
+            return Wrap(
+              spacing: 6,
+              runSpacing: 6,
+              children: categoryList.map((category) {
+                final isSelected = addProductController.categories.contains(
+                  category.name,
+                );
+                return DrawerChoiceChipsHome(
+                  text: category.name,
+                  selected: isSelected,
+                  color: category.colorStrong,
+                  onSelected: (value) {
+                    setState(() {
+                      if (isSelected) {
+                        addProductController.categories.remove(category.name);
+                      } else {
+                        if (addProductController.categories.length < 3) {
+                          addProductController.categories.add(category.name);
+                        } else if (addProductController.categories.length ==
+                            3) {
+                          SnackbarHelperGeneral.showCustomSnackBar(
+                            'Reaching tag limit, please unchoosed one tags before chosing another one!!!',
+                          );
+                        }
                       }
-                    }
-                  });
-                },
-              );
-            }).toList(),
-          ),
+                    });
+                  },
+                );
+              }).toList(),
+            );
+          }),
           SizedBox(height: 20),
         ],
       ),

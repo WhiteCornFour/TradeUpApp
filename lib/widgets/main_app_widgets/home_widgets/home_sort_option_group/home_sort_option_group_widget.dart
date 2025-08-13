@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:tradeupapp/screens/main_app/home/controller/home_controller.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/home_widgets/home_sort_option_group/home_sort_option_button_widget.dart';
 
 class SortOptionGroupHome extends StatefulWidget {
@@ -9,44 +12,35 @@ class SortOptionGroupHome extends StatefulWidget {
 }
 
 class _SortOptionGroupHomeState extends State<SortOptionGroupHome> {
-  String selected = 'Relevance'; //button standard
+  final homeController = Get.find<HomeController>();
+  String selected = 'Newest'; //button standard
 
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SortOptionButtonHome(
-            text: 'Relevance',
-            isSelected: selected == 'Relevance',
-            onPressed: () {
-              setState(() {
-                selected = 'Relevance';
-              });
-            },
-          ),
-          const SizedBox(width: 12),
-          SortOptionButtonHome(
-            text: 'Newest',
-            isSelected: selected == 'Newest',
-            onPressed: () {
-              setState(() {
-                selected = 'Newest';
-              });
-            },
-          ),
-          const SizedBox(width: 12),
-          SortOptionButtonHome(
-            text: 'Price',
-            isSelected: selected == 'Price',
-            onPressed: () {
-              setState(() {
-                selected = 'Price';
-              });
-            },
-          ),
-        ],
+      child: Obx(
+        () => Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SortOptionButtonHome(
+              text: 'Newest',
+              isSelected: homeController.selectedSortOption.value == 'Newest',
+              onPressed: () => homeController.changeSortOption('Newest'),
+            ),
+            const SizedBox(width: 12),
+            SortOptionButtonHome(
+              text: 'Highest \$',
+              isSelected: homeController.selectedSortOption.value == 'High \$',
+              onPressed: () => homeController.changeSortOption('High \$'),
+            ),
+            const SizedBox(width: 12),
+            SortOptionButtonHome(
+              text: 'Lowest \$',
+              isSelected: homeController.selectedSortOption.value == 'Low \$',
+              onPressed: () => homeController.changeSortOption('Low \$'),
+            ),
+          ],
+        ),
       ),
     );
   }

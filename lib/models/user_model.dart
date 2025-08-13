@@ -1,4 +1,5 @@
 class UserModal {
+  String? _userId;
   String? _email;
   String? _password;
   String? _fullName;
@@ -10,8 +11,9 @@ class UserModal {
   String? _tagName;
   int? _role;
 
-  // Constructor
+  //Constructor
   UserModal({
+    String? userId,
     String? email,
     String? password,
     String? fullName,
@@ -22,18 +24,20 @@ class UserModal {
     double? rating,
     String? tagName,
     int? role,
-  })  : _email = email,
-        _password = password,
-        _fullName = fullName,
-        _avtURL = avtURL,
-        _bio = bio,
-        _address = address,
-        _phoneNumber = phoneNumber,
-        _rating = rating,
-        _tagName = tagName,
-        _role = role;
+  }) : _userId = userId,
+       _email = email,
+       _password = password,
+       _fullName = fullName,
+       _avtURL = avtURL,
+       _bio = bio,
+       _address = address,
+       _phoneNumber = phoneNumber,
+       _rating = rating,
+       _tagName = tagName,
+       _role = role;
 
-  // Getters
+  // Getter/setter
+  String? get userId => _userId;
   String? get email => _email;
   String? get password => _password;
   String? get fullName => _fullName;
@@ -45,7 +49,7 @@ class UserModal {
   String? get tagName => _tagName;
   int? get role => _role;
 
-  // Setters
+  set userId(String? value) => _userId = value;
   set email(String? value) => _email = value;
   set password(String? value) => _password = value;
   set fullName(String? value) => _fullName = value;
@@ -57,9 +61,10 @@ class UserModal {
   set tagName(String? value) => _tagName = value;
   set role(int? value) => _role = value;
 
-  // Factory fromMap
-  factory UserModal.fromMap(Map<String, dynamic> map) {
+  //Factory fromMap
+  factory UserModal.fromMap(Map<String, dynamic> map, {String? docId}) {
     return UserModal(
+      userId: docId,
       email: map['email'],
       password: map['passWord'],
       fullName: map['yourname'],
@@ -73,7 +78,7 @@ class UserModal {
     );
   }
 
-  // Convert to Map
+  //Convert to Map
   Map<String, dynamic> toMap() {
     return {
       'email': _email,
