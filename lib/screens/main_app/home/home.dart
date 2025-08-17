@@ -5,6 +5,9 @@ import 'package:tradeupapp/constants/app_colors.dart';
 import 'package:tradeupapp/firebase/database_service.dart';
 import 'package:tradeupapp/screens/general/general_all_categories.dart';
 import 'package:tradeupapp/screens/main_app/home/controller/home_controller.dart';
+import 'package:tradeupapp/screens/main_app/home/controller/home_drawer_controller.dart';
+import 'package:tradeupapp/screens/main_app/profile/save_product/controller/save_product_controller.dart';
+import 'package:tradeupapp/screens/main_app/shop/controllers/shop_controller.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/home_widgets/home_dot_indicator_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/home_widgets/home_sort_option_group/home_sort_option_group_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/home_widgets/home_category_group_widget.dart';
@@ -24,6 +27,9 @@ class Home extends StatefulWidget {
 class _Home extends State<Home> {
   final PageController _pageController = PageController(viewportFraction: 0.92);
   final homeController = Get.put(HomeController());
+  final homeDrawerController = Get.put(HomeDrawerController());
+  final shopController = Get.put(ShopController());
+  final saveController = Get.put(SaveProductController());
   final db = DatabaseService();
 
   //Biến giữ số lượng cho Categories
@@ -41,6 +47,7 @@ class _Home extends State<Home> {
       if (homeController.user.value != null) {
         homeController.loadSearchHistory();
       }
+
     });
   }
 
@@ -65,18 +72,13 @@ class _Home extends State<Home> {
         errorMessage = 'Cannot load user data!';
       } else if (homeController.categoryList.length < 14) {
         errorMessage = 'Cannot load categories list data!';
-      } else if (homeController.productList.isEmpty) {
-        errorMessage = 'Cannot load product list data!';
+        // } else if (homeController.productList.isEmpty) {
+        //   errorMessage = 'Cannot load product list data!';
       } else if (homeController.userList.isEmpty) {
         errorMessage = 'Cannot load users list data!';
       }
 
       final user = homeController.user.value!;
-      final userList = homeController.userList;
-      print("User list:");
-      for (var u in userList) {
-        print("UserId: ${u.userId}, FullName: ${u.fullName}");
-      }
       final productList = homeController.productList;
       final categoryList = homeController.categoryList;
 

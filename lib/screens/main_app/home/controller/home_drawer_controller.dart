@@ -6,6 +6,7 @@ class HomeDrawerController extends GetxController {
   /// ----------
   /// Controller
   /// ----------
+  
   final homeController = Get.find<HomeController>();
 
   /// ---------
@@ -24,6 +25,7 @@ class HomeDrawerController extends GetxController {
 
   //Condition
   var selectedCondition = ''.obs;
+
 
   //Danh sách kết quả tìm kiếm
   var filteredProducts = <ProductModel>[].obs;

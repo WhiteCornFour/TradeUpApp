@@ -1,11 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:tradeupapp/screens/main_app/profile/report/report.dart';
+import 'package:tradeupapp/screens/main_app/profile/save_product/controller/save_product_controller.dart';
+import 'package:tradeupapp/screens/main_app/shop/controllers/shop_controller.dart';
+import 'package:tradeupapp/screens/main_app/shop/personal.dart';
 
 class PostCardBottomSheetShop extends StatelessWidget {
-  const PostCardBottomSheetShop({super.key});
+  const PostCardBottomSheetShop({
+    super.key,
+    required this.userId,
+    required this.userName,
+    required this.productId,
+  });
+
+  final String? userId, userName;
+  final String productId;
 
   @override
   Widget build(BuildContext context) {
+    final shopController = Get.find<ShopController>();
+    final saveController = Get.find<SaveProductController>();
+
     return SafeArea(
       child: SizedBox(
         height: 350,
@@ -23,19 +39,27 @@ class PostCardBottomSheetShop extends StatelessWidget {
             ),
             const SizedBox(height: 20),
 
-            _buildSheetItem(
-              icon: Icons.bookmark_outline,
-              title: 'Save',
-              onTap: () {
-                Navigator.pop(context);
-                print('Saved');
-              },
-            ),
+            Obx(() {
+              final isSaved = saveController.savedStatus[productId] ?? false;
+
+              return _buildSheetItem(
+                icon: isSaved ? Icons.bookmark : Icons.bookmark_outline,
+                iconColor: isSaved ? const Color(0xFFFF6F61) : Colors.black,
+                title: isSaved ? 'Removed from Save' : 'Save',
+                onTap: () {
+                  Navigator.pop(context);
+                  if (userId != null) {
+                    saveController.toggleSaveProduct(userId!, productId);
+                  }
+                },
+              );
+            }),
             _buildSheetItem(
               icon: Iconsax.user,
               title: 'View Account',
               onTap: () {
                 Navigator.pop(context);
+                Get.to(() => Personal(idUser: userId!));
                 print('View Account');
               },
             ),
@@ -44,6 +68,11 @@ class PostCardBottomSheetShop extends StatelessWidget {
               title: 'Chat',
               onTap: () {
                 Navigator.pop(context);
+                shopController.handleCheckOrStartChat(
+                  userId!,
+                  context,
+                  userName ?? 'User not Availabel',
+                );
                 print('Chat');
               },
             ),
@@ -59,8 +88,12 @@ class PostCardBottomSheetShop extends StatelessWidget {
               icon: Iconsax.warning_2,
               title: 'Report',
               isDestructive: true,
-              onTap: () {
+              onTap: () async {
                 Navigator.pop(context);
+                var tagName = await shopController.fetchTagNameByUserId(
+                  userId!,
+                );
+                Get.to(() => Report(), arguments: tagName);
                 print('Report');
               },
             ),
@@ -77,6 +110,7 @@ class PostCardBottomSheetShop extends StatelessWidget {
     IconData? trailingIcon,
     VoidCallback? onTap,
     bool isDestructive = false,
+    Color? iconColor,
   }) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
@@ -92,7 +126,7 @@ class PostCardBottomSheetShop extends StatelessWidget {
             children: [
               Icon(
                 icon,
-                color: isDestructive ? Colors.red : Colors.black,
+                color: iconColor ?? (isDestructive ? Colors.red : Colors.black),
                 size: 22,
               ),
               const SizedBox(width: 15),

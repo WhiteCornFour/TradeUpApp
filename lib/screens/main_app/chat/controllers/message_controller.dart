@@ -16,7 +16,7 @@ import 'package:tradeupapp/widgets/general/general_snackbar_helper.dart';
 
 class MessageController extends GetxController {
   final messageController = TextEditingController();
-  final Rxn<UserModal> user = Rxn<UserModal>();
+  final Rxn<UserModel> user = Rxn<UserModel>();
   final String idOtherUser;
   final String idChatRoom;
   RxList<MessageModal> messageList = <MessageModal>[].obs;

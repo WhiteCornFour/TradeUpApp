@@ -21,7 +21,7 @@ class EditProfileController extends GetxController {
   final addressController = TextEditingController();
   final bioController = TextEditingController();
 
-  var user = Rxn<UserModal>();
+  var user = Rxn<UserModel>();
   final isLoading = false.obs;
   late BuildContext context;
 
@@ -37,7 +37,7 @@ class EditProfileController extends GetxController {
     try {
       final data = await DatabaseService().fetchDataCurrentUser();
       if (data != null) {
-        user.value = UserModal.fromMap(data);
+        user.value = UserModel.fromMap(data);
       }
 
       var userData = user.value!;
@@ -256,7 +256,7 @@ class EditProfileController extends GetxController {
       url = currentUserModel!.avtURL;
     }
 
-    final updatedUser = UserModal(
+    final updatedUser = UserModel(
       email: emailController.text.trim(),
       password: '',
       fullName: fullnameController.text.trim(),

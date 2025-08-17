@@ -13,6 +13,9 @@ class PostCardShop extends StatefulWidget {
     required this.timeAgo,
     required this.likeCount,
     required this.userAvatar,
+    this.productId,
+    this.userId,
+    this.currentUserId,
     this.onPressed,
   });
 
@@ -22,14 +25,21 @@ class PostCardShop extends StatefulWidget {
   final String timeAgo;
   final int likeCount;
   final VoidCallback? onPressed;
+  final String? userId;
+  final String? currentUserId;
+  final String? productId;
+
   @override
   State<PostCardShop> createState() => _PostCardShop();
 }
 
 class _PostCardShop extends State<PostCardShop> {
   int currentImageIndex = 0;
+
   @override
   Widget build(BuildContext context) {
+    // print('PostCardShopPersonal UserId: ${widget.userId}');
+    // print('PostCardShopPersonal CurrentUserId: ${widget.currentUserId}');
     return GestureDetector(
       onTap: widget.onPressed,
       child: Column(
@@ -55,6 +65,9 @@ class _PostCardShop extends State<PostCardShop> {
                   userName: widget.userName,
                   timeAgo: widget.timeAgo,
                   userAvatar: widget.userAvatar,
+                  userId: widget.userId ?? '',
+                  productId: widget.productId ?? '',
+                  isOwnPost: widget.userId == widget.currentUserId,
                 ),
 
                 //Post Card Description
@@ -67,7 +80,11 @@ class _PostCardShop extends State<PostCardShop> {
                 PostCardImageSliderShop(imageUrls: widget.imageUrls),
 
                 //Post Card Bottom: Like, Chat, Bookmark
-                PostCardBottomShop(likeCount: widget.likeCount),
+                PostCardBottomShop(
+                  likeCount: widget.likeCount,
+                  userId: widget.userId,
+                  userName: widget.userName,
+                ),
               ],
             ),
           ),

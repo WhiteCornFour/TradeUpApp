@@ -1,10 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:tradeupapp/constants/app_colors.dart';
 import 'package:tradeupapp/firebase/auth_service.dart';
 import 'package:tradeupapp/screens/main_app/shop/controllers/personal_controller.dart';
-import 'package:tradeupapp/screens/main_app/shop/shop_product_detail/shop_product_detail.dart';
 import 'package:tradeupapp/widgets/general/general_custom_dialog.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/personal/personal_appbar_custom_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/personal/personal_avt_user_widget.dart';
@@ -16,7 +16,7 @@ import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/shop_post_card/
 
 class Personal extends StatefulWidget {
   final String idUser;
-  
+
   const Personal({super.key, required this.idUser});
 
   @override
@@ -34,9 +34,9 @@ class _PersonalState extends State<Personal> {
   }
 
   //hàm covert thời gian của createAt
-  String _formatIsoToNgayGio(String iso) {
-    if (iso.isEmpty) return 'Unknown';
-    final date = DateTime.parse(iso).toLocal();
+  String _formatTimestampToNgayGio(Timestamp? timestamp) {
+    if (timestamp == null) return 'Unknown';
+    final date = timestamp.toDate().toLocal();
     final ngay = DateFormat('d/M/yyyy').format(date);
     final gio = DateFormat('HH:mm').format(date);
     return '$ngay at $gio';
@@ -167,9 +167,6 @@ class _PersonalState extends State<Personal> {
                         itemBuilder: (context, index) {
                           final product = personalController.productList[index];
                           return PostCardShop(
-                            onPressed: () {
-                              Get.to(() => ProductDetailShop());
-                            },
                             imageUrls: product.imageList ?? [],
                             description: product.productDescription ?? '',
                             userName:
@@ -177,8 +174,12 @@ class _PersonalState extends State<Personal> {
                                 '',
                             userAvatar:
                                 personalController.userData.value?.avtURL ?? '',
-                            timeAgo: _formatIsoToNgayGio(product.createdAt!),
+                            timeAgo: _formatTimestampToNgayGio(
+                              product.createdAt!,
+                            ),
                             likeCount: 123,
+                            userId: product.userId,
+                            currentUserId: idCurrentUser,
                           );
                         },
                       );

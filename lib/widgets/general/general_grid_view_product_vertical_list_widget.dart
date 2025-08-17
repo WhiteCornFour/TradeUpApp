@@ -37,8 +37,8 @@ class GridViewProductVerticalListGeneral extends StatelessWidget {
               children: [
                 Image.asset(
                   'assets/images/no_products_found.png',
-                  width: 150,
-                  height: 150,
+                  width: 220,
+                  height: 220,
                   fit: BoxFit.contain,
                 ),
                 const SizedBox(height: 10),

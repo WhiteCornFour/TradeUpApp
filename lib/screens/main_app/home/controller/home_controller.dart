@@ -1,11 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:tradeupapp/firebase/auth_service.dart';
 import 'package:tradeupapp/firebase/database_service.dart';
 import 'package:tradeupapp/models/category_model.dart';
 import 'package:tradeupapp/models/product_model.dart';
 import 'package:tradeupapp/models/search_history_model.dart';
 import 'package:tradeupapp/models/user_model.dart';
+import 'package:tradeupapp/screens/main_app/chat/message.dart';
+import 'package:tradeupapp/widgets/general/general_snackbar_helper.dart';
 
 class HomeController extends GetxController {
   ///-----------
@@ -13,10 +17,15 @@ class HomeController extends GetxController {
   ///-----------
 
   //User data của người dùng
-  var user = Rxn<UserModal>();
+  var user = Rxn<UserModel>();
+
+  //Lấy User Id người dùng luôn
+  String? get currentUserId {
+    return user.value?.userId;
+  }
 
   //Danh sách User lấy từ Firebase
-  var userList = <UserModal>[].obs;
+  var userList = <UserModel>[].obs;
 
   //Map cho User Id va User Name
   var userIdToUserName = <String, String>{}.obs;
@@ -58,7 +67,7 @@ class HomeController extends GetxController {
     isLoading.value = true;
     final userData = await db.fetchDataCurrentUser();
     if (userData != null) {
-      final u = UserModal.fromMap(userData);
+      final u = UserModel.fromMap(userData);
       u.userId = FirebaseAuth.instance.currentUser?.uid; //set thủ công UID
       user.value = u;
     }
@@ -68,7 +77,7 @@ class HomeController extends GetxController {
   //Hàm load thông tin danh sách toàn bộ User
   Future<void> loadUsersAndMap() async {
     final users = await db.getAllUsers();
-    userList.assignAll(users);  
+    userList.assignAll(users);
 
     // Cập nhật map ngay sau khi userList có dữ liệu
     userIdToUserName.clear();
@@ -84,7 +93,9 @@ class HomeController extends GetxController {
   Future<void> loadProducts() async {
     try {
       isLoading(true);
-      var products = await db.getAllProducts();
+      var userId = FirebaseAuth.instance.currentUser?.uid;
+      if (userId == null) return;
+      var products = await db.getAllProducts(userId);
       productList.assignAll(products);
     } catch (e) {
       print("Error loading products: $e");
@@ -181,14 +192,13 @@ class HomeController extends GetxController {
 
     switch (selectedSortOption.value) {
       case 'Newest':
-        sortedList.sort((a, b) {
-          DateTime dateA =
-              DateTime.tryParse(a.createdAt ?? '') ?? DateTime(1970);
-          DateTime dateB =
-              DateTime.tryParse(b.createdAt ?? '') ?? DateTime(1970);
-          return dateB.compareTo(dateA);
-        });
-        break;
+    sortedList.sort((a, b) {
+      //Nếu createdAt null thì đặt về thời điểm cũ nhất
+      final dateA = a.createdAt?.toDate() ?? DateTime(1970);
+      final dateB = b.createdAt?.toDate() ?? DateTime(1970);
+      return dateB.compareTo(dateA); //mới nhất trước
+    });
+    break;
 
       case 'High \$':
         sortedList.sort(
@@ -264,5 +274,39 @@ class HomeController extends GetxController {
       //Kiểm tra có chứa k
       return name.contains(query) || description.contains(query);
     }).toList();
+  }
+
+  ///-------------------------
+  /// Chat Function
+  ///-------------------------
+
+  //Tạo phòng chat
+  Future<void> handleSendMessage(String idUser) async {
+    final idCurrentUser = AuthServices().currentUser!.uid;
+
+    //Kiểm tra xem đã có phòng chat chưa
+    String? result = await db.checkChatRoomStatus(idCurrentUser, idUser);
+
+    if (result == "Block") {
+      SnackbarHelperGeneral.showCustomSnackBar(
+        'This chat room has been blocked and you cannot send messages.',
+        backgroundColor: Colors.red,
+        seconds: 2,
+      );
+      return;
+    }
+
+    if (result != null) {
+      //Có phòng → vào luôn
+      print('Chat room exists with ID: $result');
+      Get.to(Message(idOtherUser: idUser, idChatRoom: result));
+    } else {
+      // Không có phòng → tạo mới rồi vào
+      String? newId = await db.createNewChatRoom(idCurrentUser, idUser);
+      if (newId != null) {
+        print('Created new chat room with ID: $newId');
+        Get.to(Message(idOtherUser: idUser, idChatRoom: newId));
+      }
+    }
   }
 }

@@ -11,7 +11,7 @@ class PersonalController extends GetxController {
   final String idUser;
   PersonalController({required this.idUser});
 
-  Rxn<UserModal> userData = Rxn<UserModal>();
+  Rxn<UserModel> userData = Rxn<UserModel>();
   RxList<ProductModel> productList = <ProductModel>[].obs;
   RxDouble rating = 0.0.obs;
   //Khai bao bien db
@@ -72,10 +72,7 @@ class PersonalController extends GetxController {
   void handleSendMessage() async {
     final idCurrentUser = AuthServices().currentUser!.uid;
 
-    String? result = await db.checkChatRoomStatus(
-      idCurrentUser,
-      idUser,
-    );
+    String? result = await db.checkChatRoomStatus(idCurrentUser, idUser);
 
     if (result == "Block") {
       // Hiển thị thông báo và dừng
@@ -94,10 +91,7 @@ class PersonalController extends GetxController {
       Get.to(Message(idOtherUser: idUser, idChatRoom: result));
     } else {
       // Không tồn tại phòng → tạo mới
-      String? newId = await db.createNewChatRoom(
-        idCurrentUser,
-        idUser,
-      );
+      String? newId = await db.createNewChatRoom(idCurrentUser, idUser);
       if (newId != null) {
         // ignore: avoid_print
         print('Created new chat room with ID: $newId');

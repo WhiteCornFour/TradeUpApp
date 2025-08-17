@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:tradeupapp/constants/app_colors.dart';
+import 'package:tradeupapp/screens/main_app/home/controller/home_product_detail_controller.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/shop_post_card/shop_post_card_image_container_widget.dart';
 
 class ProductDetailImageSliderShop extends StatelessWidget {
@@ -14,6 +16,9 @@ class ProductDetailImageSliderShop extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final productDetailController = Get.find<ProductDetailController>();
+    productDetailController.selectedImage.value = firstImage;
+
     return Container(
       color: Colors.transparent,
       child: Stack(
@@ -23,7 +28,14 @@ class ProductDetailImageSliderShop extends StatelessWidget {
             height: 400,
             child: Padding(
               padding: EdgeInsets.all(32),
-              child: Center(child: Image(image: AssetImage(firstImage))),
+              child: Center(
+                child: Obx(
+                  () => Image.network(
+                    productDetailController.selectedImage.value,
+                    fit: BoxFit.contain,
+                  ),
+                ),
+              ),
             ),
           ),
 
@@ -45,28 +57,39 @@ class ProductDetailImageSliderShop extends StatelessWidget {
             bottom: 30,
             left: 0,
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 24),
+              padding: const EdgeInsets.symmetric(horizontal: 24),
               child: SizedBox(
                 height: 80,
                 child: imageList.length < 3
                     ? Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: imageList
-                            .map(
-                              (imageUrl) => Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 5,
+                        mainAxisAlignment:
+                            MainAxisAlignment.center, 
+                        children: imageList.map((imageUrl) {
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 5),
+                            child: Obx(
+                              () => PostCardImageContainerShop(
+                                isNetworkImage: true,
+                                width: 80,
+                                backgroundColor: Colors.white,
+                                border: Border.all(
+                                  color:
+                                      productDetailController
+                                              .selectedImage
+                                              .value ==
+                                          imageUrl
+                                      ? AppColors.header
+                                      : Colors.grey.shade300,
+                                  width: 2,
                                 ),
-                                child: PostCardImageContainerShop(
-                                  width: 80,
-                                  backgroundColor: Colors.white,
-                                  border: Border.all(color: AppColors.header),
-                                  padding: const EdgeInsets.all(8),
-                                  imageUrl: imageUrl,
-                                ),
+                                padding: const EdgeInsets.all(8),
+                                imageUrl: imageUrl,
+                                onPressed: () =>
+                                    productDetailController.setImage(imageUrl),
                               ),
-                            )
-                            .toList(),
+                            ),
+                          );
+                        }).toList(),
                       )
                     : ListView.separated(
                         padding: EdgeInsets.zero,
@@ -75,13 +98,30 @@ class ProductDetailImageSliderShop extends StatelessWidget {
                         shrinkWrap: true,
                         scrollDirection: Axis.horizontal,
                         physics: const AlwaysScrollableScrollPhysics(),
-                        itemBuilder: (_, index) => PostCardImageContainerShop(
-                          width: 80,
-                          backgroundColor: Colors.white,
-                          border: Border.all(color: AppColors.header),
-                          padding: const EdgeInsets.all(8),
-                          imageUrl: imageList[index],
-                        ),
+                        itemBuilder: (_, index) {
+                          final imageUrl = imageList[index];
+                          return Obx(
+                            () => PostCardImageContainerShop(
+                              isNetworkImage: true,
+                              width: 80,
+                              backgroundColor: Colors.white,
+                              border: Border.all(
+                                color:
+                                    productDetailController
+                                            .selectedImage
+                                            .value ==
+                                        imageUrl
+                                    ? AppColors.header
+                                    : Colors.grey.shade300,
+                                width: 2,
+                              ),
+                              padding: const EdgeInsets.all(8),
+                              imageUrl: imageUrl,
+                              onPressed: () =>
+                                  productDetailController.setImage(imageUrl),
+                            ),
+                          );
+                        },
                       ),
               ),
             ),

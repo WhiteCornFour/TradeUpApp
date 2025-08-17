@@ -49,7 +49,7 @@ class DatabaseService {
     print("Thêm người dùng thành công. addUser");
   }
 
-  //Load thong tin user hien tai
+  //AddProductController: thong tin user hien tai
   Future<Map<String, dynamic>?> fetchDataCurrentUser() async {
     try {
       final currentUser = FirebaseAuth.instance.currentUser;
@@ -77,13 +77,14 @@ class DatabaseService {
     }
   }
 
+  //AddProductController: Thêm sản pham mới
   Future<void> addProduct(ProductModel product) async {
     try {
       //Tạo ID mới cho sản phẩm
       final docRef = FirebaseFirestore.instance.collection('products').doc();
 
       //Set ID cho sản phẩm trước khi lưu
-      product.id = docRef.id;
+      product.productId = docRef.id;
 
       //Đảm bảo giá trị price là double
       if (product.productPrice != null) {
@@ -130,7 +131,7 @@ class DatabaseService {
   }
 
   //ChatRoomController: Hàm fetch thông tin của user khi truyền vào id
-  Future<UserModal?> fetchUserModelById(String idUser) async {
+  Future<UserModel?> fetchUserModelById(String idUser) async {
     try {
       final docSnapshot = await FirebaseFirestore.instance
           .collection('users')
@@ -138,7 +139,7 @@ class DatabaseService {
           .get();
 
       if (docSnapshot.exists) {
-        final user = UserModal.fromMap(docSnapshot.data()!);
+        final user = UserModel.fromMap(docSnapshot.data()!);
         user.total_reviews = docSnapshot.data()!['total_rating'].toInt();
         return user;
       } else {
@@ -240,22 +241,25 @@ class DatabaseService {
     }
   }
 
-  //Lấy danh sách sản phẩm từ Firebase về
-  Future<List<ProductModel>> getAllProducts() async {
+  //HomeController: Lấy danh sách sản phẩm từ Firebase về
+  Future<List<ProductModel>> getAllProducts(String userId) async {
     try {
       final snapshot = await FirebaseFirestore.instance
           .collection('products')
+          .where('userId', isNotEqualTo: userId)
           .get();
-      return snapshot.docs
-          .map((doc) => ProductModel.fromMap(doc.data()))
-          .toList();
+      return snapshot.docs.map((doc) {
+        final product = ProductModel.fromMap(doc.data());
+        product.productId = doc.id;
+        return product;
+      }).toList();
     } catch (e) {
       print('Error fetching products: $e');
       return [];
     }
   }
 
-  //Lấy danh sách Category từ Firebase
+  //HomeController: Lấy danh sách Category từ Firebase
   Future<List<CategoryModel>> getAllCategories() async {
     final snapshot = await FirebaseFirestore.instance
         .collection('categories')
@@ -268,7 +272,7 @@ class DatabaseService {
     return categories;
   }
 
-  //Đếm số lượng sản phẩm của Category dựa trên Category Name chỉ đếm một loại
+  //HomeController: Đếm số lượng sản phẩm của Category dựa trên Category Name chỉ đếm một loại
   Map<String, int> countByCategory(
     List<ProductModel> productList,
     List<String> categoryNames,
@@ -296,17 +300,17 @@ class DatabaseService {
     return counts;
   }
 
-  //Lấy tất cả User có trong danh sách
-  Future<List<UserModal>> getAllUsers() async {
+  //HomeController: Lấy tất cả User có trong danh sách
+  Future<List<UserModel>> getAllUsers() async {
     try {
       QuerySnapshot snapshot = await FirebaseFirestore.instance
           .collection('users')
           .get();
 
-      List<UserModal> users = snapshot.docs.map((doc) {
+      List<UserModel> users = snapshot.docs.map((doc) {
         final data = doc.data() as Map<String, dynamic>;
-        print('Doc ID: ${doc.id}, Data: $data');
-        return UserModal.fromMap(data, docId: doc.id);
+        // print('Doc ID: ${doc.id}, Data: $data');
+        return UserModel.fromMap(data, docId: doc.id);
       }).toList();
 
       return users;
@@ -316,7 +320,7 @@ class DatabaseService {
     }
   }
 
-  //Thêm lịch sử search
+  //HomeController: Thêm lịch sử search
   Future<void> addOrUpdateSearchHistory(
     SearchHistoryModel searchHistory,
   ) async {
@@ -354,7 +358,7 @@ class DatabaseService {
     }
   }
 
-  //Lấy danh sách lịch sử tìm kiếm của người dùng
+  //HomeController: Lấy danh sách lịch sử tìm kiếm của người dùng
   Stream<List<SearchHistoryModel>> getUserSearchHistory(String userId) {
     try {
       return FirebaseFirestore.instance
@@ -483,7 +487,6 @@ class DatabaseService {
     }
   }
 
-  //ShopController: fetch 10 data đầu tiên trên firebase
   Stream<List<ProductModel>> getProductsRealTime({int limit = 10}) {
     return FirebaseFirestore.instance
         .collection('products')
@@ -491,8 +494,93 @@ class DatabaseService {
         // .limit(limit)
         .snapshots()
         .map(
-          (event) =>
-              event.docs.map((e) => ProductModel.fromMap(e.data())).toList(),
+          (snapshot) => snapshot.docs.map((doc) {
+            final data = doc.data();
+            data['productId'] = doc.id;
+            return ProductModel.fromMap(data);
+          }).toList(),
         );
+  }
+
+  //ShopController: Lấy Tagname dựa trên Id truyền vào
+  Future<String> getTagNameFromUserId(String userId) async {
+    try {
+      print('User id Report: $userId');
+      final doc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .get();
+
+      if (doc.exists) {
+        return doc.data()?['tagName'] ?? 'Unknown';
+      } else {
+        return 'Unknown';
+      }
+    } catch (e) {
+      print('ShopController TagName: $e');
+      return 'Unknown';
+    }
+  }
+
+  //SaveProductController: Thêm sản phẩm yêu thích mới
+  Future<void> addSaveProduct(Map<String, dynamic> data) async {
+    await FirebaseFirestore.instance.collection('save_products').add(data);
+  }
+
+  //SaveProductController: Xóa sản phẩm yêu thích
+  Future<void> removeSaveProduct(String saveProductId) async {
+    await FirebaseFirestore.instance
+        .collection('save_products')
+        .doc(saveProductId)
+        .delete();
+  }
+
+  //SaveProductController: Xem xem nó đã có trong Firebase chưa trả về true hoặc false setState cho BookedMark
+  Future<bool> isProductSaved(String userId, String productId) async {
+    final query = await FirebaseFirestore.instance
+        .collection('save_products')
+        .where('userId', isEqualTo: userId)
+        .where('productId', isEqualTo: productId)
+        .limit(1)
+        .get();
+    return query.docs.isNotEmpty;
+  }
+
+  //SaveProductController: Lấy sản phẩm yêu thích dựa theo id người dùng và sản phẩm (để xóa)
+  Future<String?> getSaveProductById(String userId, String productId) async {
+    final query = await FirebaseFirestore.instance
+        .collection('save_products')
+        .where('userId', isEqualTo: userId)
+        .where('productId', isEqualTo: productId)
+        .limit(1)
+        .get();
+    if (query.docs.isNotEmpty) {
+      return query.docs.first.id;
+    }
+    return null;
+  }
+
+  //SaveProductController: Lấy danh sách sản phẩm yêu thích dựa theo id người dùng
+  Future<List<ProductModel>> getSavedProductsList(String userId) async {
+    final saveDocs = await FirebaseFirestore.instance
+        .collection('save_products')
+        .where('userId', isEqualTo: userId)
+        .get();
+
+    List<ProductModel> products = [];
+
+    for (var doc in saveDocs.docs) {
+      final productId = doc['productId'];
+      // Lấy chi tiết sản phẩm từ collection 'products'
+      final productDoc = await FirebaseFirestore.instance
+          .collection('products')
+          .doc(productId)
+          .get();
+      if (productDoc.exists) {
+        products.add(ProductModel.fromMap(productDoc.data()!));
+      }
+    }
+
+    return products;
   }
 }
