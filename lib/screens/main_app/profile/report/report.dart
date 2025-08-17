@@ -17,6 +17,17 @@ class Report extends StatefulWidget {
 
 class _ReportState extends State<Report> {
   final reportController = Get.put(ReportController());
+  final tagName = Get.arguments ?? '';
+
+  @override
+  void initState() {
+    super.initState();
+    print('Tag name: $tagName');
+    //Nếu tag name có data thì truyền vô luôn
+    if (tagName is String && tagName.isNotEmpty) {
+      reportController.tagnameTargetController.text = tagName;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

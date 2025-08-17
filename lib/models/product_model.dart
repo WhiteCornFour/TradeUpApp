@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class ProductModel {
-  String? _id;
+  String? _productId;
   String? _userId;
   String? _productName;
   double? _productPrice;
@@ -8,12 +10,12 @@ class ProductModel {
   List<String>? _categoryList;
   List<String>? _imageList;
   String? _productStory;
-  int? _status;
-  String? _createdAt;
+  int? _status; // 0 chưa bán, 1 đã bán
+  Timestamp? _createdAt;
 
-  //Constructor
+  // Constructor
   ProductModel({
-    String? id,
+    String? productId,
     String? userId,
     String? productName,
     double? productPrice,
@@ -23,8 +25,8 @@ class ProductModel {
     List<String>? imageList,
     String? productStory,
     int? status,
-    String? createdAt,
-  }) : _id = id,
+    Timestamp? createdAt,
+  }) : _productId = productId,
        _userId = userId,
        _productName = productName,
        _productPrice = productPrice,
@@ -34,10 +36,10 @@ class ProductModel {
        _imageList = imageList ?? [],
        _productStory = productStory,
        _status = status ?? 1,
-       _createdAt = createdAt;
+       _createdAt = createdAt ?? Timestamp.now();
 
-  //Getters
-  String? get id => _id;
+  // Getters
+  String? get productId => _productId;
   String? get userId => _userId;
   String? get productName => _productName;
   double? get productPrice => _productPrice;
@@ -47,10 +49,10 @@ class ProductModel {
   List<String>? get imageList => _imageList;
   String? get productStory => _productStory;
   int? get status => _status;
-  String? get createdAt => _createdAt;
+  Timestamp? get createdAt => _createdAt;
 
-  //Setters
-  set id(String? value) => _id = value;
+  // Setters
+  set productId(String? value) => _productId = value;
   set userId(String? value) => _userId = value;
   set productName(String? value) => _productName = value;
   set productPrice(double? value) => _productPrice = value;
@@ -60,12 +62,12 @@ class ProductModel {
   set imageList(List<String>? value) => _imageList = value;
   set productStory(String? value) => _productStory = value;
   set status(int? value) => _status = value;
-  set createdAt(String? value) => _createdAt = value;
+  set createdAt(Timestamp? value) => _createdAt = value;
 
-  //Convert object to Map (for Firebase or JSON) -> Chuyển dữ liệu để tải lên Firebase
+  // Convert object to Map (Firebase)
   Map<String, dynamic> toMap() {
     return {
-      'id': _id,
+      'productId': _productId,
       'userId': _userId,
       'productName': _productName,
       'productPrice': _productPrice,
@@ -75,17 +77,16 @@ class ProductModel {
       'imageList': _imageList,
       'productStory': _productStory,
       'status': _status,
-      'createdAt': _createdAt,
+      'createdAt': _createdAt ?? Timestamp.now(),
     };
   }
 
-  //Create object from Map -> Lấy dữ liệu từ Firebase đem về và chuyển thành Object dạng Product Model
+  // Create object from Map (Firebase)
   factory ProductModel.fromMap(Map<String, dynamic> map) {
     return ProductModel(
-      id: map['id'],
+      productId: map['productId'],
       userId: map['userId'],
       productName: map['productName'],
-      //Ép kiểu về double ngay khi lấy từ Firestore
       productPrice: (map['productPrice'] is int)
           ? (map['productPrice'] as int).toDouble()
           : map['productPrice'],
@@ -95,7 +96,7 @@ class ProductModel {
       imageList: List<String>.from(map['imageList'] ?? []),
       productStory: map['productStory'],
       status: map['status'],
-      createdAt: map['createdAt'],
+      createdAt: map['createdAt'] is Timestamp ? map['createdAt'] : null,
     );
   }
 }

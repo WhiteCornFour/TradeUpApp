@@ -5,7 +5,10 @@ import 'package:iconsax/iconsax.dart';
 import 'package:readmore/readmore.dart';
 import 'package:tradeupapp/constants/app_colors.dart';
 import 'package:tradeupapp/models/category_model.dart';
+import 'package:tradeupapp/models/product_model.dart';
 import 'package:tradeupapp/screens/main_app/home/controller/home_controller.dart';
+import 'package:tradeupapp/screens/main_app/home/controller/home_product_detail_controller.dart';
+import 'package:tradeupapp/screens/main_app/profile/save_product/controller/save_product_controller.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/shop_product_detail/shop_product_detail_bottom_navigation_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/shop_product_detail/shop_product_detail_image_slider_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/shop_product_detail/shop_product_detail_header_widget.dart';
@@ -16,7 +19,14 @@ import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/shop_product_de
 import 'package:tradeupapp/widgets/general/general_button_widget.dart';
 
 class ProductDetailShop extends StatefulWidget {
-  const ProductDetailShop({super.key});
+  const ProductDetailShop({
+    super.key,
+    required this.product,
+    required this.userId,
+  });
+
+  final ProductModel product;
+  final String? userId;
 
   @override
   State<ProductDetailShop> createState() => _ProductDetailShopState();
@@ -24,15 +34,33 @@ class ProductDetailShop extends StatefulWidget {
 
 class _ProductDetailShopState extends State<ProductDetailShop> {
   final homeController = Get.find<HomeController>();
+  final productDetailController = Get.put(ProductDetailController());
+  final saveController = Get.find<SaveProductController>();
 
   List<CategoryModel> get categories => homeController.categoryList;
 
-  List<CategoryModel> get selectedCategories => categories
-      .where((cat) => cat.name == 'Electronics' || cat.name == 'Computers')
-      .toList();
+  List<CategoryModel> get selectedCategories {
+    final productCategoryIds = widget.product.categoryList ?? [];
+    return categories
+        .where((cat) => productCategoryIds.contains(cat.name))
+        .toList();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await productDetailController.loadUserDataById(widget.userId ?? '');
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    final product = widget.product;
+
+    print('Product In Detail Shop: ${product.productName}');
+    print('User in Shop Product Detail: ${widget.userId}');
+
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle.light,
       child: Container(
@@ -47,14 +75,10 @@ class _ProductDetailShopState extends State<ProductDetailShop> {
                   Stack(
                     children: [
                       ProductDetailImageSliderShop(
-                        firstImage: 'assets/images/sample_images/sample2.jpg',
-                        imageList: [
-                          'assets/images/sample_images/sample4.jpg',
-                          'assets/images/sample_images/sample3.jpg',
-                          'assets/images/sample_images/sample4.jpg',
-                          'assets/images/sample_images/sample2.jpg',
-                          'assets/images/sample_images/sample4.jpg',
-                        ],
+                        firstImage: widget.product.imageList?.isNotEmpty == true
+                            ? product.imageList!.first
+                            : 'assets/images/unavailable_image.jpg',
+                        imageList: product.imageList ?? [],
                       ),
 
                       // Dark Overlay
@@ -84,7 +108,28 @@ class _ProductDetailShopState extends State<ProductDetailShop> {
                           actions: [
                             Padding(
                               padding: const EdgeInsets.only(right: 10),
-                              child: BookmarkedToggleButtonGeneral(),
+                              child: Obx(() {
+                                final currentUserId =
+                                    homeController.currentUserId;
+                                if (currentUserId == null)
+                                  return const SizedBox();
+
+                                final productId =
+                                    widget.product.productId ?? '';
+                                final isSaved =
+                                    saveController.savedStatus[productId] ??
+                                    false;
+
+                                return BookmarkedToggleButtonGeneral(
+                                  initialState: isSaved,
+                                  onChanged: (_) {
+                                    saveController.toggleSaveProduct(
+                                      currentUserId,
+                                      productId,
+                                    );
+                                  },
+                                );
+                              }),
                             ),
                           ],
                         ),
@@ -99,31 +144,32 @@ class _ProductDetailShopState extends State<ProductDetailShop> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         //Header Product Detail
-                        ProductDetailHeaderShop(
-                          rating: '5.0',
-                          ratingCount: '199',
-                          userAvatar:
-                              'https://media.istockphoto.com/id/1317804578/photo/one-businesswoman-headshot-smiling-at-the-camera.jpg?s=612x612&w=0&k=20&c=EqR2Lffp4tkIYzpqYh8aYIPRr-gmZliRHRxcQC5yylY=',
-                          userName: 'Kathe Timber',
-                          isVerification: true,
-                        ),
+                        Obx(() {
+                          final user = productDetailController.user.value;
 
+                          return ProductDetailHeaderShop(
+                            rating: '${productDetailController.rating}',
+                            ratingCount: '${user?.totalReviews ?? 0}',
+                            userAvatar:
+                                user?.avtURL ??
+                                'https://media.istockphoto.com/id/1317804578/photo/one-businesswoman-headshot-smiling-at-the-camera.jpg?s=612x612&w=0&k=20&c=EqR2Lffp4tkIYzpqYh8aYIPRr-gmZliRHRxcQC5yylY=',
+                            userName: user?.fullName ?? 'Unknown Username',
+                            isVerification: false,
+                          );
+                        }),
                         SizedBox(height: 16),
 
                         //Content Product Detail
                         //Price Tag
                         ProductDetailPriceTagShop(
-                          isOnSale: true,
-                          discountTag: '25%',
-                          originalPrice: '\$135.00',
-                          finalPrice: '\$100.25',
+                          finalPrice: product.productPrice ?? 0.00,
                         ),
 
                         SizedBox(height: 16),
 
                         //Title
                         Text(
-                          'JBL Flip 6',
+                          product.productName ?? 'Unknown Product',
                           style: TextStyle(
                             fontSize: 20,
                             fontFamily: 'Roboto-Regular',
@@ -145,7 +191,7 @@ class _ProductDetailShopState extends State<ProductDetailShop> {
                                 ),
                               ),
                               TextSpan(
-                                text: 'New',
+                                text: product.selectedCondition ?? 'Unknown',
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontFamily: 'Roboto-Bold',
@@ -203,9 +249,7 @@ class _ProductDetailShopState extends State<ProductDetailShop> {
                         SizedBox(height: 8),
 
                         ReadMoreText(
-                          'JBL Flip 6 delivers powerful, crystal-clear sound with JBL Original Pro Sound technology. '
-                          '\nWith a bold design and IP67 waterproof and dustproof rating, it’s perfect for indoor and outdoor use. '
-                          '\nEnjoy up to 12 hours of playtime on a single charge. ',
+                          product.productDescription ?? 'Unknown Description',
                           trimLines: 3,
                           trimMode: TrimMode.Line,
                           trimCollapsedText: ' View more',
@@ -260,7 +304,7 @@ class _ProductDetailShopState extends State<ProductDetailShop> {
                 ],
               ),
             ),
-            bottomNavigationBar: ShopProductDetailBottomNavigation(),
+            bottomNavigationBar: ShopProductDetailBottomNavigation(product: product),
           ),
         ),
       ),

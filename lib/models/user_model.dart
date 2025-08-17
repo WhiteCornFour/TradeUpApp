@@ -1,4 +1,4 @@
-class UserModal {
+class UserModel {
   String? _userId;
   String? _email;
   String? _password;
@@ -10,12 +10,12 @@ class UserModal {
   double? _rating;
   String? _tagName;
   int? _role; //  1 là user || 2 là bussiness
-  
+
   //Truyền sau
   int? total_reviews;
   int? get totalReviews => total_reviews;
   // Constructor
-  UserModal({
+  UserModel({
     String? userId,
     String? email,
     String? password,
@@ -65,8 +65,8 @@ class UserModal {
   set role(int? value) => _role = value;
 
   //Factory fromMap
-  factory UserModal.fromMap(Map<String, dynamic> map, {String? docId}) {
-    return UserModal(
+  factory UserModel.fromMap(Map<String, dynamic> map, {String? docId}) {
+    return UserModel(
       userId: docId,
       email: map['email'],
       password: map['passWord'],

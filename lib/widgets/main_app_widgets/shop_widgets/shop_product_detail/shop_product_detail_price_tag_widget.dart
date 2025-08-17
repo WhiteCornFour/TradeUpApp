@@ -1,62 +1,47 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class ProductDetailPriceTagShop extends StatelessWidget {
-  final String originalPrice;
-  final String finalPrice;
-  final String discountTag;
-  final bool isOnSale;
+  final double finalPrice;
 
-  const ProductDetailPriceTagShop({
-    super.key,
-    required this.originalPrice,
-    required this.finalPrice,
-    this.discountTag = '',
-    this.isOnSale = false,
-  });
+  const ProductDetailPriceTagShop({super.key, required this.finalPrice});
+
+  String formatCurrency(double value) {
+    final formatter = NumberFormat.currency(
+      locale: 'en_US',
+      symbol: '',
+      decimalDigits: 2,
+    );
+    return formatter.format(value);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.end,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (isOnSale)
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-            decoration: BoxDecoration(
-              color: const Color(0xFFFFE248),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Text(
-              discountTag,
-              style: Theme.of(
-                context,
-              ).textTheme.labelLarge!.copyWith(color: Colors.black),
+        // ký hiệu $
+        Padding(
+          padding: const EdgeInsets.only(top: 4),
+          child: Text(
+            '\$',
+            style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+              color: Colors.black,
             ),
           ),
+        ),
+        const SizedBox(width: 2),
 
-        //if isOnSale is true
-        if (isOnSale) SizedBox(width: 12),
-
-        //Original Price
-        if (isOnSale)
-          Text(
-            originalPrice,
-            style: TextStyle(
-              fontSize: 16,
-              color: Colors.grey,
-              decoration: TextDecoration.lineThrough,
-            ),
-          ),
-
-        if (isOnSale) const SizedBox(width: 12),
-
-        //Final Price
+        // giá chính
         Text(
-          finalPrice,
+          formatCurrency(finalPrice),
           style: const TextStyle(
-            fontSize: 24,
+            fontSize: 28,
             fontWeight: FontWeight.bold,
             color: Colors.black,
+            letterSpacing: -0.5,
           ),
         ),
       ],

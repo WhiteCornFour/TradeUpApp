@@ -5,23 +5,29 @@ import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/shop_post_card/
 class PostCardHeaderShop extends StatelessWidget {
   const PostCardHeaderShop({
     super.key,
+    required this.userId,
+    required this.productId,
     required this.userName,
     required this.timeAgo,
     this.userAvatar,
+    this.isOwnPost = false,
   });
 
-  final String userName, timeAgo;
+  final String userId, productId, userName, timeAgo;
   final String? userAvatar;
+  final bool isOwnPost;
 
   @override
   Widget build(BuildContext context) {
+    print('Status: {$isOwnPost}');
+
     return Padding(
       padding: const EdgeInsets.all(12),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          // Avatar + Name & Time
+          //Avatar + Name & Time
           Row(
             children: [
               GestureDetector(
@@ -65,21 +71,28 @@ class PostCardHeaderShop extends StatelessWidget {
             ],
           ),
 
-          // More Button
-          IconButton(
-            icon: const Icon(Iconsax.more),
-            color: Colors.black,
-            onPressed: () {
-              showModalBottomSheet(
-                context: context,
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-                ),
-                backgroundColor: Colors.white,
-                builder: (context) => const PostCardBottomSheetShop(),
-              );
-            },
-          ),
+          //More Button chỉ hiển thị nếu không phải bài post của chính user
+          if (!isOwnPost)
+            IconButton(
+              icon: const Icon(Iconsax.more),
+              color: Colors.black,
+              onPressed: () {
+                showModalBottomSheet(
+                  context: context,
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(20),
+                    ),
+                  ),
+                  backgroundColor: Colors.white,
+                  builder: (context) => PostCardBottomSheetShop(
+                    userId: userId,
+                    userName: userName,
+                    productId: productId,
+                  ),
+                );
+              },
+            ),
         ],
       ),
     );

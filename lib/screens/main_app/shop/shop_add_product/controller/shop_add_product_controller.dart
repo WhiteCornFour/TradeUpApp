@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -225,7 +226,7 @@ class AddProductController extends GetxController {
 
       //Tạo ProductModel từ dữ liệu nhập
       final product = ProductModel(
-        id: null, //Firestore sẽ tự sinh ID
+        productId: null, //Firestore sẽ tự sinh ID
         userId: currentUser.uid,
         productName: productNameController.text.trim(),
         productPrice:
@@ -236,7 +237,7 @@ class AddProductController extends GetxController {
         imageList: urlImageList,
         productStory: productStoryController.text.trim(),
         status: 1,
-        createdAt: DateTime.now().toIso8601String(),
+        createdAt: Timestamp.now(),
       );
 
       //Gọi DatabaseService để lưu lên Firestore

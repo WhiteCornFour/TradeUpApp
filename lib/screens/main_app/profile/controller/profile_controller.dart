@@ -11,7 +11,7 @@ import 'package:tradeupapp/widgets/general/general_snackbar_helper.dart';
 
 class ProfileController extends GetxController {
   Rx<bool> isBusinessMode = false.obs;
-  var user = Rxn<UserModal>();
+  var user = Rxn<UserModel>();
   final isLoading = false.obs;
 
   late BuildContext context;
@@ -29,7 +29,7 @@ class ProfileController extends GetxController {
     try {
       final data = await DatabaseService().fetchDataCurrentUser();
       if (data != null) {
-        user.value = UserModal.fromMap(data);
+        user.value = UserModel.fromMap(data);
         isBusinessMode.value = user.value?.role != 1;
       }
     } catch (e) {
@@ -53,7 +53,7 @@ class ProfileController extends GetxController {
         .snapshots()
         .listen((doc) {
           if (doc.exists) {
-            user.value = UserModal.fromMap(doc.data()!);
+            user.value = UserModel.fromMap(doc.data()!);
             isBusinessMode.value = user.value?.role != 1;
           }
         });

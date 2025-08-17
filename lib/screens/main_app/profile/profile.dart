@@ -5,6 +5,7 @@ import 'package:tradeupapp/screens/main_app/profile/about_us/about_us.dart';
 import 'package:tradeupapp/screens/main_app/profile/change_password/change_password.dart';
 import 'package:tradeupapp/screens/main_app/profile/controller/profile_controller.dart';
 import 'package:tradeupapp/screens/main_app/profile/report/report.dart';
+import 'package:tradeupapp/screens/main_app/profile/save_product/save_product.dart';
 import 'package:tradeupapp/widgets/general/general_custom_dialog.dart';
 import 'package:tradeupapp/widgets/general/general_snackbar_helper.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/user_profile_widgets/user_profile_appbar_custom_widget.dart';
@@ -141,6 +142,14 @@ class _ProfileState extends State<Profile> {
                             label: 'Sales history',
                           )
                         : SizedBox(),
+
+                    CategoryFuncUserProfile(
+                      onTap: () {
+                        profileController.navigatorFunc(const SaveProduct());
+                      },
+                      icon: Icons.bookmark,
+                      label: 'Save product',
+                    ),
 
                     CategoryFuncUserProfile(
                       onTap: () =>

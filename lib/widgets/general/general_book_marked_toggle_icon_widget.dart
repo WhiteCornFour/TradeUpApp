@@ -27,6 +27,14 @@ class _BookmarkedToggleButtonGeneralState
     isBookmarked = widget.initialState;
   }
 
+  @override
+  void didUpdateWidget(covariant BookmarkedToggleButtonGeneral oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.initialState != widget.initialState) {
+      isBookmarked = widget.initialState;
+    }
+  }
+
   void _toggleBookmark() {
     setState(() => isBookmarked = !isBookmarked);
     widget.onChanged?.call(isBookmarked);

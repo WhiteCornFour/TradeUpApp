@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
@@ -6,6 +7,7 @@ import 'package:tradeupapp/constants/app_colors.dart';
 import 'package:tradeupapp/firebase/auth_service.dart';
 import 'package:tradeupapp/screens/main_app/shop/controllers/shop_controller.dart';
 import 'package:tradeupapp/screens/main_app/shop/personal.dart';
+import 'package:tradeupapp/screens/main_app/shop/shop_product_detail/shop_product_detail.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/shop_pop_menu/shop_pop_menu_widget.dart';
 import 'package:tradeupapp/widgets/general/general_search_app_bar_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/shop_post_card/shop_post_card_widget.dart';
@@ -18,12 +20,13 @@ class Shop extends StatefulWidget {
 }
 
 class _ShopState extends State<Shop> {
-  final shopController = Get.put(ShopController());
+  final shopController = Get.find<ShopController>();
   final idCurrentUser = AuthServices().currentUser!.uid;
+
   //hàm covert thời gian của createAt
-  String _formatIsoToNgayGio(String iso) {
-    if (iso.isEmpty) return 'Unknown';
-    final date = DateTime.parse(iso).toLocal();
+  String _formatTimestampToNgayGio(Timestamp? timestamp) {
+    if (timestamp == null) return 'Unknown';
+    final date = timestamp.toDate().toLocal();
     final ngay = DateFormat('d/M/yyyy').format(date);
     final gio = DateFormat('HH:mm').format(date);
     return '$ngay at $gio';
@@ -129,12 +132,23 @@ class _ShopState extends State<Shop> {
                       final user = shopController.usersCache[feed.userId];
 
                       return PostCardShop(
+                        onPressed: () {
+                          Get.to(
+                            () => ProductDetailShop(
+                              product: feed,
+                              userId: feed.userId,
+                            ),
+                          );
+                        },
                         imageUrls: feed.imageList ?? [],
                         description: feed.productDescription ?? '',
                         userName: user?.fullName ?? 'Loading...',
-                        timeAgo: _formatIsoToNgayGio(feed.createdAt ?? ''),
+                        timeAgo: _formatTimestampToNgayGio(feed.createdAt),
                         likeCount: 123,
                         userAvatar: user?.avtURL ?? '',
+                        userId: feed.userId,
+                        currentUserId: idCurrentUser,
+                        productId: feed.productId,
                       );
                     },
                   );

@@ -3,12 +3,13 @@ import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:tradeupapp/constants/app_colors.dart';
 import 'package:tradeupapp/models/product_model.dart';
+import 'package:tradeupapp/screens/main_app/home/controller/home_controller.dart';
+import 'package:tradeupapp/screens/main_app/profile/save_product/controller/save_product_controller.dart';
 import 'package:tradeupapp/screens/main_app/shop/shop_product_detail/shop_product_detail.dart';
-import 'package:tradeupapp/widgets/general/general_search_app_bar_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/home_widgets/home_image_container_widget.dart';
 import 'package:tradeupapp/widgets/general/general_book_marked_toggle_icon_widget.dart';
 
-class ProductCardVerticalHome extends StatelessWidget {
+class ProductCardVerticalHome extends StatefulWidget {
   const ProductCardVerticalHome({
     super.key,
     required this.product,
@@ -19,14 +20,36 @@ class ProductCardVerticalHome extends StatelessWidget {
   final Map<String, String> userIdToUserName;
 
   @override
-  Widget build(BuildContext context) {
-    final userName = userIdToUserName[product.userId] ?? 'Unknown User';
-    print('Product: ${product.productName}, userId: ${product.userId}');
-    print('Mapped name: ${homeController.getUserNameById(product.userId)}');
+  State<ProductCardVerticalHome> createState() =>
+      _ProductCardVerticalHomeState();
+}
 
+class _ProductCardVerticalHomeState extends State<ProductCardVerticalHome> {
+  final homeController = Get.find<HomeController>();
+  final saveController = Get.find<SaveProductController>();
+
+  @override
+  void initState() {
+    super.initState();
+    final currentUserId = homeController.currentUserId;
+    if (currentUserId != null && widget.product.productId != null) {
+      saveController.checkIfSaved(currentUserId, widget.product.productId!);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final userName =
+        widget.userIdToUserName[widget.product.userId] ?? 'Unknown User';
+
+    // print('Product Name: ${widget.product.userId}');
+    // print('Product: ${product.productName}, userId: ${product.userId}');
+    // print('Mapped name: ${homeController.getUserNameById(product.userId)}');
+    final homeController = Get.find<HomeController>();
+    final saveController = Get.find<SaveProductController>();
     return GestureDetector(
       onTap: () {
-        Get.to(() => ProductDetailShop());
+        Get.to(() => ProductDetailShop(product: widget.product, userId: widget.product.userId));
       },
       child: Container(
         width: 180,
@@ -62,48 +85,35 @@ class ProductCardVerticalHome extends StatelessWidget {
                     height: 180,
                     width: double.infinity,
                     //Kiểm tra xem có null hoặc empty k
-                    imageUrl: product.imageList?.isNotEmpty == true
-                        ? product.imageList!.first
+                    imageUrl: widget.product.imageList?.isNotEmpty == true
+                        ? widget.product.imageList!.first
                         : '',
                     isNetworkImage: true,
                     applyImageRadius: true,
                   ),
 
-                  //Sale Tag
-                  // Positioned(
-                  //   top: 12,
-                  //   left: 12,
-                  //   child: Container(
-                  //     padding: const EdgeInsets.symmetric(
-                  //       horizontal: 8,
-                  //       vertical: 4,
-                  //     ),
-                  //     decoration: BoxDecoration(
-                  //       boxShadow: [
-                  //         BoxShadow(
-                  //           color: Colors.black.withOpacity(0.8),
-                  //           blurRadius: 50,
-                  //           offset: const Offset(0, 2),
-                  //           spreadRadius: 7,
-                  //         ),
-                  //       ],
-                  //       color: const Color(0xFFFFE248),
-                  //       borderRadius: BorderRadius.circular(8),
-                  //     ),
-                  //     child: Text(
-                  //       '25%',
-                  //       style: Theme.of(
-                  //         context,
-                  //       ).textTheme.labelLarge!.apply(color: Colors.black),
-                  //     ),
-                  //   ),
-                  // ),
-
                   //Favourie Button
                   Positioned(
                     top: 5,
                     right: 8,
-                    child: BookmarkedToggleButtonGeneral(),
+                    child: Obx(() {
+                      final currentUserId = homeController.currentUserId;
+                      if (currentUserId == null) return const SizedBox();
+
+                      final productId = widget.product.productId ?? '';
+                      final isSaved =
+                          saveController.savedStatus[productId] ?? false;
+
+                      return BookmarkedToggleButtonGeneral(
+                        initialState: isSaved,
+                        onChanged: (_) {
+                          saveController.toggleSaveProduct(
+                            currentUserId,
+                            productId,
+                          );
+                        },
+                      );
+                    }),
                   ),
                 ],
               ),
@@ -119,7 +129,7 @@ class ProductCardVerticalHome extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    product.productName ?? 'Unnamed Product',
+                    widget.product.productName ?? 'Unnamed Product',
                     style: TextStyle(
                       fontSize: 14,
                       fontFamily: 'Roboto-Regular',
@@ -161,7 +171,7 @@ class ProductCardVerticalHome extends StatelessWidget {
                     children: [
                       //Price
                       Text(
-                        '\$${product.productPrice?.toStringAsFixed(2) ?? "0.00"}',
+                        '\$${widget.product.productPrice?.toStringAsFixed(2) ?? "0.00"}',
                         style: TextStyle(
                           fontSize: 18,
                           fontFamily: 'Roboto-Bold',
@@ -173,7 +183,16 @@ class ProductCardVerticalHome extends StatelessWidget {
                       ),
 
                       GestureDetector(
-                        onTap: () => {print('Go to chat box')},
+                        onTap: () => {
+                          if (widget.product.userId != null)
+                            {
+                              homeController.handleSendMessage(
+                                widget.product.userId!,
+                              ),
+                            }
+                          else
+                            {print('Home: Cannot enter chatroom')},
+                        },
                         child: Container(
                           decoration: const BoxDecoration(
                             color: AppColors.header,
