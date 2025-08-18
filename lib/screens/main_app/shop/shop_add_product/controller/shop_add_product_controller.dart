@@ -238,6 +238,7 @@ class AddProductController extends GetxController {
         productStory: productStoryController.text.trim(),
         status: 1,
         createdAt: Timestamp.now(),
+        likedBy: [],
       );
 
       //Gọi DatabaseService để lưu lên Firestore

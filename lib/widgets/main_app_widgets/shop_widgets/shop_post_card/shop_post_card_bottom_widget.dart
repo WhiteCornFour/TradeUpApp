@@ -9,14 +9,20 @@ class PostCardBottomShop extends StatelessWidget {
     required this.likeCount,
     required this.userId,
     required this.userName,
+    required this.productId,
+    required this.likedBy,
   });
 
   final int likeCount;
-  final String? userId, userName;
+  final String? userId, userName, productId;
+  final List<String> likedBy;
 
   @override
   Widget build(BuildContext context) {
     final shopController = Get.find<ShopController>();
+    String? currentUserId = shopController.currentUserId.value;
+    //Kiểm tra xem người dùng hiện tại có nằm trong danh sách người like bài viết
+    final bool isLiked = likedBy.contains(currentUserId);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
@@ -29,10 +35,28 @@ class PostCardBottomShop extends StatelessWidget {
               Row(
                 children: [
                   IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Iconsax.heart),
-                    color: Colors.black,
-                    tooltip: 'Like',
+                    onPressed: () async {
+                      print('User id liked post card: $currentUserId');
+                      print('Product id liked post card: $productId');
+                      if (userId == null || productId == null) return;
+
+                      if (isLiked) {
+                        await shopController.unlikeProduct(
+                          productId!,
+                          currentUserId,
+                        );
+                      } else {
+                        await shopController.likeProduct(
+                          productId!,
+                          currentUserId,
+                        );
+                      }
+                    },
+                    icon: Icon(
+                      isLiked ? Iconsax.heart5 : Iconsax.heart,
+                      color: isLiked ? Colors.red : Colors.black,
+                    ),
+                    tooltip: isLiked ? 'Unlike' : 'Like',
                   ),
                   SizedBox(width: 4),
                   Text('$likeCount Likes', style: TextStyle(fontSize: 14)),
@@ -64,8 +88,7 @@ class PostCardBottomShop extends StatelessWidget {
                 tooltip: 'Contact',
               ),
               IconButton(
-                onPressed: () {
-                },
+                onPressed: () {},
                 icon: Icon(Icons.share),
                 color: Colors.black,
                 tooltip: 'Share',
