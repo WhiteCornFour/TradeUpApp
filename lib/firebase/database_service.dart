@@ -378,24 +378,17 @@ class DatabaseService {
     }
   }
 
-  //PersonnalController: fetch danh sách product mà người dùng đã đăng khi truyền vào id người dùng
-  Future<List<ProductModel>> getProductByIdUser(String userId) async {
-    try {
-      final snapshot = await FirebaseFirestore.instance
-          .collection('products')
-          .where('userId', isEqualTo: userId)
-          .get();
-
-      final products = snapshot.docs.map((doc) {
-        return ProductModel.fromMap(doc.data());
-      }).toList();
-
-      return products;
-    } catch (e) {
-      // ignore: avoid_print
-      print('Error fetchFeedsByIdUser: $e');
-      return [];
-    }
+  //PersonnalController: fetch danh sách product mà người dùng đã đăng khi truyền vào id người dùng (Biết rằng dùng Stream để real time)
+  Stream<List<ProductModel>> getProductsByUserStream(String userId) {
+    return FirebaseFirestore.instance
+        .collection('products')
+        .where('userId', isEqualTo: userId)
+        .snapshots()
+        .map((snapshot) {
+          return snapshot.docs
+              .map((doc) => ProductModel.fromMap(doc.data()))
+              .toList();
+        });
   }
 
   //PersonalController: Cập nhật lại rating của user khi truyền vào id user và điểm rating
@@ -582,5 +575,33 @@ class DatabaseService {
     }
 
     return products;
+  }
+
+  //ShopController: Thêm UserId vào mục LikedBy của Product
+  Future<void> likeProduct(String productId, String userId) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('products')
+          .doc(productId)
+          .update({
+            'likedBy': FieldValue.arrayUnion([userId]),
+          });
+    } catch (e) {
+      print("Error while liking product: $e");
+    }
+  }
+
+  //ShopController: Xóa UserId vào mục LikedBy của Product
+  Future<void> unlikeProduct(String productId, String userId) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('products')
+          .doc(productId)
+          .update({
+            'likedBy': FieldValue.arrayRemove([userId]),
+          });
+    } catch (e) {
+      print("Error while unliking product: $e");
+    }
   }
 }

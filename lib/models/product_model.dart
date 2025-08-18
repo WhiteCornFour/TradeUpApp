@@ -12,6 +12,7 @@ class ProductModel {
   String? _productStory;
   int? _status; // 0 chưa bán, 1 đã bán
   Timestamp? _createdAt;
+  List<String>? _likedBy;
 
   // Constructor
   ProductModel({
@@ -26,6 +27,7 @@ class ProductModel {
     String? productStory,
     int? status,
     Timestamp? createdAt,
+    List<String>? likedBy,
   }) : _productId = productId,
        _userId = userId,
        _productName = productName,
@@ -36,7 +38,8 @@ class ProductModel {
        _imageList = imageList ?? [],
        _productStory = productStory,
        _status = status ?? 1,
-       _createdAt = createdAt ?? Timestamp.now();
+       _createdAt = createdAt ?? Timestamp.now(),
+       _likedBy = likedBy ?? [];
 
   // Getters
   String? get productId => _productId;
@@ -50,6 +53,7 @@ class ProductModel {
   String? get productStory => _productStory;
   int? get status => _status;
   Timestamp? get createdAt => _createdAt;
+  List<String>? get likedBy => _likedBy;
 
   // Setters
   set productId(String? value) => _productId = value;
@@ -63,6 +67,7 @@ class ProductModel {
   set productStory(String? value) => _productStory = value;
   set status(int? value) => _status = value;
   set createdAt(Timestamp? value) => _createdAt = value;
+  set likedBy(List<String>? value) => _likedBy = value;
 
   // Convert object to Map (Firebase)
   Map<String, dynamic> toMap() {
@@ -78,6 +83,7 @@ class ProductModel {
       'productStory': _productStory,
       'status': _status,
       'createdAt': _createdAt ?? Timestamp.now(),
+      'likedBy': _likedBy ?? [],
     };
   }
 
@@ -97,6 +103,7 @@ class ProductModel {
       productStory: map['productStory'],
       status: map['status'],
       createdAt: map['createdAt'] is Timestamp ? map['createdAt'] : null,
+      likedBy: List<String>.from(map['likedBy'] ?? []),
     );
   }
 }
