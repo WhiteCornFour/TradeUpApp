@@ -10,6 +10,7 @@ class CategoryHeadBannerGeneral extends StatelessWidget
     required this.overlayColor,
     this.subTitle,
     this.height = 220,
+    this.onBack,
   });
 
   final String title;
@@ -17,6 +18,7 @@ class CategoryHeadBannerGeneral extends StatelessWidget
   final String imagePath;
   final Color overlayColor;
   final double height;
+  final VoidCallback? onBack;
 
   @override
   Widget build(BuildContext context) {
@@ -100,7 +102,7 @@ class CategoryHeadBannerGeneral extends StatelessWidget
               ),
               child: IconButton(
                 icon: const Icon(Icons.arrow_back, color: Colors.white),
-                onPressed: Get.back,
+                onPressed: onBack ?? () => Get.back(),
               ),
             ),
           ),

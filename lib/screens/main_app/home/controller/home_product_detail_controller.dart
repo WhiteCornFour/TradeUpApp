@@ -7,6 +7,9 @@ class ProductDetailController extends GetxController {
   /// Variables
   /// ---------
 
+  //Trạng thái Loading cho trang
+  var isLoading = false.obs;
+
   //Ảnh đang chọn
   var selectedImage = ''.obs;
 
@@ -14,34 +17,41 @@ class ProductDetailController extends GetxController {
     selectedImage.value = url;
   }
 
-  //Rating sau khi tinh
+  //Điểm rating trung bình
   RxDouble rating = 0.0.obs;
 
-  //Lay user model
+  //Tổng số review
+  RxInt ratingCount = 0.obs;
+
+  //Thông tin user (chủ shop)
   var user = Rxn<UserModel>();
 
   final db = DatabaseService();
 
   //Hàm fetch User theo id
   Future<void> loadUserDataById(String userId) async {
-    final fetchedUser = await db.fetchUserModelById(userId);
-    user.value = fetchedUser;
-    _calculatorRating(); 
+    isLoading.value = true;
+    try {
+      final fetchedUser = await db.fetchUserModelById(userId);
+      if (fetchedUser != null) {
+        user.value = fetchedUser;
+
+        // Cập nhật tổng số review
+        ratingCount.value = fetchedUser.totalReviews ?? 0;
+
+        // Cập nhật điểm trung bình
+        _calculateRating(fetchedUser.rating, fetchedUser.totalReviews);
+      }
+    } finally {
+      isLoading.value = false;
+    }
   }
 
-  void _calculatorRating() {
-    if (user.value != null) {
-      final totalReviews = (user.value!.totalReviews ?? 0).toDouble();
-      final totalRating = (user.value!.rating ?? 0).toDouble();
-
-      if (totalReviews > 0) {
-        double avg = totalRating / totalReviews;
-        rating.value = double.parse(
-          avg.toStringAsFixed(1),
-        ); // Làm tròn 1 chữ số
-      } else {
-        rating.value = 0.0;
-      }
+  void _calculateRating(double? totalRating, int? totalReviews) {
+    if (totalReviews != null && totalReviews > 0 && totalRating != null) {
+      double avg = totalRating / totalReviews;
+      rating.value = double.parse(avg.toStringAsFixed(1)); 
+      rating.value = 0.0;
     }
   }
 }

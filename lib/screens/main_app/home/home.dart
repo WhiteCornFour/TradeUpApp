@@ -4,8 +4,8 @@ import 'package:iconsax/iconsax.dart';
 import 'package:tradeupapp/constants/app_colors.dart';
 import 'package:tradeupapp/firebase/database_service.dart';
 import 'package:tradeupapp/screens/general/general_all_categories.dart';
+import 'package:tradeupapp/screens/general/general_all_products.dart';
 import 'package:tradeupapp/screens/main_app/home/controller/home_controller.dart';
-import 'package:tradeupapp/screens/main_app/home/controller/home_drawer_controller.dart';
 import 'package:tradeupapp/screens/main_app/profile/save_product/controller/save_product_controller.dart';
 import 'package:tradeupapp/screens/main_app/shop/controllers/shop_controller.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/home_widgets/home_dot_indicator_widget.dart';
@@ -27,7 +27,6 @@ class Home extends StatefulWidget {
 class _Home extends State<Home> {
   final PageController _pageController = PageController(viewportFraction: 0.92);
   final homeController = Get.put(HomeController());
-  final homeDrawerController = Get.put(HomeDrawerController());
   final shopController = Get.put(ShopController());
   final saveController = Get.put(SaveProductController());
   final db = DatabaseService();
@@ -47,7 +46,6 @@ class _Home extends State<Home> {
       if (homeController.user.value != null) {
         homeController.loadSearchHistory();
       }
-
     });
   }
 
@@ -157,6 +155,10 @@ class _Home extends State<Home> {
                 HeaderSectionGeneral(
                   title: 'Discover',
                   icon: Iconsax.ticket_star,
+                  onTap: () {
+                    homeController.selectedSortOption.value = 'Newest';
+                    Get.to(() => AllProductsGeneral());
+                  },
                 ),
                 //Option Group
                 const SizedBox(height: 10),
@@ -164,7 +166,10 @@ class _Home extends State<Home> {
                 //List of Product
                 const SizedBox(height: 15),
                 Obx(() {
-                  final products = homeController.getFilteredProducts();
+                  final products = homeController.getFilteredProducts(
+                    inputProducts: homeController.productList,
+                    limitTo10: true,
+                  );
 
                   return Padding(
                     padding: EdgeInsets.symmetric(horizontal: 10),

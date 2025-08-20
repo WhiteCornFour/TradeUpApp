@@ -60,10 +60,9 @@ class ProductDetailImageSliderShop extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 24),
               child: SizedBox(
                 height: 80,
-                child: imageList.length < 3
+                child: imageList.length <= 3
                     ? Row(
-                        mainAxisAlignment:
-                            MainAxisAlignment.center, 
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: imageList.map((imageUrl) {
                           return Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 5),
