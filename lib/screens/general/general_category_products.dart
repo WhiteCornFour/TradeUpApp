@@ -4,6 +4,7 @@ import 'package:tradeupapp/models/category_model.dart';
 import 'package:tradeupapp/screens/main_app/home/controller/home_controller.dart';
 import 'package:tradeupapp/widgets/general/general_category_head_banner_widget.dart';
 import 'package:tradeupapp/widgets/general/general_grid_view_product_vertical_list_widget.dart';
+import 'package:tradeupapp/widgets/main_app_widgets/home_widgets/home_sort_option_group/home_sort_option_group_widget.dart';
 
 class CategoryProductsGeneral extends StatelessWidget {
   const CategoryProductsGeneral({super.key});
@@ -26,21 +27,34 @@ class CategoryProductsGeneral extends StatelessWidget {
           children: [
             //Head Banner
             CategoryHeadBannerGeneral(
+              onBack: () {
+                homeController.selectedSortOption.value = 'Newest';
+                Get.back();
+              },
               title: category.name,
               subTitle: category.description,
               imagePath: category.imagePath,
               overlayColor: category.colorStrong,
             ),
-            SizedBox(height: 30),
+
+            const SizedBox(height: 15),
+            SortOptionGroupHome(),
+            SizedBox(height: 15),
 
             //Grid View List Product
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10),
-              child: GridViewProductVerticalListGeneral(
-                productList: filteredProducts,
-                userIdToUserName: homeController.userIdToUserName,
-              ),
-            ),
+            Obx(() {
+              final products = homeController.getFilteredProducts(
+                inputProducts: filteredProducts,
+              );
+
+              return Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10),
+                child: GridViewProductVerticalListGeneral(
+                  productList: products,
+                  userIdToUserName: homeController.userIdToUserName,
+                ),
+              );
+            }),
             SizedBox(height: 30),
           ],
         ),

@@ -12,8 +12,9 @@ class ProductDetailHeaderShop extends StatelessWidget {
     this.isVerification = false,
   });
 
-  final String rating, ratingCount, userAvatar, userName;
+  final String rating, ratingCount, userName;
   final bool isVerification;
+  final String? userAvatar;
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +22,14 @@ class ProductDetailHeaderShop extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         // Avatar
-        CircleAvatar(radius: 20, backgroundImage: NetworkImage(userAvatar)),
+        CircleAvatar(
+          radius: 20,
+          backgroundImage: userAvatar != null && userAvatar!.isNotEmpty
+              ? NetworkImage(userAvatar!)
+              : const AssetImage("assets/images/avatar-user.png")
+                    as ImageProvider,
+        ),
+
         const SizedBox(width: 10),
 
         //User Info

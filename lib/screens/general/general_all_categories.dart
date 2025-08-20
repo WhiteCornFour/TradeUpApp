@@ -15,6 +15,7 @@ class AllCategoriesGeneral extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.white,
+      resizeToAvoidBottomInset: false,
       appBar: CustomAppBarGeneral(
         showBackArrow: false,
         backgroundColor: Colors.white,
@@ -25,39 +26,43 @@ class AllCategoriesGeneral extends StatelessWidget {
           style: TextStyle(fontFamily: 'Roboto-Medium'),
         ),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 20),
-          child: Obx(() {
-            final categoryList = homeController.categoryList;
+      body: SafeArea(
+        bottom: false,
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 20),
+            child: Obx(() {
+              final categoryList = homeController.categoryList;
 
-            if (categoryList.isEmpty) {
-              return const Center(child: CircularProgressIndicator());
-            }
+              if (categoryList.isEmpty) {
+                return const Center(child: CircularProgressIndicator());
+              }
 
-            return GridView.builder(
-              padding: EdgeInsets.zero,
-              itemCount: categoryList.length,
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 16,
-                mainAxisSpacing: 16,
-                mainAxisExtent: 125,
-              ),
-              itemBuilder: (context, index) => CategoryCardButtonGeneral(
-                category: categoryList[index],
-                showBorder: true,
-                onTap: () {
-                  Get.to(
-                    () => const CategoryProductsGeneral(),
-                    arguments: categoryList[index], //Truyền category đúng ở đây
-                  );
-                },
-              ),
-            );
-          }),
+              return GridView.builder(
+                padding: EdgeInsets.zero,
+                itemCount: categoryList.length,
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 16,
+                  mainAxisSpacing: 16,
+                  mainAxisExtent: 125,
+                ),
+                itemBuilder: (context, index) => CategoryCardButtonGeneral(
+                  category: categoryList[index],
+                  showBorder: true,
+                  onTap: () {
+                    Get.to(
+                      () => const CategoryProductsGeneral(),
+                      arguments:
+                          categoryList[index], //Truyền category đúng ở đây
+                    );
+                  },
+                ),
+              );
+            }),
+          ),
         ),
       ),
     );

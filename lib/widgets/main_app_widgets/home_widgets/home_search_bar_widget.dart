@@ -5,7 +5,7 @@ class SearchBarHome extends StatelessWidget {
   const SearchBarHome({
     super.key,
     this.isReadOnly = false,
-    this.onChanged,
+    this.controller,
     this.onTap,
     this.hintText = 'Looking for something...',
   });
@@ -13,7 +13,7 @@ class SearchBarHome extends StatelessWidget {
   final bool isReadOnly;
   final VoidCallback? onTap;
   final String hintText;
-  final ValueChanged<String>? onChanged;
+  final TextEditingController? controller;
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +33,7 @@ class SearchBarHome extends StatelessWidget {
           SizedBox(width: 12),
           Expanded(
             child: TextField(
-              onChanged: onChanged,
+              controller: controller,
               readOnly: isReadOnly,
               onTap: onTap,
               style: TextStyle(
