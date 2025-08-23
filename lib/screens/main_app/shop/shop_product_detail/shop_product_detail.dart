@@ -6,6 +6,9 @@ import 'package:readmore/readmore.dart';
 import 'package:tradeupapp/constants/app_colors.dart';
 import 'package:tradeupapp/models/category_model.dart';
 import 'package:tradeupapp/models/product_model.dart';
+import 'package:tradeupapp/screens/general/general_share_show_bottom_sheet.dart';
+import 'package:tradeupapp/screens/main_app/chat/controllers/chat_room_controller.dart';
+import 'package:tradeupapp/screens/main_app/chat/controllers/message_controller.dart';
 import 'package:tradeupapp/screens/main_app/home/controller/home_controller.dart';
 import 'package:tradeupapp/screens/main_app/home/controller/home_product_detail_controller.dart';
 import 'package:tradeupapp/screens/main_app/profile/save_product/controller/save_product_controller.dart';
@@ -36,6 +39,7 @@ class _ProductDetailShopState extends State<ProductDetailShop> {
   final homeController = Get.find<HomeController>();
   final productDetailController = Get.put(ProductDetailController());
   final saveController = Get.find<SaveProductController>();
+  ChatRoomController? chatRoomController;
 
   //Trạng thái Loading cho trang
   var isLoading = true.obs;
@@ -52,6 +56,7 @@ class _ProductDetailShopState extends State<ProductDetailShop> {
   @override
   void initState() {
     super.initState();
+    chatRoomController = Get.find<ChatRoomController>();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await productDetailController.loadUserDataById(widget.userId ?? '');
     });
@@ -175,6 +180,20 @@ class _ProductDetailShopState extends State<ProductDetailShop> {
                         children: [
                           //Header Product Detail (user info, rating)
                           ProductDetailHeaderShop(
+                            onPressedShareProduct: () {
+                              ShareShowBottomSheetGeneral.show(
+                                context,
+                                chatRoomController!.filteredChatRooms,
+                                chatRoomController!.searchController,
+                                chatRoomController!.isLoading.value,
+                                (idChatRoom) {
+                                  MessageController().handleSendProduct(
+                                    product.productId!,
+                                    idChatRoom,
+                                  );
+                                },
+                              );
+                            },
                             rating: '${productDetailController.rating.value}',
                             ratingCount:
                                 '${productDetailController.ratingCount.value}',

@@ -10,11 +10,13 @@ class ProductDetailHeaderShop extends StatelessWidget {
     required this.userAvatar,
     required this.userName,
     this.isVerification = false,
+    required this.onPressedShareProduct,
   });
 
   final String rating, ratingCount, userName;
   final bool isVerification;
   final String? userAvatar;
+  final Function onPressedShareProduct;
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +85,9 @@ class ProductDetailHeaderShop extends StatelessWidget {
 
         // Share Button
         IconButton(
-          onPressed: () {},
+          onPressed: () {
+            onPressedShareProduct();
+          },
           icon: const Icon(Icons.share),
           color: Colors.black,
         ),
