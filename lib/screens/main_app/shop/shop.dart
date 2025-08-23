@@ -144,7 +144,7 @@ class _ShopState extends State<Shop> {
                         description: feed.productDescription ?? '',
                         userName: user?.fullName ?? 'Loading...',
                         timeAgo: _formatTimestampToNgayGio(feed.createdAt),
-                        likeCount: 123,
+                        likedBy: feed.likedBy ?? [],
                         userAvatar: user?.avtURL ?? '',
                         userId: feed.userId,
                         currentUserId: idCurrentUser,

@@ -4,7 +4,6 @@ import 'package:iconsax/iconsax.dart';
 import 'package:tradeupapp/constants/app_colors.dart';
 import 'package:tradeupapp/screens/general/general_search_product.dart';
 import 'package:tradeupapp/screens/main_app/home/controller/home_controller.dart';
-import 'package:tradeupapp/screens/main_app/home/controller/home_drawer_controller.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/home_widgets/home_drawer/home_drawer_categories_choice_chips_group_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/home_widgets/home_drawer/home_drawer_condition_choice_chips_group_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/home_widgets/home_drawer/home_drawer_price_slider_widget.dart';
@@ -12,13 +11,25 @@ import 'package:tradeupapp/widgets/main_app_widgets/home_widgets/home_search_bar
 import 'package:tradeupapp/widgets/general/general_button_widget.dart';
 import 'package:tradeupapp/widgets/general/general_header_section_widget.dart';
 
-class DrawerHome extends StatelessWidget {
+class DrawerHome extends StatefulWidget {
   const DrawerHome({super.key});
+
+  @override
+  State<DrawerHome> createState() => _DrawerHomeState();
+}
+
+class _DrawerHomeState extends State<DrawerHome> {
+  final TextEditingController keywordController = TextEditingController();
+
+  // state tạm trong drawer
+  List<String> selectedCategories = [];
+  double minPrice = 0.0;
+  double maxPrice = 0.0;
+  String condition = "";
 
   @override
   Widget build(BuildContext context) {
     final homeController = Get.find<HomeController>();
-    final homeDrawerController = Get.put(HomeDrawerController());
 
     return DraggableScrollableSheet(
       expand: false,
@@ -35,8 +46,7 @@ class DrawerHome extends StatelessWidget {
           controller: controller,
           children: [
             //Search Bar
-            SizedBox(height: 12),
-            //Header Section: Search Bar
+            const SizedBox(height: 12),
             HeaderSectionGeneral(
               title: 'Search Bar',
               icon: Iconsax.search_favorite,
@@ -44,43 +54,44 @@ class DrawerHome extends StatelessWidget {
               paddingVertical: 0,
               showViewAll: false,
             ),
-            SizedBox(height: 12),
+            const SizedBox(height: 12),
             SearchBarHome(
+              controller: keywordController,
               hintText: 'Enter your keywords',
-              onChanged: (value) =>
-                  homeDrawerController.searchKeyword.value = value,
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
 
-            //Categories Tag
+            //Categories
             DrawerCategoriesChoiceChipsGroupHome(
               categories: homeController.categoryList,
-              onSelectionChanged: (selectedCategories) {
-                homeDrawerController.selectedCategories.assignAll(
-                  selectedCategories,
-                );
+              onSelectionChanged: (cats) {
+                setState(() {
+                  selectedCategories = cats;
+                });
               },
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
 
-            //Price Bar
+            //Price
             DrawerPriceSliderHome(
               onPriceChanged: (min, max) {
-                homeDrawerController.minPrice.value = min;
-                homeDrawerController.maxPrice.value = max;
+                setState(() {
+                  minPrice = min;
+                  maxPrice = max;
+                });
               },
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
 
             //Condition
             DrawerConditionChoiceChipsGroupHome(
               onSelectionChanged: (value) {
-                homeDrawerController.selectedCondition.value = value;
+                setState(() {
+                  condition = value;
+                });
               },
             ),
-            SizedBox(height: 20),
-
-            //Distance(optional)
+            const SizedBox(height: 20),
 
             //Apply Button
             ButtonGeneral(
@@ -89,12 +100,27 @@ class DrawerHome extends StatelessWidget {
               text: 'Apply',
               backgroundColor: AppColors.header,
               onPressed: () {
-                // Kiểm tra dữ liệu
-                homeDrawerController.searchProductsWithFilters();
-                Get.to(
-                  () => SearchProductGeneral(),
-                  arguments: {'type': 'filter'},
+                print('========== FILTER STATE ==========');
+                print('Keyword: ${keywordController.text}');
+                print('Selected Categories: $selectedCategories');
+                print('Min Price: $minPrice');
+                print('Max Price: $maxPrice');
+                print('Condition: $condition');
+                print('=================================');
+
+                //Gọi hàm search với dữ liệu gom lại từ drawer
+                homeController.searchProductsWithFilters(
+                  keyword: keywordController.text,
+                  categories: selectedCategories,
+                  minPrice: minPrice,
+                  maxPrice: maxPrice,
+                  condition: condition,
                 );
+
+                Get.back();
+                if (Get.currentRoute != '/SearchProductGeneral') {
+                  Get.to(() => const SearchProductGeneral());
+                }
               },
             ),
           ],
@@ -103,3 +129,4 @@ class DrawerHome extends StatelessWidget {
     );
   }
 }
+

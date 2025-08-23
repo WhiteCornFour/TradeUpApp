@@ -167,21 +167,24 @@ class _PersonalState extends State<Personal> {
                         physics: BouncingScrollPhysics(),
                         itemBuilder: (context, index) {
                           final product = personalController.productList[index];
-                          return PostCardShop(
-                            imageUrls: product.imageList ?? [],
-                            description: product.productDescription ?? '',
-                            userName:
-                                personalController.userData.value?.fullName ??
-                                '',
-                            userAvatar:
-                                personalController.userData.value?.avtURL ?? '',
-                            timeAgo: _formatTimestampToNgayGio(
-                              product.createdAt!,
-                            ),
-                            likeCount: 123,
-                            userId: product.userId,
-                            currentUserId: idCurrentUser,
-                          );
+
+                          return Obx(() {
+                            final user = personalController.userData.value;
+
+                            return PostCardShop(
+                              imageUrls: product.imageList ?? [],
+                              description: product.productDescription ?? '',
+                              userName: user?.fullName ?? '',
+                              userAvatar: user?.avtURL ?? '',
+                              timeAgo: _formatTimestampToNgayGio(
+                                product.createdAt!,
+                              ),
+                              likedBy: product.likedBy ?? [],
+                              userId: product.userId,
+                              currentUserId: idCurrentUser,
+                              productId: product.productId,
+                            );
+                          });
                         },
                       );
                     }),

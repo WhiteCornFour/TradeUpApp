@@ -76,11 +76,16 @@ class CustomSearchDelegate extends SearchDelegate {
 
     homeController.saveSearchHistory(query);
 
-    close(context, null); // Đóng search bar
-    Get.to(
-      () => SearchProductGeneral(),
-      arguments: {'type': 'keyword', 'keyword': query},
-    ); // Truyền query sang
+    //Cập nhật reactive query
+    homeController.searchKeywordByDelegate.value = query;
+    homeController.filteredProducts.assignAll(homeController.searchProducts());
+
+    close(context, null); //Đóng search bar
+
+    //Nếu chưa có trang SearchProductGeneral thì mở, còn nếu đang mở thì nó tự update
+    if (Get.currentRoute != '/SearchProductGeneral') {
+      Get.to(() => SearchProductGeneral());
+    } // Truyền query sang
   }
 
   //Theme Custom for Search Delegate

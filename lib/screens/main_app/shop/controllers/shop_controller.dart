@@ -15,17 +15,20 @@ class ShopController extends GetxController {
   ///-----------
   /// Variables (Danh sách các biến khai báo trong Controller)
   ///-----------
-  
+
   RxList<ProductModel> feedList = <ProductModel>[].obs;
   RxMap<String, UserModel> usersCache = <String, UserModel>{}.obs;
   final db = DatabaseService();
   StreamSubscription? _subscription;
+
+  RxString currentUserId = ''.obs;
 
   var isLoadingUsers = false.obs;
 
   @override
   void onInit() {
     super.onInit();
+    currentUserId.value = AuthServices().currentUser?.uid ?? '';
     _fetchInitialProducts();
   }
 
@@ -192,5 +195,19 @@ class ShopController extends GetxController {
         );
       },
     );
+  }
+
+  /// -------------------
+  /// Logic Like / Unlike
+  /// -------------------
+
+  // Gọi hàm trong DatabaseService để like sản phẩm
+  Future<void> likeProduct(String productId, String userId) async {
+    await db.likeProduct(productId, userId);
+  }
+
+  // Gọi hàm trong DatabaseService để unlike sản phẩm
+  Future<void> unlikeProduct(String productId, String userId) async {
+    await db.unlikeProduct(productId, userId);
   }
 }

@@ -50,10 +50,28 @@ class _PostCardBottomShopState extends State<PostCardBottomShop> {
               Row(
                 children: [
                   IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Iconsax.heart),
-                    color: Colors.black,
-                    tooltip: 'Like',
+                    onPressed: () async {
+                      print('User id liked post card: $currentUserId');
+                      print('Product id liked post card: $productId');
+                      if (userId == null || productId == null) return;
+
+                      if (isLiked) {
+                        await shopController.unlikeProduct(
+                          productId!,
+                          currentUserId,
+                        );
+                      } else {
+                        await shopController.likeProduct(
+                          productId!,
+                          currentUserId,
+                        );
+                      }
+                    },
+                    icon: Icon(
+                      isLiked ? Iconsax.heart5 : Iconsax.heart,
+                      color: isLiked ? Colors.red : Colors.black,
+                    ),
+                    tooltip: isLiked ? 'Unlike' : 'Like',
                   ),
                   SizedBox(width: 4),
                   Text(

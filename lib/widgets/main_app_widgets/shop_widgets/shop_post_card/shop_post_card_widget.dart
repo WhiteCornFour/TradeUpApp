@@ -11,7 +11,7 @@ class PostCardShop extends StatefulWidget {
     required this.description,
     required this.userName,
     required this.timeAgo,
-    required this.likeCount,
+    required this.likedBy,
     required this.userAvatar,
     this.productId,
     this.userId,
@@ -23,7 +23,7 @@ class PostCardShop extends StatefulWidget {
   final String description;
   final String userName, userAvatar;
   final String timeAgo;
-  final int likeCount;
+  final List<String> likedBy;
   final VoidCallback? onPressed;
   final String? userId;
   final String? currentUserId;
@@ -40,6 +40,8 @@ class _PostCardShop extends State<PostCardShop> {
   Widget build(BuildContext context) {
     // print('PostCardShopPersonal UserId: ${widget.userId}');
     // print('PostCardShopPersonal CurrentUserId: ${widget.currentUserId}');
+    int likeCount = widget.likedBy.length;
+
     return GestureDetector(
       onTap: widget.onPressed,
       child: Column(
@@ -81,10 +83,11 @@ class _PostCardShop extends State<PostCardShop> {
 
                 //Post Card Bottom: Like, Chat, Bookmark
                 PostCardBottomShop(
-                  likeCount: widget.likeCount,
+                  likeCount: likeCount,
                   userId: widget.userId,
                   userName: widget.userName,
                   productId: widget.productId!,
+                  likedBy: widget.likedBy,
                 ),
               ],
             ),

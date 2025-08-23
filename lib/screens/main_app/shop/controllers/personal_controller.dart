@@ -48,8 +48,10 @@ class PersonalController extends GetxController {
     }
   }
 
-  void _fetchProducts() async {
-    productList.value = await db.getProductByIdUser(idUser);
+  void _fetchProducts() {
+    db.getProductsByUserStream(idUser).listen((products) {
+      productList.value = products;
+    });
   }
 
   void handleUpdateRating(double ratepoint) async {
