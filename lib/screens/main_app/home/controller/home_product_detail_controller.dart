@@ -40,18 +40,26 @@ class ProductDetailController extends GetxController {
         ratingCount.value = fetchedUser.totalReviews ?? 0;
 
         // Cập nhật điểm trung bình
-        _calculateRating(fetchedUser.rating, fetchedUser.totalReviews);
+        _calculatorRating();
       }
     } finally {
       isLoading.value = false;
     }
   }
 
-  void _calculateRating(double? totalRating, int? totalReviews) {
-    if (totalReviews != null && totalReviews > 0 && totalRating != null) {
-      double avg = totalRating / totalReviews;
-      rating.value = double.parse(avg.toStringAsFixed(1)); 
-      rating.value = 0.0;
+  void _calculatorRating() {
+    if (user.value != null) {
+      final totalReviews = (user.value!.totalReviews ?? 0).toDouble();
+      final totalRating = (user.value!.rating ?? 0).toDouble();
+
+      if (totalReviews > 0) {
+        double avg = totalRating / totalReviews;
+        rating.value = double.parse(
+          avg.toStringAsFixed(1),
+        ); // Làm tròn 1 chữ số
+      } else {
+        rating.value = 0.0;
+      }
     }
   }
 }

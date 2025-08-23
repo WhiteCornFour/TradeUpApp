@@ -12,10 +12,12 @@ class PostCardBottomSheetShop extends StatelessWidget {
     required this.userId,
     required this.userName,
     required this.productId,
+    required this.onPressedShareProduct,
   });
 
   final String? userId, userName;
   final String productId;
+  final Function onPressedShareProduct;
 
   @override
   Widget build(BuildContext context) {
@@ -80,8 +82,7 @@ class PostCardBottomSheetShop extends StatelessWidget {
               icon: Icons.share,
               title: 'Share',
               onTap: () {
-                Navigator.pop(context);
-                print('Share');
+                onPressedShareProduct();
               },
             ),
             _buildSheetItem(

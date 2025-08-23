@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:tradeupapp/screens/general/general_share_show_bottom_sheet.dart';
+import 'package:tradeupapp/screens/main_app/chat/controllers/chat_room_controller.dart';
+import 'package:tradeupapp/screens/main_app/chat/controllers/message_controller.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/shop_post_card/shop_post_card_bottom_sheet_widget.dart';
 
 class PostCardHeaderShop extends StatelessWidget {
@@ -19,7 +23,8 @@ class PostCardHeaderShop extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('Status: {$isOwnPost}');
+    //print('Status: {$isOwnPost}');
+    final chatRoomController = Get.find<ChatRoomController>();
 
     return Padding(
       padding: const EdgeInsets.all(12),
@@ -86,6 +91,20 @@ class PostCardHeaderShop extends StatelessWidget {
                   ),
                   backgroundColor: Colors.white,
                   builder: (context) => PostCardBottomSheetShop(
+                    onPressedShareProduct: () {
+                      ShareShowBottomSheetGeneral.show(
+                        context,
+                        chatRoomController.filteredChatRooms,
+                        chatRoomController.searchController,
+                        chatRoomController.isLoading.value,
+                        (idChatRoom) {
+                          MessageController().handleSendProduct(
+                            productId,
+                            idChatRoom,
+                          );
+                        },
+                      );
+                    },
                     userId: userId,
                     userName: userName,
                     productId: productId,
