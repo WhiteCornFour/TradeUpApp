@@ -13,11 +13,13 @@ class PostCardBottomShop extends StatefulWidget {
     required this.userId,
     required this.userName,
     required this.productId,
+    required this.likedBy,
   });
 
   final int likeCount;
   final String? userId, userName;
   final String productId;
+  final List<String> likedBy;
 
   @override
   State<PostCardBottomShop> createState() => _PostCardBottomShopState();
@@ -39,6 +41,11 @@ class _PostCardBottomShopState extends State<PostCardBottomShop> {
 
   @override
   Widget build(BuildContext context) {
+    final shopController = Get.find<ShopController>();
+    String? currentUserId = shopController.currentUserId.value;
+    //Kiểm tra xem người dùng hiện tại có nằm trong danh sách người like bài viết
+    final bool isLiked = widget.likedBy.contains(currentUserId);
+    
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       child: Row(
@@ -50,19 +57,17 @@ class _PostCardBottomShopState extends State<PostCardBottomShop> {
               Row(
                 children: [
                   IconButton(
-                    onPressed: () async {
-                      print('User id liked post card: $currentUserId');
-                      print('Product id liked post card: $productId');
-                      if (userId == null || productId == null) return;
+                    onPressed: () async {                    
+                      if (widget.userId == null) return;
 
                       if (isLiked) {
                         await shopController.unlikeProduct(
-                          productId!,
+                          widget.productId,
                           currentUserId,
                         );
                       } else {
                         await shopController.likeProduct(
-                          productId!,
+                          widget.productId,
                           currentUserId,
                         );
                       }
