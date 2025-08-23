@@ -17,8 +17,6 @@ import 'package:tradeupapp/widgets/general/general_snackbar_helper.dart';
 class MessageController extends GetxController {
   final messageController = TextEditingController();
   final Rxn<UserModel> user = Rxn<UserModel>();
-  final String idOtherUser;
-  final String idChatRoom;
   RxList<MessageModal> messageList = <MessageModal>[].obs;
   final isLoading = false.obs;
   //Current user
@@ -30,11 +28,13 @@ class MessageController extends GetxController {
   //Khai báo biến database
   final db = DatabaseService();
 
-  MessageController({required this.idOtherUser, required this.idChatRoom});
+  String? idOtherUser;
+  String? idChatRoom;
+  MessageController({this.idOtherUser, this.idChatRoom});
 
   @override
   void onInit() async {
-    user.value = await db.fetchUserModelById(idOtherUser);
+    user.value = await db.fetchUserModelById(idOtherUser!);
 
     //Kiểm tra nếu thông tin của người dùng là null thì ẩn lun phòng
     if (user.value == null) {
@@ -45,30 +45,12 @@ class MessageController extends GetxController {
         backgroundColor: Colors.red,
       );
     }
-    // _fetchUserModelById(idOtherUser);
     _fetchAllMessages();
     super.onInit();
   }
 
-  // Future<void> _fetchUserModelById(String idUser) async {
-  //   try {
-  //     final docSnapshot = await FirebaseFirestore.instance
-  //         .collection('users')
-  //         .doc(idUser)
-  //         .get();
-
-  //     if (docSnapshot.exists) {
-  //       user.value = UserModal.fromMap(docSnapshot.data()!);
-  //     } else {
-  //       print('User not found');
-  //     }
-  //   } catch (e) {
-  //     print('Error fetching user: $e');
-  //   }
-  // }
-
   void _fetchAllMessages() {
-    if (idChatRoom.isEmpty) {
+    if (idChatRoom!.isEmpty) {
       // ignore: avoid_print
       print('Id Chat room is Empty!');
       return;
@@ -78,7 +60,12 @@ class MessageController extends GetxController {
         .collection('chatRoom')
         .doc(idChatRoom)
         .collection('messages')
-        .where('status', isEqualTo: 0)
+        .where(
+          Filter.or(
+            Filter('status', isEqualTo: 0),
+            Filter('status', isEqualTo: 2),
+          ),
+        )
         .snapshots()
         .listen(
           (event) async {
@@ -101,12 +88,12 @@ class MessageController extends GetxController {
   }
 
   void handleDeleteChatRoom() {
-    DatabaseService().updateStatusRoom(idChatRoom, 1);
+    DatabaseService().updateStatusRoom(idChatRoom!, 1);
     Get.back();
   }
 
   void handleBlockChatRoom() {
-    DatabaseService().updateStatusRoom(idChatRoom, 2);
+    DatabaseService().updateStatusRoom(idChatRoom!, 2);
     Get.back();
   }
 
@@ -141,7 +128,7 @@ class MessageController extends GetxController {
       );
 
       // Gửi message lên Firestore
-      await DatabaseService().addNewMessage(message.toJson(), idChatRoom);
+      await DatabaseService().addNewMessage(message.toJson(), idChatRoom!);
       isLoadingButton.value = false;
     } catch (e) {
       // ignore: avoid_print
@@ -264,14 +251,57 @@ class MessageController extends GetxController {
       final resData = json.decode(resStr);
       return resData['secure_url'];
     } else {
-      print('Upload failed: ${response.statusCode}');
+      // ignore: avoid_print
+      print('Upload failed _uploadToCloudinary: ${response.statusCode}');
       return null;
     }
   }
 
   //Hàm xử lý xóa delete khi người dùng nhấn giữ
-  void handleDeleteMessage(String idMessage) {
+  void handleDeleteMessage(String idMessage, String senderID) {
+    //Không cho xóa tin nhắn của người khác
+    if (senderID != idCurrentUser) {
+      SnackbarHelperGeneral.showCustomSnackBar(
+        "You cannot delete the other user's message",
+        backgroundColor: Colors.orange,
+        seconds: 1,
+      );
+      return;
+    }
     if (idMessage.isEmpty) return;
-    DatabaseService().updateStatusMessage(idMessage, idChatRoom);
+    DatabaseService().updateStatusMessage(idMessage, idChatRoom!);
   }
+
+  //Hàm xử lý khi người dùng share product thông qua message
+  void handleSendProduct(String idProducts, String idChatRoom) async {
+    try {
+      isLoadingButton.value = true;
+
+      final message = MessageModal(
+        content: idProducts,
+        imageUrl: '',
+        idSender: idCurrentUser,
+        status: 2,
+        timestamp: Timestamp.now(),
+      );
+
+      // Gửi message lên Firestore
+      await DatabaseService().addNewMessage(
+        message.toJson(),
+        idChatRoom,
+        lastMessage: "📦 Sent a product",
+      );
+      isLoadingButton.value = false;
+      SnackbarHelperGeneral.showCustomSnackBar(
+        'Sent product successfully!',
+        backgroundColor: Colors.green,
+      );
+    } catch (e) {
+      // ignore: avoid_print
+      print('Error: $e');
+    } finally {
+      isLoadingButton.value = false;
+    }
+  }
+
 }

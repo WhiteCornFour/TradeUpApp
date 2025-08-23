@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:tradeupapp/constants/app_colors.dart';
-import 'package:tradeupapp/screens/main_app/chat/message.dart';
 import 'package:tradeupapp/screens/main_app/chat/controllers/chat_room_controller.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/chat_widgets/chat_room_app_bar_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/chat_widgets/chat_room_item_user_widget.dart';
@@ -20,14 +19,14 @@ class Chat extends StatefulWidget {
 
 class _Chat extends State<Chat> {
   final currentUserId = FirebaseAuth.instance.currentUser?.uid;
-  final chatController = Get.put(ChatRoomController());
+  final chatController = ChatRoomController.instance;
 
   @override
   void initState() {
     super.initState();
 
     chatController.searchController.addListener(() {
-      chatController.filterChatRoomsByName(
+      chatController.filterChatRoomsByNameAndTagname(
         chatController.searchController.text,
       );
     });
@@ -48,6 +47,7 @@ class _Chat extends State<Chat> {
 
   @override
   Widget build(BuildContext context) {
+    chatController.context = context;
     return Scaffold(
       backgroundColor: Colors.white,
       resizeToAvoidBottomInset: false,
@@ -76,6 +76,10 @@ class _Chat extends State<Chat> {
                 if (chatController.chatRooms.isEmpty) {
                   return NoChatFoundChatRoom();
                 }
+                
+                if (chatController.filteredChatRooms.isEmpty) {
+                  return NoChatFoundChatRoom();
+                }
 
                 return ListView.builder(
                   itemCount: chatController.filteredChatRooms.length,
@@ -91,12 +95,9 @@ class _Chat extends State<Chat> {
                       imageURL: chatData.otherUserAvatar ?? '',
                       lastMessage: chatData.lastMessage,
                       lastTime: _formatTimestamp(chatData.lastTime),
-                      onPressed: () => Get.to(
-                        Message(
-                          idOtherUser: otherIdUser,
-                          idChatRoom: chatData.getIdChatRoom!,
-                        ),
-                      ),
+                      onPressed: () {
+                        chatController.handleSendMessage(otherIdUser);
+                      },
                     );
                   },
                 );

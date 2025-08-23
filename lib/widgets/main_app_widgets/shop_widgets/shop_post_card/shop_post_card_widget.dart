@@ -86,7 +86,7 @@ class _PostCardShop extends State<PostCardShop> {
                   likeCount: likeCount,
                   userId: widget.userId,
                   userName: widget.userName,
-                  productId: widget.productId,
+                  productId: widget.productId!,
                   likedBy: widget.likedBy,
                 ),
               ],

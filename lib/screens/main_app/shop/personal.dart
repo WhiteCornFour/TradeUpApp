@@ -67,6 +67,7 @@ class _PersonalState extends State<Personal> {
 
   @override
   Widget build(BuildContext context) {
+    personalController.context = context;
     // 0 show button chat with user || 1 show floating button add new feed
     var isVisibleButton = idCurrentUser == widget.idUser ? 1 : 0;
 

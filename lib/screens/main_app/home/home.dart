@@ -4,7 +4,11 @@ import 'package:iconsax/iconsax.dart';
 import 'package:tradeupapp/constants/app_colors.dart';
 import 'package:tradeupapp/firebase/database_service.dart';
 import 'package:tradeupapp/screens/general/general_all_categories.dart';
+
+import 'package:tradeupapp/screens/main_app/chat/controllers/chat_room_controller.dart';
+
 import 'package:tradeupapp/screens/general/general_all_products.dart';
+
 import 'package:tradeupapp/screens/main_app/home/controller/home_controller.dart';
 import 'package:tradeupapp/screens/main_app/profile/save_product/controller/save_product_controller.dart';
 import 'package:tradeupapp/screens/main_app/shop/controllers/shop_controller.dart';
@@ -47,6 +51,8 @@ class _Home extends State<Home> {
         homeController.loadSearchHistory();
       }
     });
+    //Chuan bi du lieu cho chat room controller
+    Get.put(ChatRoomController());
   }
 
   @override
