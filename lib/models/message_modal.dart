@@ -5,7 +5,7 @@ class MessageModal {
   String imageUrl;
   String idSender;
   Timestamp timestamp;
-  int status; // 0 active || 1 delete
+  int status; // 0 active || 1 delete || 2 user send product
   String? idMessage;
 
   MessageModal({

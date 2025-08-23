@@ -5,7 +5,7 @@ class ItemUserChatRoom extends StatelessWidget {
   final String imageURL;
   final String lastMessage;
   final String lastTime;
-  final VoidCallback onPressed;
+  final Function onPressed;
   const ItemUserChatRoom({
     super.key,
     required this.userName,
@@ -20,7 +20,9 @@ class ItemUserChatRoom extends StatelessWidget {
     final hasImage = imageURL.isNotEmpty && imageURL != '';
 
     return InkWell(
-      onTap: onPressed,
+      onTap: () {
+        onPressed();
+      },
       splashColor: Colors.grey.shade200,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),

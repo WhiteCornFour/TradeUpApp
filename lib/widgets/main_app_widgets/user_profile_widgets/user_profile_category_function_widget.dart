@@ -9,7 +9,7 @@ class CategoryFuncUserProfile extends StatelessWidget {
     required this.label,
   });
 
-  final VoidCallback onTap; // dùng VoidCallback thay vì Function để an toàn hơn
+  final Function onTap; // dùng VoidCallback thay vì Function để an toàn hơn
   final IconData icon; // icon truyền từ ngoài
   final String label;
 
@@ -29,7 +29,9 @@ class CategoryFuncUserProfile extends StatelessWidget {
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           ),
         ),
-        onPressed: onTap, // sử dụng hàm truyền vào
+        onPressed: () {
+          onTap();
+        }, // sử dụng hàm truyền vào
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [

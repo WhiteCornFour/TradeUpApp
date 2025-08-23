@@ -30,6 +30,9 @@ class EditProfileController extends GetxController {
 
   //Khai báo biến database
   final db = DatabaseService();
+
+  String? oldTagName;
+
   // Load dữ liệu người dùng
   Future<void> loadUser() async {
     isLoading.value = true;
@@ -48,6 +51,8 @@ class EditProfileController extends GetxController {
       addressController.text = userData.address ?? '';
       bioController.text = userData.bio ?? '';
       imageURL.value = userData.avtURL ?? '';
+      //lay tag Name tu firebase
+      oldTagName = userData.tagName ?? '';
     } catch (e) {
       SnackbarHelperGeneral.showCustomSnackBar(
         'Error: $e',
@@ -172,15 +177,22 @@ class EditProfileController extends GetxController {
   }
 
   // Kiểm tra dữ liệu nhập vào
-  String? _validateUserInfoBeforeUpdate() {
+  Future<String?> _validateUserInfoBeforeUpdate() async {
     if (tagNameController.text.trim().isEmpty) {
       return 'Tag name cannot be empty.';
     }
     if (tagNameController.text.length > 16) {
       return "Tagname cannot exceed 16 characters.";
     }
-    if (fullnameController.text.trim().isEmpty) {
-      return "Full name cannot be empty.";
+    //Kiem tra tagname co trung lap hay khong?
+    if (oldTagName != tagNameController.text && oldTagName != '') {
+      bool result = await db.checkTagnameUnique(tagNameController.text.trim());
+      if (!result) {
+        return 'Your tagname already exists';
+      }
+      if (fullnameController.text.trim().isEmpty) {
+        return "Full name cannot be empty.";
+      }
     }
 
     final phoneRegex = RegExp(r'^(0|\+84)[0-9]{9}$');
@@ -219,6 +231,7 @@ class EditProfileController extends GetxController {
       final resData = json.decode(resStr);
       return resData['secure_url'];
     } else {
+      // ignore: avoid_print
       print('Upload failed: ${response.statusCode}');
       return null;
     }
@@ -228,7 +241,7 @@ class EditProfileController extends GetxController {
   Future<void> updateProfileUser() async {
     final currentUser = FirebaseAuth.instance.currentUser;
 
-    String? validationMessage = _validateUserInfoBeforeUpdate();
+    String? validationMessage = await _validateUserInfoBeforeUpdate();
     if (validationMessage != null) {
       SnackbarHelperGeneral.showCustomSnackBar(validationMessage);
       return;
