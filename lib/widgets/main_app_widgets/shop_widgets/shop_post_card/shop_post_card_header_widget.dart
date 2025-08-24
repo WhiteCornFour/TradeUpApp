@@ -19,7 +19,7 @@ class PostCardHeaderShop extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('Status: {$isOwnPost}');
+    // print('Status: {$isOwnPost}');
 
     return Padding(
       padding: const EdgeInsets.all(12),
@@ -36,11 +36,9 @@ class PostCardHeaderShop extends StatelessWidget {
                   radius: 22,
                   backgroundImage: userAvatar != ''
                       ? NetworkImage(userAvatar!)
-                      : null,
+                      : const AssetImage('assets/images/avatar-user.png')
+                            as ImageProvider,
                   backgroundColor: Colors.grey[300],
-                  child: userAvatar == ''
-                      ? const Icon(Icons.person, color: Colors.black)
-                      : null,
                 ),
               ),
               const SizedBox(width: 10),

@@ -139,7 +139,10 @@ class DatabaseService {
           .get();
 
       if (docSnapshot.exists) {
-        final user = UserModel.fromMap(docSnapshot.data()!);
+        final user = UserModel.fromMap(
+          docSnapshot.data()!,
+          docId: docSnapshot.id,
+        );
         user.total_reviews = docSnapshot.data()!['total_rating'].toInt();
         return user;
       } else {

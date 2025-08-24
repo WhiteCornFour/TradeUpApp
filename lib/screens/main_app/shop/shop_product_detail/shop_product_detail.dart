@@ -6,6 +6,7 @@ import 'package:readmore/readmore.dart';
 import 'package:tradeupapp/constants/app_colors.dart';
 import 'package:tradeupapp/models/category_model.dart';
 import 'package:tradeupapp/models/product_model.dart';
+import 'package:tradeupapp/screens/main_app/shop/shop_product_detail/shop_make_an_offer/shop_make_an_offer.dart';
 import 'package:tradeupapp/screens/main_app/home/controller/home_controller.dart';
 import 'package:tradeupapp/screens/main_app/home/controller/home_product_detail_controller.dart';
 import 'package:tradeupapp/screens/main_app/profile/save_product/controller/save_product_controller.dart';
@@ -175,6 +176,9 @@ class _ProductDetailShopState extends State<ProductDetailShop> {
                         children: [
                           //Header Product Detail (user info, rating)
                           ProductDetailHeaderShop(
+                            sellerId:
+                                productDetailController.user.value?.userId ??
+                                'Null id',
                             rating: '${productDetailController.rating.value}',
                             ratingCount:
                                 '${productDetailController.ratingCount.value}',
@@ -269,7 +273,7 @@ class _ProductDetailShopState extends State<ProductDetailShop> {
                               icon: Iconsax.receipt_item,
                               backgroundColor: AppColors.header,
                               isOutlined: true,
-                              onPressed: () {},
+                              onPressed: () => Get.to(() => MakeAnOfferShop()),
                             ),
                           ),
 

@@ -50,7 +50,8 @@ class ProductDetailController extends GetxController {
   void _calculateRating(double? totalRating, int? totalReviews) {
     if (totalReviews != null && totalReviews > 0 && totalRating != null) {
       double avg = totalRating / totalReviews;
-      rating.value = double.parse(avg.toStringAsFixed(1)); 
+      rating.value = double.parse(avg.toStringAsFixed(1));
+    } else {
       rating.value = 0.0;
     }
   }
