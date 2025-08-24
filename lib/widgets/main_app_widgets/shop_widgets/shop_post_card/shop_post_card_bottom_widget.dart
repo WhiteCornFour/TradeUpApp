@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:tradeupapp/screens/general/general_share_show_bottom_sheet.dart';
+import 'package:tradeupapp/screens/main_app/chat/controllers/chat_room_controller.dart';
+import 'package:tradeupapp/screens/main_app/chat/controllers/message_controller.dart';
 import 'package:tradeupapp/screens/main_app/shop/controllers/shop_controller.dart';
 
-class PostCardBottomShop extends StatelessWidget {
+class PostCardBottomShop extends StatefulWidget {
   const PostCardBottomShop({
     super.key,
     required this.likeCount,
@@ -14,16 +17,35 @@ class PostCardBottomShop extends StatelessWidget {
   });
 
   final int likeCount;
-  final String? userId, userName, productId;
+  final String? userId, userName;
+  final String productId;
   final List<String> likedBy;
+
+  @override
+  State<PostCardBottomShop> createState() => _PostCardBottomShopState();
+}
+
+class _PostCardBottomShopState extends State<PostCardBottomShop> {
+  final shopController = Get.find<ShopController>();
+  final chatRoomController = ChatRoomController.instance;
+
+  @override
+  void initState() {
+    super.initState();
+    chatRoomController.searchController.addListener(() {
+      chatRoomController.filterChatRoomsByNameAndTagname(
+        chatRoomController.searchController.text,
+      );
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final shopController = Get.find<ShopController>();
     String? currentUserId = shopController.currentUserId.value;
     //Kiểm tra xem người dùng hiện tại có nằm trong danh sách người like bài viết
-    final bool isLiked = likedBy.contains(currentUserId);
-
+    final bool isLiked = widget.likedBy.contains(currentUserId);
+    
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       child: Row(
@@ -35,19 +57,17 @@ class PostCardBottomShop extends StatelessWidget {
               Row(
                 children: [
                   IconButton(
-                    onPressed: () async {
-                      print('User id liked post card: $currentUserId');
-                      print('Product id liked post card: $productId');
-                      if (userId == null || productId == null) return;
+                    onPressed: () async {                    
+                      if (widget.userId == null) return;
 
                       if (isLiked) {
                         await shopController.unlikeProduct(
-                          productId!,
+                          widget.productId,
                           currentUserId,
                         );
                       } else {
                         await shopController.likeProduct(
-                          productId!,
+                          widget.productId,
                           currentUserId,
                         );
                       }
@@ -59,7 +79,10 @@ class PostCardBottomShop extends StatelessWidget {
                     tooltip: isLiked ? 'Unlike' : 'Like',
                   ),
                   SizedBox(width: 4),
-                  Text('$likeCount Likes', style: TextStyle(fontSize: 14)),
+                  Text(
+                    '${widget.likeCount} Likes',
+                    style: TextStyle(fontSize: 14),
+                  ),
                 ],
               ),
               SizedBox(width: 16),
@@ -78,9 +101,9 @@ class PostCardBottomShop extends StatelessWidget {
               IconButton(
                 onPressed: () {
                   shopController.handleCheckOrStartChat(
-                    userId!,
+                    widget.userId!,
                     context,
-                    userName ?? 'User not Availabel',
+                    widget.userName ?? 'User not Availabel',
                   );
                 },
                 icon: Icon(Iconsax.messages_3),
@@ -88,7 +111,20 @@ class PostCardBottomShop extends StatelessWidget {
                 tooltip: 'Contact',
               ),
               IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  ShareShowBottomSheetGeneral.show(
+                    context,
+                    chatRoomController.filteredChatRooms,
+                    chatRoomController.searchController,
+                    chatRoomController.isLoading.value,
+                    (idChatRoom) {
+                      MessageController().handleSendProduct(
+                        widget.productId,
+                        idChatRoom,
+                      );
+                    },
+                  );
+                },
                 icon: Icon(Icons.share),
                 color: Colors.black,
                 tooltip: 'Share',

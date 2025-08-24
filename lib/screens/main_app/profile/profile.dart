@@ -148,7 +148,7 @@ class _ProfileState extends State<Profile> {
                       onTap: () {
                         profileController.navigatorFunc(const SaveProduct());
                       },
-                      icon: Icons.bookmark,
+                      icon: Icons.bookmark_border_outlined,
                       label: 'Save product',
                     ),
 

@@ -5,6 +5,7 @@ import 'package:tradeupapp/firebase/database_service.dart';
 import 'package:tradeupapp/models/product_model.dart';
 import 'package:tradeupapp/models/user_model.dart';
 import 'package:tradeupapp/screens/main_app/chat/message.dart';
+import 'package:tradeupapp/widgets/general/general_custom_dialog.dart';
 import 'package:tradeupapp/widgets/general/general_snackbar_helper.dart';
 
 class PersonalController extends GetxController {
@@ -16,6 +17,8 @@ class PersonalController extends GetxController {
   RxDouble rating = 0.0.obs;
   //Khai bao bien db
   final db = DatabaseService();
+
+  BuildContext? context;
 
   @override
   void onInit() {
@@ -77,11 +80,22 @@ class PersonalController extends GetxController {
     String? result = await db.checkChatRoomStatus(idCurrentUser, idUser);
 
     if (result == "Block") {
-      // Hiển thị thông báo và dừng
-      SnackbarHelperGeneral.showCustomSnackBar(
-        'This chat room has been blocked and you cannot send messages.',
-        backgroundColor: Colors.red,
-        seconds: 2,
+      CustomDialogGeneral.show(
+        context!,
+        'Messaging blocked',
+        'You have blocked this user. Unblock them to continue chatting.',
+        () async {
+          String? newId = await db.createNewChatRoom(idCurrentUser, idUser);
+          if (newId != null) {
+            // ignore: avoid_print
+            print('Created new chat room with ID: $newId');
+            Get.to(Message(idOtherUser: idUser, idChatRoom: newId));
+          }
+        },
+        image: 'warning.jpg',
+        numberOfButton: 2,
+        textButton1: 'Yes',
+        textButton2: 'No',
       );
       return;
     }
@@ -90,6 +104,7 @@ class PersonalController extends GetxController {
       // Tồn tại phòng và không bị block
       // ignore: avoid_print
       print('Chat room exists with ID: $result');
+      db.updateStatusRoom(result, 0);
       Get.to(Message(idOtherUser: idUser, idChatRoom: result));
     } else {
       // Không tồn tại phòng → tạo mới

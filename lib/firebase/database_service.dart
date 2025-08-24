@@ -120,6 +120,25 @@ class DatabaseService {
     }
   }
 
+  //EditProfileController: Ham kiem tra tagname co unique hay khong truoc khi cap nhap
+  Future<bool> checkTagnameUnique(String tagNameUpdate) async {
+    try {
+      final docRef = await FirebaseFirestore.instance
+          .collection('users')
+          .where('tagName', isEqualTo: tagNameUpdate)
+          .limit(1)
+          .get();
+      if (docRef.docs.isEmpty) {
+        return true; //Tagname nay hop le
+      }
+      return false; //Tagname nay khong hop le
+    } catch (e) {
+      // ignore: avoid_print
+      print('Error checkTagnameUnique: $e');
+      return false;
+    }
+  }
+
   //ReportController: Hàm thêm 1 report mới vào db
   Future<void> addNewReport(Map<String, dynamic> data) async {
     try {
@@ -157,6 +176,28 @@ class DatabaseService {
     }
   }
 
+  //ChatRoomController: Searching User by tagname
+  Future<UserModel?> searchUserByTagName(String tagName) async {
+    try {
+      final snapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .where('tagName', isEqualTo: tagName)
+          .limit(1)
+          .get();
+
+      if (snapshot.docs.isNotEmpty) {
+        final doc = snapshot.docs.first;
+        final user = UserModel.fromMap(doc.data());
+        user.userId = doc.id; // gán id cho UserModel nếu cần
+        return user;
+      }
+      return null; // không tìm thấy user
+    } catch (e) {
+      print('Error searchUserByTagName: $e');
+      return null;
+    }
+  }
+
   //MessageController: Hàm cập nhật lại status của 1 chat room khi truyền vào một idChatRoom
   Future<void> updateStatusRoom(String idChatRoom, int status) async {
     if (idChatRoom.isEmpty) {
@@ -178,8 +219,9 @@ class DatabaseService {
   //MessageController: hàm thêm 1 new message
   Future<void> addNewMessage(
     Map<String, dynamic> message,
-    String idChatRoom,
-  ) async {
+    String idChatRoom, {
+    String lastMessage = '',
+  }) async {
     try {
       final chatRoomRef = FirebaseFirestore.instance
           .collection('chatRoom')
@@ -190,8 +232,11 @@ class DatabaseService {
       await messagesRef.add(message);
 
       // Cập nhật lastMessage và lastTime
+      final lastMessageUpdate = lastMessage != ''
+          ? lastMessage
+          : message['content'];
       await chatRoomRef.update({
-        'lastMessage': message['content'],
+        'lastMessage': lastMessageUpdate,
         'lastTime': FieldValue.serverTimestamp(),
       });
     } catch (e) {
@@ -212,25 +257,28 @@ class DatabaseService {
       // 1. Cập nhật status của message
       await messagesRef.doc(idMessage).update({'status': 1});
 
-      // 2. Lấy message cuối cùng còn lại
+      // 2. Lấy message cuối cùng còn lại (status 0 hoặc 2)
       final lastMessageQuery = await messagesRef
-          .where('status', isEqualTo: 0)
+          .where('status', whereIn: [0, 2])
           .orderBy('timestamp', descending: true)
           .limit(1)
           .get();
 
       String lastMessageText;
-
       if (lastMessageQuery.docs.isNotEmpty) {
         final lastMessageData = lastMessageQuery.docs.first.data();
-        lastMessageText =
-            (lastMessageData['content'] != null &&
-                lastMessageData['content'].toString().isNotEmpty)
-            ? lastMessageData['content']
-            : (lastMessageData['imageUrl'] != null &&
-                  lastMessageData['imageUrl'].toString().isNotEmpty)
-            ? 'Sent a photo'
-            : "Let's start the conversation";
+        if (lastMessageData['status'] == 2) {
+          lastMessageText = "📦 Sent a product";
+        } else {
+          lastMessageText =
+              (lastMessageData['content'] != null &&
+                  lastMessageData['content'].toString().isNotEmpty)
+              ? lastMessageData['content']
+              : (lastMessageData['imageUrl'] != null &&
+                    lastMessageData['imageUrl'].toString().isNotEmpty)
+              ? 'Sent a photo'
+              : "Let's start the conversation";
+        }
       } else {
         // Không còn tin nhắn nào
         lastMessageText = "Let's start the conversation";
@@ -242,6 +290,23 @@ class DatabaseService {
       // ignore: avoid_print
       print('Error updateStatusMessage: $e');
     }
+  }
+
+  //MessageController: Lấy dữ liệu của 1 product khi truyền vào Id
+  Future<ProductModel?> getProductById(String idProduct) async {
+    try {
+      final snapshot = await FirebaseFirestore.instance
+          .collection("products")
+          .where('productId', isEqualTo: idProduct)
+          .get();
+      if (snapshot.docs.isNotEmpty) {
+        return ProductModel.fromMap(snapshot.docs.first.data());
+      }
+    } catch (e) {
+      // ignore: avoid_print
+      print('Error getProductById: $e');
+    }
+    return null;
   }
 
   //HomeController: Lấy danh sách sản phẩm từ Firebase về
@@ -257,6 +322,7 @@ class DatabaseService {
         return product;
       }).toList();
     } catch (e) {
+      // ignore: avoid_print
       print('Error fetching products: $e');
       return [];
     }

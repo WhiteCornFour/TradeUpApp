@@ -1,11 +1,17 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:tradeupapp/firebase/database_service.dart';
 import 'package:tradeupapp/models/chat_room_model.dart';
+import 'package:tradeupapp/screens/main_app/chat/message.dart';
+import 'package:tradeupapp/widgets/general/general_custom_dialog.dart';
 
 class ChatRoomController extends GetxController {
+  //Có thể gọi ra controller ở bất kỳ đâu mà ko cần gọi lại
+  static ChatRoomController get instance => Get.find();
+
+  final uid = FirebaseAuth.instance.currentUser?.uid;
   final searchController = TextEditingController();
   var chatRooms = <ChatRoomModel>[].obs;
   final isLoading = false.obs;
@@ -13,15 +19,22 @@ class ChatRoomController extends GetxController {
   var filteredChatRooms = <ChatRoomModel>[].obs;
   //Khai báo biến database
   final db = DatabaseService();
+
+  BuildContext? context;
   @override
   void onInit() {
     super.onInit();
     _listenToChatRooms();
   }
 
+  @override
+  void onClose() {
+    searchController.dispose();
+    super.onClose();
+  }
+
   //load ds cac chat room cua nguoi dung realtime
   void _listenToChatRooms() {
-    final uid = FirebaseAuth.instance.currentUser?.uid;
     if (uid == null) return;
 
     isLoading.value = true;
@@ -65,13 +78,14 @@ class ChatRoomController extends GetxController {
             isLoading.value = false;
           },
           onError: (e) {
-            print("Error: $e");
+            // ignore: avoid_print
+            print("Error _listenToChatRooms: $e");
             isLoading.value = false;
           },
         );
   }
 
-  void filterChatRoomsByName(String query) {
+  void filterChatRoomsByNameAndTagname(String query) async {
     final lowerQuery = query.toLowerCase();
 
     if (lowerQuery.isEmpty) {
@@ -85,5 +99,80 @@ class ChatRoomController extends GetxController {
               chat.otherUserName?.toLowerCase().contains(lowerQuery) ?? false,
         )
         .toList();
+
+    //Thuc hien cung luc tim kiem theo tagname cua user
+    _filterChatRoomByTagName(query);
+  }
+
+  void _filterChatRoomByTagName(String query) async {
+    if (query.isEmpty) {
+      filteredChatRooms.value = chatRooms;
+      return;
+    }
+
+    final user = await db.searchUserByTagName(query);
+
+    if (user != null && user.userId != uid) {
+      final newRoom = ChatRoomModel(
+        idUser1: uid!,
+        idUser2: user.userId!,
+        lastMessage: "Let's start the conversation",
+        lastTime: Timestamp.now(),
+        status: 0,
+        otherUserName: user.fullName,
+        otherUserAvatar: user.avtURL,
+      );
+
+      // Gộp chatRooms đã filter với newRoom → loại bỏ trùng
+      final merged = {
+        for (var room in [...filteredChatRooms, newRoom])
+          room.idUser1 == uid ? room.idUser2 : room.idUser1: room,
+      };
+
+      filteredChatRooms.value = merged.values.toList();
+    }
+  }
+
+  void handleSendMessage(String idUser) async {
+    searchController.text = '';
+    String? result = await db.checkChatRoomStatus(uid!, idUser);
+
+    if (result == "Block") {
+      // Hiển thị thông báo và dừng
+      CustomDialogGeneral.show(
+        context!,
+        'Messaging blocked',
+        'You have blocked this user. Unblock them to continue chatting.',
+        () async {
+          String? newId = await db.createNewChatRoom(uid!, idUser);
+          if (newId != null) {
+            // ignore: avoid_print
+            print('Created new chat room with ID: $newId');
+            Get.to(Message(idOtherUser: idUser, idChatRoom: newId));
+          }
+        },
+        image: 'warning.jpg',
+        numberOfButton: 2,
+        textButton1: 'Yes',
+        textButton2: 'No',
+      );
+      return;
+    }
+
+    if (result != null) {
+      // Tồn tại phòng và không bị block
+      // ignore: avoid_print
+      print('Chat room exists with ID: $result');
+      db.updateStatusRoom(result, 0);
+      Get.to(Message(idOtherUser: idUser, idChatRoom: result));
+    } else {
+      // Không tồn tại phòng → tạo mới
+      String? newId = await db.createNewChatRoom(uid!, idUser);
+      if (newId != null) {
+        // ignore: avoid_print
+        print('Created new chat room with ID: $newId');
+        Get.to(Message(idOtherUser: idUser, idChatRoom: newId));
+      }
+    }
   }
 }

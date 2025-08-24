@@ -3,12 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:tradeupapp/constants/app_colors.dart';
+import 'package:tradeupapp/firebase/database_service.dart';
+import 'package:tradeupapp/models/product_model.dart';
 import 'package:tradeupapp/screens/main_app/chat/controllers/message_controller.dart';
 import 'package:tradeupapp/widgets/general/general_custom_dialog.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/chat_widgets/message_app_bar_custom_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/chat_widgets/message_bottom_text_field_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/chat_widgets/message_emty_message_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/chat_widgets/message_item_message_widget.dart';
+import 'package:tradeupapp/widgets/main_app_widgets/chat_widgets/message_item_product_message_widget.dart';
 
 class Message extends StatefulWidget {
   final String idOtherUser;
@@ -38,6 +41,23 @@ class _MessageState extends State<Message> {
       ),
     );
     _scrollController = ScrollController();
+
+    // Auto scroll khi có tin nhắn mới
+    ever(messageController.messageList, (_) {
+      _scrollToBottom();
+    });
+  }
+
+  void _scrollToBottom() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_scrollController.hasClients) {
+        _scrollController.animateTo(
+          _scrollController.position.minScrollExtent, // vì reverse: true
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      }
+    });
   }
 
   String _formatTimestamp(Timestamp timestamp) {
@@ -76,41 +96,16 @@ class _MessageState extends State<Message> {
     );
   }
 
-  void _showDialogBeforeDeleteMessage(String idMessage) {
+  void _showDialogBeforeDeleteMessage(String idMessage, String senderID) {
     CustomDialogGeneral.show(
       context,
       'Delete message?',
       'Are you sure you want to delete this message? This action cannot be undone.',
       () {
-        messageController.handleDeleteMessage(idMessage);
+        messageController.handleDeleteMessage(idMessage, senderID);
       },
       numberOfButton: 2,
       textButton1: 'Delete',
-    );
-  }
-
-  Widget _buildMessage(
-    String idMessage,
-    MainAxisAlignment mainAxisAlignment,
-    CrossAxisAlignment crossAxisAlignment,
-    double topLeft,
-    double topRight,
-    String time, {
-    String? content,
-    String? imageURL,
-  }) {
-    return ItemMessageMessage(
-      onLongPressed: () {
-        _showDialogBeforeDeleteMessage(idMessage);
-      },
-      mainAxisAlignment: mainAxisAlignment,
-      crossAxisAlignment: crossAxisAlignment,
-      timestamp: time,
-      content: content,
-      imageURL: imageURL,
-      isImage: imageURL != null,
-      topLeft: topLeft,
-      topRight: topRight,
     );
   }
 
@@ -162,84 +157,116 @@ class _MessageState extends State<Message> {
                   }
                 }
 
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  if (_scrollController.hasClients) {
-                    _scrollController.animateTo(
-                      _scrollController.position.maxScrollExtent,
-                      duration: const Duration(milliseconds: 300),
-                      curve: Curves.easeOut,
-                    );
-                  }
-                });
-
                 return ListView.builder(
-                  itemCount: messageController.messageList.length,
+                  reverse: true, // Tin nhắn mới ở cuối
                   controller: _scrollController,
+                  itemCount: messageController.messageList.length,
                   itemBuilder: (context, index) {
-                    final message = messageController.messageList[index];
+                    final reversedIndex =
+                        messageController.messageList.length - 1 - index;
+                    final message =
+                        messageController.messageList[reversedIndex];
                     final isCurrentUser =
                         widget.idOtherUser != message.idSender;
 
-                    final mainAxisAlignment = isCurrentUser
-                        ? MainAxisAlignment.end
-                        : MainAxisAlignment.start;
-                    final crossAxisAlignment = isCurrentUser
-                        ? CrossAxisAlignment.end
-                        : CrossAxisAlignment.start;
-                    final topLeft = isCurrentUser ? 12.0 : 0.0;
-                    final topRight = isCurrentUser ? 0.0 : 12.0;
-
+                    bool isRight = isCurrentUser;
                     bool hasImage = message.imageUrl.isNotEmpty;
                     bool hasText =
                         message.content.isNotEmpty &&
                         message.content != 'Sent a photo';
 
-                    String time = _formatTimestamp(message.timestamp);
+                    String timestamp = _formatTimestamp(message.timestamp);
 
+                    // Nếu là sản phẩm
+                    if (message.status == 2) {
+                      var db = DatabaseService();
+                      return FutureBuilder<ProductModel?>(
+                        future: db.getProductById(message.content),
+                        builder: (context, snapshot) {
+                          WidgetsBinding.instance.addPostFrameCallback(
+                            (_) => _scrollToBottom(),
+                          );
+                          if (!snapshot.hasData) {
+                            return Container(
+                              width: MediaQuery.of(context).size.width * 0.7,
+                              height: 120,
+                              alignment: Alignment.center,
+                              child: const CircularProgressIndicator(
+                                strokeWidth: 2.5,
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  Colors.blue,
+                                ),
+                              ),
+                            );
+                          }
+
+                          return ItemProductMessage(
+                            isRight: isRight,
+                            onPressed: (idProduct) {},
+                            timestamp: timestamp,
+                            product: snapshot.data!,
+                          );
+                        },
+                      );
+                    }
+
+                    // Có cả ảnh và text
                     if (hasImage && hasText) {
                       return Column(
                         children: [
-                          _buildMessage(
-                            message.idMessage!,
-                            mainAxisAlignment,
-                            crossAxisAlignment,
-                            topLeft,
-                            topRight,
-                            time,
-                            imageURL: message.imageUrl,
-                          ),
-                          _buildMessage(
-                            message.idMessage!,
-                            mainAxisAlignment,
-                            crossAxisAlignment,
-                            topLeft,
-                            topRight,
-                            time,
+                          ItemMessageMessage(
+                            timestamp: timestamp,
+                            onLongPressed: () {
+                              _showDialogBeforeDeleteMessage(
+                                message.idMessage!,
+                                messageController.idCurrentUser,
+                              );
+                            },
+                            isRight: isRight,
                             content: message.content,
+                          ),
+                          ItemMessageMessage(
+                            timestamp: timestamp,
+                            onLongPressed: () {
+                              _showDialogBeforeDeleteMessage(
+                                message.idMessage!,
+                                messageController.idCurrentUser,
+                              );
+                            },
+                            isRight: isRight,
+                            isImage: true,
+                            imageURL: message.imageUrl,
                           ),
                         ],
                       );
                     }
 
+                    // Chỉ có ảnh
                     if (hasImage) {
-                      return _buildMessage(
-                        message.idMessage!,
-                        mainAxisAlignment,
-                        crossAxisAlignment,
-                        topLeft,
-                        topRight,
-                        time,
+                      return ItemMessageMessage(
+                        timestamp: timestamp,
+                        onLongPressed: () {
+                          _showDialogBeforeDeleteMessage(
+                            message.idMessage!,
+                            messageController.idCurrentUser,
+                          );
+                        },
+                        isRight: isRight,
+                        isImage: true,
                         imageURL: message.imageUrl,
                       );
                     }
 
-                    return _buildMessage(
-                      message.idMessage!,
-                      mainAxisAlignment,
-                      crossAxisAlignment,
-                      topLeft,
-                      topRight,
-                      time,
+                    // Chỉ có text
+                    return ItemMessageMessage(
+                      timestamp: timestamp,
+                      onLongPressed: () {
+                        _showDialogBeforeDeleteMessage(
+                          message.idMessage!,
+                          messageController.idCurrentUser,
+                        );
+                      },
+                      isRight: isRight,
                       content: message.content,
                     );
                   },
