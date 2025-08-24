@@ -11,7 +11,12 @@ class CategoryProductsGeneral extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final CategoryModel category = Get.arguments as CategoryModel;
+    final CategoryModel? category = Get.arguments as CategoryModel?;
+    if (category == null) {
+      return const Scaffold(
+        body: Center(child: Text("No category data found")),
+      );
+    }
 
     final homeController = Get.find<HomeController>();
 

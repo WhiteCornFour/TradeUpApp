@@ -25,7 +25,7 @@ class PostCardHeaderShop extends StatelessWidget {
   Widget build(BuildContext context) {
     //print('Status: {$isOwnPost}');
     final chatRoomController = Get.find<ChatRoomController>();
-
+    
     return Padding(
       padding: const EdgeInsets.all(12),
       child: Row(
@@ -41,11 +41,9 @@ class PostCardHeaderShop extends StatelessWidget {
                   radius: 22,
                   backgroundImage: userAvatar != ''
                       ? NetworkImage(userAvatar!)
-                      : null,
+                      : const AssetImage('assets/images/avatar-user.png')
+                            as ImageProvider,
                   backgroundColor: Colors.grey[300],
-                  child: userAvatar == ''
-                      ? const Icon(Icons.person, color: Colors.black)
-                      : null,
                 ),
               ),
               const SizedBox(width: 10),
