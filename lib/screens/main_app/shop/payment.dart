@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:tradeupapp/constants/app_colors.dart';
-import 'package:tradeupapp/widgets/general/general_back_button.dart';
+import 'package:tradeupapp/screens/main_app/shop/controllers/payment_controller.dart';
+import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/payment_widgets/payment_app_bar_widget.dart';
+import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/payment_widgets/payment_button_create_order_widget.dart';
+import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/payment_widgets/payment_dialog_change_shipping_address_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/payment_widgets/payment_show_address_widget.dart';
+import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/payment_widgets/payment_show_infor_product_widget.dart';
+import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/payment_widgets/payment_show_personal_store_widget.dart';
+import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/payment_widgets/payment_tab_bar_widget.dart';
 
 class Payment extends StatefulWidget {
   const Payment({super.key});
@@ -11,35 +18,33 @@ class Payment extends StatefulWidget {
 }
 
 class _PaymentState extends State<Payment> {
+  final controller = Get.put(PaymentController());
+  final List<String> images = [
+    'assets/images/logo.png',
+    'assets/images/logo.png',
+    'assets/images/logo.png',
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.backgroundGrey,
-      appBar: AppBar(
-        leading: BackButtonCustomGeneral(),
-        backgroundColor: AppColors.backgroundGrey,
-        centerTitle: true,
-        title: Text(
-          'Checkout',
-          style: TextStyle(
-            color: AppColors.header,
-            fontFamily: 'Roboto-Medium',
-            fontSize: 23,
-          ),
-        ),
-      ),
+      appBar: AppBarPayment(),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
             children: [
               //hien thi dia chi cua current user
-              ShowAddressPayment(),
+              ShowAddressPayment(
+                onPressedIconButton: () {
+                  DialogChangeShippingAddressPayment.show(context);
+                },
+              ),
 
-              SizedBox(height: 15),
+              SizedBox(height: 10),
               //hien thi lai thong tin san pham
               Container(
                 margin: EdgeInsets.symmetric(horizontal: 20),
-                //padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                padding: EdgeInsets.only(top: 15),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(16),
                   color: Colors.white,
@@ -58,61 +63,9 @@ class _PaymentState extends State<Payment> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    ListTile(
-                      leading: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          ClipOval(
-                            child: Image.asset(
-                              'assets/images/logo.png',
-                              width: 30,
-                              height: 30,
-                            ),
-                          ),
-                          SizedBox(height: 5),
-                          Icon(Icons.location_on, size: 20, color: Colors.grey),
-                        ],
-                      ), // Icon cửa hàng
-                      title: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            "Wonwoo Store",
-                            style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              fontFamily: 'Roboto-Medium',
-                              fontSize: 16,
-                              color: AppColors.header,
-                            ),
-                          ),
-                          SizedBox(width: 4),
-                          Icon(Icons.verified, color: Colors.green, size: 16),
-                        ],
-                      ),
-                      subtitle: Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              'Ap Cau Tre, Xa Long Thoi, Huyen Tieu Can, Tinh Tra Vinh',
-                              style: TextStyle(
-                                fontFamily: 'Roboto-Regular',
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                                color: AppColors.header,
-                              ),
-                              softWrap: true,
-                              maxLines: 2,
-                            ),
-                          ),
-                        ],
-                      ),
-                      trailing: Icon(
-                        Icons.chevron_right,
-                        color: AppColors.header,
-                      ),
-                      onTap: () {
-                        // Xử lý khi nhấn vào item
-                      },
+                    //Show thong tin cua cua hang
+                    ShowPersonalStorePayment(
+                      idUserPersonal: "EUh3D2nHZIdATzKr2s84rAk5DZo2",
                     ),
 
                     //border duoi chu
@@ -131,69 +84,20 @@ class _PaymentState extends State<Payment> {
                       ),
                     ),
 
-                    Container(
-                      margin: EdgeInsets.symmetric(
-                        horizontal: 20,
-                        vertical: 10,
-                      ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
-                            child: Image.asset(
-                              'assets/images/logo.png',
-                              height: 80,
-                              width: 80,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                          SizedBox(width: 10),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Sony Headphones 6',
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    color: AppColors.header,
-                                    fontFamily: 'Roboto-Medium',
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                SizedBox(height: 4),
-                                Text(
-                                  'Mô tả sản phẩm Mô tả sản phẩm Mô tả sản phẩm Mô tả sản phẩm',
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    color: AppColors.header,
-                                    fontFamily: 'Roboto-Regular',
-                                    fontSize: 14,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(width: 10),
-                          Text(
-                            '25.000Đ',
-                            style: TextStyle(
-                              color: AppColors.header,
-                              fontFamily: 'Roboto-Medium',
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
+                    //Show cac thong tin lien quan den san pham hien tai
+                    ShowInforProductPayment(
+                      images: images,
+                      controller: controller,
                     ),
                   ],
                 ),
               ),
+
+              //Chon phuong thuc thanh toan
+              TabBarPayment(),
+
+              //Xac nhan thanh toan
+              ButtonCreateOrderPayment(),
             ],
           ),
         ),

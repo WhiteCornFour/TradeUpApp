@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:tradeupapp/constants/app_colors.dart';
 
 class ShowAddressPayment extends StatelessWidget {
-  const ShowAddressPayment({super.key});
+  final Function onPressedIconButton;
+  const ShowAddressPayment({super.key, required this.onPressedIconButton});
 
   @override
   Widget build(BuildContext context) {
@@ -36,14 +37,16 @@ class ShowAddressPayment extends StatelessWidget {
                       color: AppColors.header,
                       fontFamily: 'Roboto-Medium', // sửa chính tả
                       fontWeight: FontWeight.w500,
-                      fontSize: 18,
+                      fontSize: 16,
                     ),
                   ),
                   IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      onPressedIconButton();
+                    },
                     icon: Icon(
                       Icons.chevron_right_rounded,
-                      color: AppColors.header,
+                      color: AppColors.background,
                     ),
                   ),
                 ],
@@ -64,7 +67,7 @@ class ShowAddressPayment extends StatelessWidget {
                 crossAxisAlignment:
                     CrossAxisAlignment.center, // canh text từ trên
                 children: [
-                  Icon(Icons.location_on, color: Colors.grey),
+                  Icon(Icons.location_on, color: AppColors.background),
                   SizedBox(width: 8), // tạo khoảng cách icon - text
                   Expanded(
                     child: Text(
