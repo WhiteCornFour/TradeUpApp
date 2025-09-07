@@ -11,6 +11,7 @@ import 'package:tradeupapp/firebase/auth_service.dart';
 import 'package:tradeupapp/firebase/database_service.dart';
 
 import 'package:tradeupapp/models/message_modal.dart';
+import 'package:tradeupapp/models/product_model.dart';
 import 'package:tradeupapp/models/user_model.dart';
 import 'package:tradeupapp/widgets/general/general_snackbar_helper.dart';
 
@@ -27,6 +28,8 @@ class MessageController extends GetxController {
   var isLoadingButton = false.obs;
   //Khai báo biến database
   final db = DatabaseService();
+
+  ProductModel? product;
 
   String? idOtherUser;
   String? idChatRoom;
@@ -304,4 +307,10 @@ class MessageController extends GetxController {
     }
   }
 
+  void handleGetDataProductById(String idProduct) async {
+    final data = await db.getProductById(idProduct);
+    if (data != null) {
+      product = data;
+    }
+  }
 }

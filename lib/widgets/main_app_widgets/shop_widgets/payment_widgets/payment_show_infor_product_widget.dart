@@ -2,17 +2,18 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tradeupapp/constants/app_colors.dart';
+import 'package:tradeupapp/models/product_model.dart';
 import 'package:tradeupapp/screens/main_app/shop/controllers/payment_controller.dart';
 
 class ShowInforProductPayment extends StatelessWidget {
   const ShowInforProductPayment({
     super.key,
-    required this.images,
     required this.controller,
+    required this.data,
   });
 
-  final List<String> images;
   final PaymentController controller;
+  final ProductModel data;
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +22,7 @@ class ShowInforProductPayment extends StatelessWidget {
         Container(
           margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           child: CarouselSlider.builder(
-            itemCount: images.length,
+            itemCount: data.imageList!.length,
             options: CarouselOptions(
               height: 200,
               autoPlay: true,
@@ -33,13 +34,24 @@ class ShowInforProductPayment extends StatelessWidget {
               },
             ),
             itemBuilder: (context, index, realIndex) {
-              final imagePath = images[index];
+              final imagePath = data.imageList![index];
               return ClipRRect(
                 borderRadius: BorderRadius.circular(10),
-                child: Image.asset(
+                child: Image.network(
                   imagePath,
                   fit: BoxFit.cover,
                   width: double.infinity,
+                  errorBuilder: (context, error, stackTrace) {
+                    return const Icon(
+                      Icons.broken_image,
+                      size: 50,
+                      color: Colors.grey,
+                    );
+                  },
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress == null) return child;
+                    return const Center(child: CircularProgressIndicator());
+                  },
                 ),
               );
             },
@@ -49,7 +61,7 @@ class ShowInforProductPayment extends StatelessWidget {
         Obx(
           () => Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: List.generate(images.length, (index) {
+            children: List.generate(data.imageList!.length, (index) {
               return AnimatedContainer(
                 duration: Duration(milliseconds: 300),
                 margin: EdgeInsets.symmetric(horizontal: 4),
@@ -74,7 +86,7 @@ class ShowInforProductPayment extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                'SamSung Galaxy Ultra 10',
+                data.productName ?? "Loading...",
                 style: TextStyle(
                   color: AppColors.header,
                   fontFamily: 'Roboto-Medium',
@@ -84,7 +96,7 @@ class ShowInforProductPayment extends StatelessWidget {
               ),
 
               Text(
-                "Like new",
+                data.selectedCondition ?? "Loading...",
                 style: TextStyle(
                   color: AppColors.background,
                   fontFamily: 'Roboto-Regular',
@@ -95,7 +107,7 @@ class ShowInforProductPayment extends StatelessWidget {
 
               Flexible(
                 child: Text(
-                  'This is a sample description for Sony Headphones 6',
+                  data.productDescription ?? "Loading...",
                   softWrap: true,
                   maxLines: 2,
                   style: TextStyle(

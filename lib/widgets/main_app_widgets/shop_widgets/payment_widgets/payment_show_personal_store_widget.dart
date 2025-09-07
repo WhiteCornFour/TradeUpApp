@@ -1,27 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tradeupapp/constants/app_colors.dart';
+import 'package:tradeupapp/models/user_model.dart';
 import 'package:tradeupapp/screens/main_app/shop/personal.dart';
+import 'package:tradeupapp/widgets/general/general_snackbar_helper.dart';
 
 class ShowPersonalStorePayment extends StatelessWidget {
-  final String idUserPersonal;
-  const ShowPersonalStorePayment({super.key, required this.idUserPersonal});
+  final UserModel data;
+  const ShowPersonalStorePayment({super.key, required this.data});
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
       leading: SizedBox(
-        width: 30,
-        height: double.infinity,
+        width: 45,
+        height: 45,
         child: Align(
           alignment: Alignment.topCenter,
-          child: ClipOval(
-            child: Image.asset(
-              'assets/images/logo.png',
-              width: 30,
-              height: 30,
-              fit: BoxFit.fill,
-            ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(100),
+            child: data.avtURL == null
+                ? Image.asset(
+                    'assets/images/logo.png',
+                    width: 45,
+                    height: 45,
+                    fit: BoxFit.fill,
+                  )
+                : Image.network(
+                    data.avtURL!,
+                    fit: BoxFit.fill,
+                    width: 45,
+                    height: 45,
+                  ),
           ),
         ),
       ), // Icon cửa hàng
@@ -29,7 +39,7 @@ class ShowPersonalStorePayment extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
-            "Wonwoo Store",
+            data.fullName ?? "Loading...",
             style: TextStyle(
               fontWeight: FontWeight.w500,
               fontFamily: 'Roboto-Medium',
@@ -45,7 +55,7 @@ class ShowPersonalStorePayment extends StatelessWidget {
         children: [
           Expanded(
             child: Text(
-              'Ap Cau Tre, Xa Long Thoi, Huyen Tieu Can, Tinh Tra Vinh',
+              data.address ?? "Loading...",
               style: TextStyle(
                 fontFamily: 'Roboto-Regular',
                 fontSize: 16,
@@ -60,7 +70,14 @@ class ShowPersonalStorePayment extends StatelessWidget {
       ),
       trailing: Icon(Icons.chevron_right, color: AppColors.background),
       onTap: () {
-        Get.to(Personal(idUser: idUserPersonal));
+        if (data.userId == null) {
+          SnackbarHelperGeneral.showCustomSnackBar(
+            "Please try again!",
+            backgroundColor: Colors.orange,
+          );
+        } else {
+          Get.to(Personal(idUser: data.userId!));
+        }
       },
     );
   }
