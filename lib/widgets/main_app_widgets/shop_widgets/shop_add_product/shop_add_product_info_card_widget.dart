@@ -75,8 +75,9 @@ class AddProductInfoCardShop extends StatelessWidget {
                       color: Colors.black,
                       height: 1.3,
                     ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis, 
+                    softWrap: false, 
                   ),
 
                   //Tag list

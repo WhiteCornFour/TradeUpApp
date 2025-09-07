@@ -12,6 +12,7 @@ import 'package:tradeupapp/screens/general/general_all_products.dart';
 import 'package:tradeupapp/screens/main_app/home/controller/home_controller.dart';
 import 'package:tradeupapp/screens/main_app/profile/save_product/controller/save_product_controller.dart';
 import 'package:tradeupapp/screens/main_app/shop/controllers/shop_controller.dart';
+import 'package:tradeupapp/widgets/general/general_loading_screen.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/home_widgets/home_dot_indicator_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/home_widgets/home_sort_option_group/home_sort_option_group_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/home_widgets/home_category_group_widget.dart';
@@ -61,12 +62,7 @@ class _Home extends State<Home> {
       //1. Kiểm tra trạng thái Loading
       if (homeController.isLoading.value) {
         return const Scaffold(
-          body: Center(
-            child: CircularProgressIndicator(
-              backgroundColor: AppColors.background,
-              color: AppColors.text,
-            ),
-          ),
+          body: LoadingScreenGeneral(message: "Loading Home page..."),
         );
       }
 

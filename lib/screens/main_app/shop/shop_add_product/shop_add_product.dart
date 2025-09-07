@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:tradeupapp/screens/main_app/index.dart';
+import 'package:tradeupapp/screens/main_app/shop/personal.dart';
 import 'package:tradeupapp/screens/main_app/shop/shop_add_product/controller/shop_add_product_controller.dart';
+import 'package:tradeupapp/widgets/general/general_loading_screen.dart';
+import 'package:tradeupapp/widgets/general/general_search_app_bar_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/shop_add_product/shop_add_product_page/shop_add_product_page_one_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/shop_add_product/shop_add_product_page/shop_add_product_page_three_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/shop_add_product/shop_add_product_page/shop_add_product_page_two_widget.dart';
@@ -39,72 +42,75 @@ class _AddProductShopState extends State<AddProductShop> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: true,
-      backgroundColor: Colors.white,
-      appBar: CustomAppBarGeneral(
-        showBackArrow: false,
+    return Obx(() {
+      //1. Trạng thái loading
+      if (addProductController.isSubmitting.value) {
+        return const Scaffold(
+          body: LoadingScreenGeneral(message: "Upload your product..."),
+        );
+      }
+      return Scaffold(
+        resizeToAvoidBottomInset: true,
         backgroundColor: Colors.white,
-        leadingIcon: Iconsax.arrow_left_2,
-        leadingOnPressed: Get.back,
-        title: const Text(
-          'Add Product',
-          style: TextStyle(fontFamily: 'Roboto-Medium'),
+        appBar: CustomAppBarGeneral(
+          showBackArrow: false,
+          backgroundColor: Colors.white,
+          leadingIcon: Iconsax.arrow_left_2,
+          leadingOnPressed: Get.back,
+          title: const Text(
+            'Add Product',
+            style: TextStyle(fontFamily: 'Roboto-Medium'),
+          ),
         ),
-      ),
-      body: SafeArea(
-        child: Column(
-          children: [
-            //Nội dung trang
-            Expanded(
-              child: PageView(
-                controller: addProductController.pageController,
-                physics:
-                    const NeverScrollableScrollPhysics(), //Không cho vuốt, chỉ dùng nút
-                onPageChanged: addProductController.updateStepIndicator,
-                children: const [
-                  AddProductPageOneShop(), // Step 1: Basic info
-                  AddProductPageTwoShop(), // Step 2: Images & categories
-                  AddProductPageThreeShop(), // Step 3: Review & post
-                  OnBoardingPage(
-                    image: 'assets/images/success_product.gif',
-                    title: 'Product Created Successfully!',
-                    subTitle:
-                        'Your product is now live and ready to be viewed.',
-                  ), //Finish Page
-                ],
+        body: SafeArea(
+          child: Column(
+            children: [
+              Expanded(
+                child: PageView(
+                  controller: addProductController.pageController,
+                  physics: const NeverScrollableScrollPhysics(),
+                  onPageChanged: addProductController.updateStepIndicator,
+                  children: const [
+                    AddProductPageOneShop(),
+                    AddProductPageTwoShop(),
+                    AddProductPageThreeShop(),
+                    OnBoardingPage(
+                      image: 'assets/images/success_product.gif',
+                      title: 'Product Created Successfully!',
+                      subTitle:
+                          'Your product is now live and ready to be viewed.',
+                    ),
+                  ],
+                ),
               ),
-            ),
-
-            //Nhóm nút điều hướng
-            Obx(
-              () => Padding(
+              Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: AddProductWizardNavigationButtonsShop(
                   currentStep: addProductController.currentStepIndex.value,
                   totalSteps: 4,
                   onNext: addProductController.nextStep,
                   onBack: addProductController.previousStep,
-                  onFinish: () {
-                    AddProductController.instance.submitProduct();
+                  onFinish: () async {
+                    await addProductController.submitProduct();
                   },
-                  onBackHome: () => {
-                    //Chờ build xong mới điều hướng
+                  onManageProducts: () {
+                    final userId = homeController.user.value?.userId ?? "";
+                    Get.to(() => Personal(idUser: userId));
+                  },
+                  onBackHome: () {
                     WidgetsBinding.instance.addPostFrameCallback((_) {
-                      //Xoá controller trước khi rời đi để tránh Obx trigger lỗi
                       if (Get.isRegistered<AddProductController>()) {
                         Get.delete<AddProductController>();
                       }
                       Get.offAll(() => MainAppIndex());
-                    }),
+                    });
                   },
-                  onManageProducts: () => {},
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 }

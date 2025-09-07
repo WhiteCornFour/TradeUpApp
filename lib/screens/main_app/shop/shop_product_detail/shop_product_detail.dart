@@ -6,13 +6,16 @@ import 'package:readmore/readmore.dart';
 import 'package:tradeupapp/constants/app_colors.dart';
 import 'package:tradeupapp/models/category_model.dart';
 import 'package:tradeupapp/models/product_model.dart';
+import 'package:tradeupapp/screens/main_app/shop/shop_product_detail/shop_make_an_offer/controller/shop_make_an_offer_controller.dart';
 import 'package:tradeupapp/screens/main_app/shop/shop_product_detail/shop_make_an_offer/shop_make_an_offer.dart';
 import 'package:tradeupapp/screens/general/general_share_show_bottom_sheet.dart';
 import 'package:tradeupapp/screens/main_app/chat/controllers/chat_room_controller.dart';
 import 'package:tradeupapp/screens/main_app/chat/controllers/message_controller.dart';
 import 'package:tradeupapp/screens/main_app/home/controller/home_controller.dart';
-import 'package:tradeupapp/screens/main_app/home/controller/home_product_detail_controller.dart';
+import 'package:tradeupapp/screens/main_app/shop/shop_product_detail/controller/shop_product_detail_controller.dart';
 import 'package:tradeupapp/screens/main_app/profile/save_product/controller/save_product_controller.dart';
+import 'package:tradeupapp/screens/main_app/shop/shop_product_detail/shop_offer_list/shop_offer_list.dart';
+import 'package:tradeupapp/widgets/general/general_loading_screen.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/shop_product_detail/shop_product_detail_bottom_navigation_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/shop_product_detail/shop_product_detail_image_slider_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/shop_product_detail/shop_product_detail_header_widget.dart';
@@ -20,7 +23,7 @@ import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/shop_product_de
 import 'package:tradeupapp/widgets/general/general_book_marked_toggle_icon_widget.dart';
 import 'package:tradeupapp/widgets/general/general_custom_app_bar_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/shop_product_detail/shop_product_detail_tag_button_widget.dart';
-import 'package:tradeupapp/widgets/general/general_button_widget.dart';
+import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/shop_product_detail/shop_product_detail_top_offer_card.dart';
 
 class ProductDetailShop extends StatefulWidget {
   const ProductDetailShop({
@@ -40,6 +43,7 @@ class _ProductDetailShopState extends State<ProductDetailShop> {
   final homeController = Get.find<HomeController>();
   final productDetailController = Get.put(ProductDetailController());
   final saveController = Get.find<SaveProductController>();
+  final makeAnOfferController = Get.put(MakeAnOfferController());
   ChatRoomController? chatRoomController;
 
   //Trạng thái Loading cho trang
@@ -60,6 +64,14 @@ class _ProductDetailShopState extends State<ProductDetailShop> {
     chatRoomController = Get.find<ChatRoomController>();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await productDetailController.loadUserDataById(widget.userId ?? '');
+      await productDetailController.loadTopOffer(
+        widget.product.productId ?? '',
+      );
+      await productDetailController.loadOffersOfProduct(
+        widget.product.productId ?? '',
+      );
+      makeAnOfferController.originPrice.value =
+          widget.product.productPrice ?? 0.0;
     });
   }
 
@@ -77,11 +89,8 @@ class _ProductDetailShopState extends State<ProductDetailShop> {
             //1. Loading state
             if (productDetailController.isLoading.value) {
               return const Scaffold(
-                body: Center(
-                  child: CircularProgressIndicator(
-                    backgroundColor: AppColors.background,
-                    color: AppColors.text,
-                  ),
+                body: LoadingScreenGeneral(
+                  message: "Loading product details...",
                 ),
               );
             }
@@ -105,6 +114,7 @@ class _ProductDetailShopState extends State<ProductDetailShop> {
 
             //3. Render UI chính
             return Scaffold(
+              backgroundColor: Colors.white,
               body: SingleChildScrollView(
                 child: Column(
                   children: [
@@ -283,22 +293,16 @@ class _ProductDetailShopState extends State<ProductDetailShop> {
 
                           const SizedBox(height: 16),
 
-                          //Offer Button
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 5),
-                            child: ButtonGeneral(
-                              width: double.infinity,
-                              text: 'Make An Offer',
-                              icon: Iconsax.receipt_item,
-                              backgroundColor: AppColors.header,
-                              isOutlined: true,
-                              onPressed: () => Get.to(() => MakeAnOfferShop()),
+                          //Description
+                          Text(
+                            'Description',
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontFamily: 'Roboto-Bold',
+                              color: Colors.black,
                             ),
                           ),
-
                           const SizedBox(height: 8),
-
-                          //Description
                           ReadMoreText(
                             product.productDescription ?? 'Unknown Description',
                             trimLines: 3,
@@ -325,41 +329,88 @@ class _ProductDetailShopState extends State<ProductDetailShop> {
                           ),
 
                           const SizedBox(height: 16),
+
+                          //Final Deal Agreement For This Product
+                          Text(
+                            'Deal Agreed',
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontFamily: 'Roboto-Bold',
+                              color: Colors.black,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Obx(() {
+                            final offer =
+                                productDetailController.topOffer.value;
+                            return ProductDetailTopOfferCardShop(
+                              userName: offer?.senderName ?? "Unknown User",
+                              userAvatar: offer?.senderAvatar,
+                              offerPrice: offer?.offerPrice,
+                              offerType: offer?.type,
+                              status: offer?.status,
+                            );
+                          }),
+
+                          const SizedBox(height: 16),
                           const Divider(),
                           const SizedBox(height: 16),
 
-                          //Reviews
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Text(
-                                'Reviews(199)',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontFamily: 'Roboto-Bold',
-                                  color: Colors.black,
-                                ),
+                          //Offers
+                          Obx(() {
+                            final offerCount =
+                                productDetailController.offerList.length;
+                            return GestureDetector(
+                              onTap: () {
+                                Get.to(() => ShopOfferList());
+                              },
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    'Offers($offerCount)',
+                                    style: const TextStyle(
+                                      fontSize: 20,
+                                      fontFamily: 'Roboto-Bold',
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  Icon(
+                                    Icons.arrow_forward_ios,
+                                    size: 18,
+                                    color: Colors.black,
+                                  ),
+                                ],
                               ),
-                              GestureDetector(
-                                onTap: () {},
-                                child: const Icon(
-                                  Icons.arrow_forward_ios,
-                                  size: 18,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 16),
+                            );
+                          }),
+                          const SizedBox(height: 20),
                         ],
                       ),
                     ),
                   ],
                 ),
               ),
-              bottomNavigationBar: ShopProductDetailBottomNavigation(
-                product: product,
-              ),
+              bottomNavigationBar: Obx(() {
+                final topOffer = productDetailController.topOffer.value;
+
+                // Nếu có top offer và status = 1 thì ẩn
+                if (topOffer != null && topOffer.status == 1) {
+                  return const SizedBox.shrink();
+                }
+
+                // Nếu chưa có deal thì hiển thị
+                return ShopProductDetailBottomNavigation(
+                  product: product,
+                  onPressed: () => Get.to(
+                    () => MakeAnOfferShop(
+                      product: product,
+                      userId: widget.userId,
+                    ),
+                  ),
+                );
+              }),
             );
           }),
         ),

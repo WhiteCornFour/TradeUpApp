@@ -7,9 +7,14 @@ import 'package:tradeupapp/screens/main_app/home/controller/home_controller.dart
 import 'package:tradeupapp/widgets/general/general_button_widget.dart';
 
 class ShopProductDetailBottomNavigation extends StatelessWidget {
-  const ShopProductDetailBottomNavigation({super.key, required this.product});
+  const ShopProductDetailBottomNavigation({
+    super.key,
+    required this.product,
+    this.onPressed,
+  });
 
   final ProductModel product;
+  final VoidCallback? onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -59,11 +64,11 @@ class ShopProductDetailBottomNavigation extends StatelessWidget {
               height: 52,
               child: ButtonGeneral(
                 width: double.infinity,
-                text: 'Check Out',
-                icon: Iconsax.check,
+                text: 'Make An Offer',
+                icon: Iconsax.receipt_item,
                 iconDistance: 18,
                 backgroundColor: AppColors.header,
-                onPressed: Get.back,
+                onPressed: onPressed,
               ),
             ),
           ),
