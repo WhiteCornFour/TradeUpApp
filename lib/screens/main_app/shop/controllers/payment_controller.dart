@@ -40,7 +40,7 @@ class PaymentController extends GetxController {
 
   void _handleFetchDataCards() async {
     final fetchedCards = await db.getCards(idCurrentUser);
-    if (fetchedCards.isNotEmpty) {
+    if (fetchedCards!.isNotEmpty) {
       cards.assignAll(fetchedCards); // 🔥 dùng assignAll thay vì gán trực tiếp
     }
   }

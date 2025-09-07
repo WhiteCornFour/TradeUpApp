@@ -704,7 +704,7 @@ class DatabaseService {
   }
 
   //PaymentController: fetch data card by idUser
-  Future<List<CardModel>> getCards(String idUser) async {
+  Future<List<CardModel>?> getCards(String idUser) async {
     try {
       final collectionRef = FirebaseFirestore.instance.collection("users");
       final docRef = collectionRef.doc(idUser);
@@ -724,6 +724,8 @@ class DatabaseService {
     } catch (e) {
       // ignore: avoid_print
       print("Error getCards: $e");
+    }
+  }
 
   //MakeAnOfferController: Thêm offer cho nguời dùng
   Future<void> addOffer(OfferModel offer) async {
@@ -819,18 +821,20 @@ class DatabaseService {
 
   //PaymentController: Update status card by id
   Future<void> updateStatusCardById(String idCurrentUser, String idCard) async {
-  try {
-    final docRef = FirebaseFirestore.instance.collection("users").doc(idCurrentUser);
-    final subCollRef = docRef.collection("cards");
+    try {
+      final docRef = FirebaseFirestore.instance
+          .collection("users")
+          .doc(idCurrentUser);
+      final subCollRef = docRef.collection("cards");
 
-    await subCollRef.doc(idCard).update({"status": 0});
-    // ignore: avoid_print
-    print("Card $idCard updated successfully!");
-  } catch (e) {
-    // ignore: avoid_print
-    print("Error updateStatusCardById: $e");
+      await subCollRef.doc(idCard).update({"status": 0});
+      // ignore: avoid_print
+      print("Card $idCard updated successfully!");
+    } catch (e) {
+      // ignore: avoid_print
+      print("Error updateStatusCardById: $e");
+    }
   }
-}
 
   //ProductDetailController: Lấy offer duoc accepted của 1 sản phẩm
   Future<OfferModel?> fetchAcceptedOfferByProductId(String productId) async {
