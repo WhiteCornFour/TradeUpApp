@@ -6,7 +6,9 @@ import 'package:tradeupapp/constants/app_colors.dart';
 import 'package:tradeupapp/firebase/database_service.dart';
 import 'package:tradeupapp/models/product_model.dart';
 import 'package:tradeupapp/screens/main_app/chat/controllers/message_controller.dart';
+import 'package:tradeupapp/screens/main_app/shop/shop_product_detail/shop_product_detail.dart';
 import 'package:tradeupapp/widgets/general/general_custom_dialog.dart';
+import 'package:tradeupapp/widgets/general/general_snackbar_helper.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/chat_widgets/message_app_bar_custom_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/chat_widgets/message_bottom_text_field_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/chat_widgets/message_emty_message_widget.dart';
@@ -202,7 +204,24 @@ class _MessageState extends State<Message> {
 
                           return ItemProductMessage(
                             isRight: isRight,
-                            onPressed: (idProduct) {},
+                            onPressed: (idProduct) {
+                              messageController.handleGetDataProductById(
+                                idProduct,
+                              );
+                              if (messageController.product != null) {
+                                Get.to(
+                                  ProductDetailShop(
+                                    product: messageController.product!,
+                                    userId: messageController.idCurrentUser,
+                                  ),
+                                );
+                              } else {
+                                SnackbarHelperGeneral.showCustomSnackBar(
+                                  "Please try again!",
+                                  backgroundColor: Colors.orange,
+                                );
+                              }
+                            },
                             timestamp: timestamp,
                             product: snapshot.data!,
                           );

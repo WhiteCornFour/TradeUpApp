@@ -3,7 +3,8 @@ import 'package:tradeupapp/constants/app_colors.dart';
 
 class ShowAddressPayment extends StatelessWidget {
   final Function onPressedIconButton;
-  const ShowAddressPayment({super.key, required this.onPressedIconButton});
+  final String shippingAdress;
+  const ShowAddressPayment({super.key, required this.onPressedIconButton, required this.shippingAdress});
 
   @override
   Widget build(BuildContext context) {
@@ -71,7 +72,7 @@ class ShowAddressPayment extends StatelessWidget {
                   SizedBox(width: 8), // tạo khoảng cách icon - text
                   Expanded(
                     child: Text(
-                      'Ap Cau Tre, Xa Long Thoi, Huyen Tieu Can, Tinh Tra Vinh',
+                      shippingAdress,
                       maxLines: 2,
                       softWrap: true,
                       style: TextStyle(

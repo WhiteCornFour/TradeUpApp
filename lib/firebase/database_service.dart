@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:tradeupapp/models/card_model.dart';
 import 'package:tradeupapp/models/category_model.dart';
 import 'package:tradeupapp/models/chat_room_model.dart';
 import 'package:tradeupapp/models/offer_model.dart';
@@ -671,6 +672,61 @@ class DatabaseService {
     }
   }
 
+  //PaymentController: update address user
+  Future<void> updateAddresUser(String idUser, String newAdress) async {
+    try {
+      await FirebaseFirestore.instance.collection("users").doc(idUser).update({
+        "address": newAdress,
+      });
+    } catch (e) {
+      // ignore: avoid_print
+      print("Error updateAddresUser: $e");
+    }
+  }
+
+  //PaymentController: add new card by idUser
+  Future<String?> addNewCard(String idUser, CardModel card) async {
+    try {
+      final collectionRef = FirebaseFirestore.instance.collection("users");
+      final docRef = collectionRef.doc(idUser);
+      final subCollectionRef = docRef.collection("cards");
+
+      final newDoc = await subCollectionRef.add(card.toMap());
+
+      // ignore: avoid_print
+      print("Card added successfully with id: ${newDoc.id}");
+      return newDoc.id; // trả về id của thẻ vừa thêm
+    } catch (e) {
+      // ignore: avoid_print
+      print("Error addNewCard: $e");
+      return null;
+    }
+  }
+
+  //PaymentController: fetch data card by idUser
+  Future<List<CardModel>?> getCards(String idUser) async {
+    try {
+      final collectionRef = FirebaseFirestore.instance.collection("users");
+      final docRef = collectionRef.doc(idUser);
+      final subCollectionRef = docRef
+          .collection("cards")
+          .where(Filter("status", isEqualTo: 1));
+
+      final cardDocs = await subCollectionRef.get();
+
+      List<CardModel> cards = cardDocs.docs.map((e) {
+        CardModel card = CardModel.fromMap(e.data());
+        card.idCard = e.id;
+        return card;
+      }).toList();
+
+      return cards;
+    } catch (e) {
+      // ignore: avoid_print
+      print("Error getCards: $e");
+    }
+  }
+
   //MakeAnOfferController: Thêm offer cho nguời dùng
   Future<void> addOffer(OfferModel offer) async {
     await FirebaseFirestore.instance.collection('offers').add(offer.toMap());
@@ -760,6 +816,23 @@ class DatabaseService {
     } catch (e) {
       print("Error fetchOffersByProductId: $e");
       return [];
+    }
+  }
+
+  //PaymentController: Update status card by id
+  Future<void> updateStatusCardById(String idCurrentUser, String idCard) async {
+    try {
+      final docRef = FirebaseFirestore.instance
+          .collection("users")
+          .doc(idCurrentUser);
+      final subCollRef = docRef.collection("cards");
+
+      await subCollRef.doc(idCard).update({"status": 0});
+      // ignore: avoid_print
+      print("Card $idCard updated successfully!");
+    } catch (e) {
+      // ignore: avoid_print
+      print("Error updateStatusCardById: $e");
     }
   }
 

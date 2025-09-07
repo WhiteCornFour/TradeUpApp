@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:tradeupapp/constants/app_colors.dart';
 
-class DialogChangeShippingAddressPayment {
-  static void show(BuildContext context) {
-    final TextEditingController addressController = TextEditingController();
 
-    showDialog(
+class DialogChangeShippingAddressPayment {
+  static Future<String?> show(
+    BuildContext context,
+    TextEditingController controller,
+    String oldAddress,
+  ) {
+    controller.text = oldAddress;
+
+    return showDialog<String>(
       context: context,
-      barrierDismissible: false, // Không cho tắt khi chạm ra ngoài
+      barrierDismissible: false,
       builder: (context) {
         return AlertDialog(
           shape: RoundedRectangleBorder(
@@ -35,22 +40,19 @@ class DialogChangeShippingAddressPayment {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               TextField(
-                controller: addressController,
+                controller: controller,
+                maxLines: 1,
                 decoration: InputDecoration(
-                  labelText: "New address shipping",
-                  border: OutlineInputBorder(),
+                  labelText: "New shipping address",
+                  border: const OutlineInputBorder(),
                   floatingLabelStyle: TextStyle(color: AppColors.header),
                   labelStyle: const TextStyle(color: Colors.grey),
                   focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: AppColors.header,
-                      width: 2,
-                    ), // Khi focus
+                    borderSide: BorderSide(color: AppColors.header, width: 2),
                   ),
                 ),
-
                 style: TextStyle(
                   color: AppColors.header,
                   fontSize: 16,
@@ -74,7 +76,7 @@ class DialogChangeShippingAddressPayment {
           actionsAlignment: MainAxisAlignment.spaceBetween,
           actions: [
             OutlinedButton(
-              onPressed: () => Navigator.pop(context),
+              onPressed: () => Navigator.pop(context, null), // ❌ không trả về địa chỉ
               style: OutlinedButton.styleFrom(
                 side: BorderSide(color: AppColors.background),
                 shape: RoundedRectangleBorder(
@@ -93,10 +95,8 @@ class DialogChangeShippingAddressPayment {
             ),
             ElevatedButton(
               onPressed: () {
-                String newAddress = addressController.text.trim();
-                if (newAddress.isNotEmpty) {
-                  Navigator.pop(context, newAddress);
-                }
+                final newAddress = controller.text.trim();
+                Navigator.pop(context, newAddress); // ✅ trả về địa chỉ
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.background,
@@ -120,3 +120,4 @@ class DialogChangeShippingAddressPayment {
     );
   }
 }
+
