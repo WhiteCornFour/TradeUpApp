@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:tradeupapp/models/category_model.dart';
 import 'package:tradeupapp/models/chat_room_model.dart';
+import 'package:tradeupapp/models/offer_model.dart';
 import 'package:tradeupapp/models/product_model.dart';
 import 'package:tradeupapp/models/search_history_model.dart';
 import 'package:tradeupapp/models/user_model.dart';
@@ -165,12 +166,10 @@ class DatabaseService {
         user.total_reviews = docSnapshot.data()!['total_rating'].toInt();
         return user;
       } else {
-        // ignore: avoid_print
         print('User not found fetchUserModelById');
         return null;
       }
     } catch (e) {
-      // ignore: avoid_print
       print('Error fetching user fetchUserModelById: $e');
       return null;
     }
@@ -292,7 +291,7 @@ class DatabaseService {
     }
   }
 
-  //MessageController: Lấy dữ liệu của 1 product khi truyền vào Id
+  //MessageController & ViewOfferController: Lấy dữ liệu của 1 product khi truyền vào Id
   Future<ProductModel?> getProductById(String idProduct) async {
     try {
       final snapshot = await FirebaseFirestore.instance
@@ -303,7 +302,6 @@ class DatabaseService {
         return ProductModel.fromMap(snapshot.docs.first.data());
       }
     } catch (e) {
-      // ignore: avoid_print
       print('Error getProductById: $e');
     }
     return null;
@@ -322,7 +320,6 @@ class DatabaseService {
         return product;
       }).toList();
     } catch (e) {
-      // ignore: avoid_print
       print('Error fetching products: $e');
       return [];
     }
@@ -671,6 +668,136 @@ class DatabaseService {
           });
     } catch (e) {
       print("Error while unliking product: $e");
+    }
+  }
+
+  //MakeAnOfferController: Thêm offer cho nguời dùng
+  Future<void> addOffer(OfferModel offer) async {
+    await FirebaseFirestore.instance.collection('offers').add(offer.toMap());
+  }
+
+  //ViewOfferController: Lấy danh sách offer mà currentUser nhận được
+  Future<List<OfferModel>> getUserReceivedOfferList(
+    String currentUserId,
+  ) async {
+    final querySnapshot = await FirebaseFirestore.instance
+        .collection('offers')
+        .where('receiverId', isEqualTo: currentUserId)
+        .orderBy('createdAt', descending: true) //mới nhất lên trước
+        .get();
+
+    return querySnapshot.docs
+        .map((doc) => OfferModel.fromMap(doc.data(), docId: doc.id))
+        .toList();
+  }
+
+  //ViewOfferController: Lấy danh sách offer mà currentUser đã gửi
+  Future<List<OfferModel>> getUserSentOfferList(String currentUserId) async {
+    final querySnapshot = await FirebaseFirestore.instance
+        .collection('offers')
+        .where('senderId', isEqualTo: currentUserId)
+        .orderBy('createdAt', descending: true)
+        .get();
+
+    return querySnapshot.docs
+        .map((doc) => OfferModel.fromMap(doc.data(), docId: doc.id))
+        .toList();
+  }
+
+  //ViewOfferController: Lấy tên user từ userId
+  Future<String> getUserNameFromUserId(String userId) async {
+    try {
+      final doc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .get();
+
+      if (doc.exists) {
+        return doc.data()!['yourname'] ?? "Unknown user";
+      } else {
+        return "Unknown user";
+      }
+    } catch (e) {
+      print("Error getUserNameFromUserId: $e");
+      return "Unknown user";
+    }
+  }
+
+  //ViewOfferController: Chấp nhận Offer (status = 1)
+  Future<void> acceptOffer(String offerId) async {
+    try {
+      await FirebaseFirestore.instance.collection('offers').doc(offerId).update(
+        {'status': 1, 'createdAt': FieldValue.serverTimestamp()},
+      );
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  //ViewOfferController: Từ chối Offer (status = 2)
+  Future<void> declineOffer(String offerId) async {
+    try {
+      await FirebaseFirestore.instance.collection('offers').doc(offerId).update(
+        {'status': 2, 'createdAt': FieldValue.serverTimestamp()},
+      );
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  //ProductDetailController: Lấy toàn bộ offers của 1 sản phẩm
+  Future<List<OfferModel>> fetchOffersByProductId(String productId) async {
+    try {
+      final snapshot = await FirebaseFirestore.instance
+          .collection("offers")
+          .where("productId", isEqualTo: productId)
+          .orderBy("createdAt", descending: true)
+          .get();
+
+      return snapshot.docs
+          .map((doc) => OfferModel.fromMap(doc.data()))
+          .toList();
+    } catch (e) {
+      print("Error fetchOffersByProductId: $e");
+      return [];
+    }
+  }
+
+  //ProductDetailController: Lấy offer duoc accepted của 1 sản phẩm
+  Future<OfferModel?> fetchAcceptedOfferByProductId(String productId) async {
+    try {
+      final snapshot = await FirebaseFirestore.instance
+          .collection('offers')
+          .where('productId', isEqualTo: productId)
+          .where('status', isEqualTo: 1)
+          .limit(1)
+          .get();
+
+      if (snapshot.docs.isNotEmpty) {
+        final doc = snapshot.docs.first;
+        return OfferModel.fromMap(doc.data(), docId: doc.id);
+      }
+      return null;
+    } catch (e) {
+      print("❌ Error fetchAcceptedOfferByProductId: $e");
+      return null;
+    }
+  }
+
+  //ProductDetailController: Lấy danh sách Offer của Product từ Firebase
+  Future<List<OfferModel>> getOffersByProductId(String productId) async {
+    try {
+      final snapshot = await FirebaseFirestore.instance
+          .collection('offers')
+          .where('productId', isEqualTo: productId)
+          .get();
+
+      return snapshot.docs
+          .map((doc) => OfferModel.fromMap(doc.data(), docId: doc.id))
+          .toList();
+    } catch (e) {
+      print("❌ Error getOffersByProductId: $e");
+      return [];
     }
   }
 }

@@ -86,6 +86,7 @@ class HomeController extends GetxController {
 
   //Hàm load thông tin danh sách toàn bộ User
   Future<void> loadUsersAndMap() async {
+        isLoading.value = true;
     final users = await db.getAllUsers();
     userList.assignAll(users);
 
@@ -97,6 +98,7 @@ class HomeController extends GetxController {
       }
     }
     userIdToUserName.refresh(); // để Obx nhận thay đổi
+        isLoading.value = false;
   }
 
   //Hàm load thông tin danh sách Product

@@ -19,6 +19,8 @@ class LoginController extends GetxController {
     super.dispose();
   }
 
+  var isLogin = false.obs;
+
   //Nhan thông tin của User mới từ Register gửi qua
   String errorMessage = '';
 
@@ -26,6 +28,7 @@ class LoginController extends GetxController {
     final email = controllerEmail.text.trim();
     final password = controllerPassword.text.trim();
     try {
+      isLogin.value = true;
       //Đăng nhập
       final credential = await AuthServices().signIn(
         email: email,
@@ -51,11 +54,14 @@ class LoginController extends GetxController {
         "Something went wrong!",
         backgroundColor: Colors.red,
       );
+    } finally {
+      isLogin.value = false;
     }
   }
 
   void signInWithGoogle() async {
     try {
+      isLogin.value = true;
       //Đăng nhập Google
       final userCredential = await authServices.value.signInWithGoogle();
       final user = userCredential.user;
@@ -90,6 +96,8 @@ class LoginController extends GetxController {
       }
     } catch (e) {
       SnackbarHelperGeneral.showCustomSnackBar("Google SignIn failed!");
+    } finally {
+      isLogin.value = false;
     }
   }
 }

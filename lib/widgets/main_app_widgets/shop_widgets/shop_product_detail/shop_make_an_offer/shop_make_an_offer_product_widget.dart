@@ -40,17 +40,35 @@ class MakeAnOfferProductCardShop extends StatelessWidget {
           ClipRRect(
             borderRadius: BorderRadius.circular(8),
             child: imagePath != null
-                ? Image.asset(
-                    imagePath!,
-                    width: height - 20,
-                    height: height - 20,
-                    fit: BoxFit.cover,
-                  )
+                ? (imagePath!.startsWith('http')
+                      ? Image.network(
+                          imagePath!,
+                          width: height - 20,
+                          height: height - 20,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Container(
+                              width: height - 20,
+                              height: height - 20,
+                              color: Colors.grey[200],
+                              child: const Icon(
+                                Iconsax.image,
+                                color: Colors.grey,
+                              ),
+                            );
+                          },
+                        )
+                      : Image.asset(
+                          imagePath!,
+                          width: height - 20,
+                          height: height - 20,
+                          fit: BoxFit.cover,
+                        ))
                 : Container(
                     width: height - 20,
                     height: height - 20,
                     color: Colors.grey[200],
-                    child: Icon(Iconsax.image, color: Colors.grey),
+                    child: const Icon(Iconsax.image, color: Colors.grey),
                   ),
           ),
           const SizedBox(width: 12),

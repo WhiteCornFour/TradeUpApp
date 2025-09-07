@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tradeupapp/constants/app_colors.dart';
-import 'package:tradeupapp/screens/main_app/home/controller/home_product_detail_controller.dart';
+import 'package:tradeupapp/screens/main_app/shop/shop_product_detail/controller/shop_product_detail_controller.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/shop_post_card/shop_post_card_image_container_widget.dart';
 
 class ProductDetailImageSliderShop extends StatelessWidget {
