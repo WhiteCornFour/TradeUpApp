@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:tradeupapp/firebase/database_service.dart';
+import 'package:tradeupapp/models/offer_model.dart';
 import 'package:tradeupapp/models/user_model.dart';
 
 class ProductDetailController extends GetxController {
@@ -26,6 +27,12 @@ class ProductDetailController extends GetxController {
   //Thông tin user (chủ shop)
   var user = Rxn<UserModel>();
 
+  //Top offer
+  var topOffer = Rxn<OfferModel>();
+
+  //Danh sach Offer cua san pham
+  var offerList = <OfferModel>[].obs;
+
   final db = DatabaseService();
 
   //Hàm fetch User theo id
@@ -45,6 +52,38 @@ class ProductDetailController extends GetxController {
     } finally {
       isLoading.value = false;
     }
+  }
+
+  //Hàm load Top Offer
+  Future<void> loadTopOffer(String productId) async {
+    try {
+      final acceptedOffer = await db.fetchAcceptedOfferByProductId(productId);
+      if (acceptedOffer != null) {
+        final sender = await db.fetchUserModelById(
+          acceptedOffer.senderId ?? '',
+        );
+        acceptedOffer.senderName = sender?.fullName;
+        acceptedOffer.senderAvatar = sender?.avtURL;
+
+        topOffer.value = acceptedOffer;
+      } else {
+        topOffer.value = null; // không có offer nào được accept
+      }
+    } catch (e) {
+      print("Error loadTopOffer: $e");
+    }
+  }
+
+  //Hàm load Danh sách Offers
+  Future<void> loadOffersOfProduct(String productId) async {
+    final data = await db.getOffersByProductId(productId);
+    for (var offer in data) {
+      final sender = await db.fetchUserModelById(offer.senderId ?? '');
+      offer.senderName = sender?.fullName;
+      offer.senderAvatar = sender?.avtURL;
+    }
+
+    offerList.assignAll(data);
   }
 
   void _calculatorRating() {

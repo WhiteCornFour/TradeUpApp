@@ -157,7 +157,7 @@ class _ProfileState extends State<Profile> {
 
                     CategoryFuncUserProfile(
                       onTap: () {
-                        profileController.navigatorFunc(const ViewOffer());
+                        profileController.navigatorFunc(ViewOffer());
                       },
                       icon: Icons.date_range_outlined,
                       label: 'View Offer',

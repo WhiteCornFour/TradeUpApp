@@ -45,6 +45,9 @@ class AddProductController extends GetxController {
   //Step 3: Post and Feeds
   final productStoryController = TextEditingController();
 
+  //Loading cho submit
+  var isSubmitting = false.obs;
+
   /// ---------------------
   /// Navigation Functions
   /// ---------------------
@@ -199,6 +202,7 @@ class AddProductController extends GetxController {
     FocusManager.instance.primaryFocus?.unfocus();
 
     try {
+      isSubmitting.value = true;
       //Lấy userId từ FirebaseAuth
       final currentUser = FirebaseAuth.instance.currentUser;
       if (currentUser == null) {
@@ -248,16 +252,30 @@ class AddProductController extends GetxController {
         'Successfully adding product',
         backgroundColor: Colors.green,
       );
-
-      //Chuyển sang trang Finish trực tiếp
-      nextStep();
-
       resetForm();
     } catch (e) {
       SnackbarHelperGeneral.showCustomSnackBar(
         'Failed to add product due to: $e',
         backgroundColor: Colors.red,
       );
+    } finally {
+      isSubmitting.value = false;
+
+      //Đi thẳng sang Finish page mà không validate lại
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        int totalSteps = 3;
+
+        //cập nhật progress = 100%
+        updateProgress(1.0, totalSteps);
+
+        pageController.animateToPage(
+          totalSteps, // Finish page index (3)
+          duration: const Duration(milliseconds: 500),
+          curve: Curves.easeInOut,
+        );
+
+        currentStepIndex.value = totalSteps;
+      });
     }
   }
 

@@ -49,7 +49,12 @@ class _ProductCardVerticalHomeState extends State<ProductCardVerticalHome> {
     final saveController = Get.find<SaveProductController>();
     return GestureDetector(
       onTap: () {
-        Get.to(() => ProductDetailShop(product: widget.product, userId: widget.product.userId));
+        Get.to(
+          () => ProductDetailShop(
+            product: widget.product,
+            userId: widget.product.userId,
+          ),
+        );
       },
       child: Container(
         width: 180,
@@ -135,7 +140,8 @@ class _ProductCardVerticalHomeState extends State<ProductCardVerticalHome> {
                       fontFamily: 'Roboto-Regular',
                     ),
                     overflow: TextOverflow.ellipsis,
-                    maxLines: 2,
+                    maxLines: 1,
+                    softWrap: false,
                     textAlign: TextAlign.left,
                   ),
 
