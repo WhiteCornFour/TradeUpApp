@@ -35,9 +35,8 @@ class EditProfileController extends GetxController {
 
   // Load dữ liệu người dùng
   Future<void> loadUser() async {
-    isLoading.value = true;
-
     try {
+      isLoading.value = true;
       final data = await DatabaseService().fetchDataCurrentUser();
       if (data != null) {
         user.value = UserModel.fromMap(data);
@@ -152,28 +151,36 @@ class EditProfileController extends GetxController {
 
   // Lấy địa chỉ hiện tại
   Future<void> getCurrentAddress() async {
-    Location location = Location();
-    bool serviceEnabled = await location.serviceEnabled();
-    if (!serviceEnabled) {
-      serviceEnabled = await location.requestService();
-      if (!serviceEnabled) return;
+    try {
+      isLoading.value = true;
+      Location location = Location();
+      bool serviceEnabled = await location.serviceEnabled();
+      if (!serviceEnabled) {
+        serviceEnabled = await location.requestService();
+        if (!serviceEnabled) return;
+      }
+
+      PermissionStatus permissionGranted = await location.hasPermission();
+      if (permissionGranted == PermissionStatus.denied) {
+        permissionGranted = await location.requestPermission();
+        if (permissionGranted != PermissionStatus.granted) return;
+      }
+
+      LocationData locationData = await location.getLocation();
+      List<Placemark> placemarks = await placemarkFromCoordinates(
+        locationData.latitude!,
+        locationData.longitude!,
+      );
+
+      Placemark place = placemarks.first;
+      addressController.text =
+          "${place.street}, ${place.locality}, ${place.country}";
+    } catch (e) {
+      // ignore: avoid_print
+      print("Error getCurrentAddress: $e");
+    } finally {
+      isLoading.value = false;
     }
-
-    PermissionStatus permissionGranted = await location.hasPermission();
-    if (permissionGranted == PermissionStatus.denied) {
-      permissionGranted = await location.requestPermission();
-      if (permissionGranted != PermissionStatus.granted) return;
-    }
-
-    LocationData locationData = await location.getLocation();
-    List<Placemark> placemarks = await placemarkFromCoordinates(
-      locationData.latitude!,
-      locationData.longitude!,
-    );
-
-    Placemark place = placemarks.first;
-    addressController.text =
-        "${place.street}, ${place.locality}, ${place.country}";
   }
 
   // Kiểm tra dữ liệu nhập vào
@@ -239,60 +246,68 @@ class EditProfileController extends GetxController {
 
   // Cập nhật thông tin người dùng
   Future<void> updateProfileUser() async {
-    final currentUser = FirebaseAuth.instance.currentUser;
+    try {
+      isLoading.value = true;
+      final currentUser = FirebaseAuth.instance.currentUser;
 
-    String? validationMessage = await _validateUserInfoBeforeUpdate();
-    if (validationMessage != null) {
-      SnackbarHelperGeneral.showCustomSnackBar(validationMessage);
-      return;
-    }
-
-    // final userDoc = await FirebaseFirestore.instance
-    //     .collection('users')
-    //     .doc(currentUser!.uid)
-    //     .get();
-    final currentUserModel = await db.fetchUserModelById(currentUser!.uid);
-
-    //final currentUserModel = UserModal.fromMap(userDoc.data()!);
-    String? url;
-    if (imageFile.value != null) {
-      url = await _uploadToCloudinary(imageFile.value!);
-      if (url == null) {
-        SnackbarHelperGeneral.showCustomSnackBar(
-          'Failed to upload image. Please try again.',
-          backgroundColor: Colors.red,
-        );
+      String? validationMessage = await _validateUserInfoBeforeUpdate();
+      if (validationMessage != null) {
+        SnackbarHelperGeneral.showCustomSnackBar(validationMessage);
         return;
       }
-    } else {
-      // url = currentUserModel.avtURL;
-      url = currentUserModel!.avtURL;
+
+      // final userDoc = await FirebaseFirestore.instance
+      //     .collection('users')
+      //     .doc(currentUser!.uid)
+      //     .get();
+      final currentUserModel = await db.fetchUserModelById(currentUser!.uid);
+
+      //final currentUserModel = UserModal.fromMap(userDoc.data()!);
+      String? url;
+      if (imageFile.value != null) {
+        url = await _uploadToCloudinary(imageFile.value!);
+        if (url == null) {
+          SnackbarHelperGeneral.showCustomSnackBar(
+            'Failed to upload image. Please try again.',
+            backgroundColor: Colors.red,
+          );
+          return;
+        }
+      } else {
+        // url = currentUserModel.avtURL;
+        url = currentUserModel!.avtURL;
+      }
+
+      final updatedUser = UserModel(
+        email: emailController.text.trim(),
+        password: '',
+        fullName: fullnameController.text.trim(),
+        avtURL: url,
+        bio: bioController.text.trim(),
+        address: addressController.text.trim(),
+        phoneNumber: phoneNumberController.text.trim(),
+        tagName: tagNameController.text.trim(),
+        role: currentUserModel!.role,
+        rating: currentUserModel.rating,
+      );
+
+      // await FirebaseFirestore.instance
+      //     .collection('users')
+      //     .doc(currentUser.uid)
+      //     .update(updatedUser.toMap());
+      await db.updateDataUser(updatedUser.toMap(), currentUser.uid);
+
+      loadUser();
+
+      SnackbarHelperGeneral.showCustomSnackBar(
+        'Your profile has been updated successfully.',
+        backgroundColor: Colors.green,
+      );
+    } catch (e) {
+      // ignore: avoid_print
+      print("Error updateProfileUser: $e");
+    } finally {
+      isLoading.value = false;
     }
-
-    final updatedUser = UserModel(
-      email: emailController.text.trim(),
-      password: '',
-      fullName: fullnameController.text.trim(),
-      avtURL: url,
-      bio: bioController.text.trim(),
-      address: addressController.text.trim(),
-      phoneNumber: phoneNumberController.text.trim(),
-      tagName: tagNameController.text.trim(),
-      role: currentUserModel!.role,
-      rating: currentUserModel.rating,
-    );
-
-    // await FirebaseFirestore.instance
-    //     .collection('users')
-    //     .doc(currentUser.uid)
-    //     .update(updatedUser.toMap());
-    await db.updateDataUser(updatedUser.toMap(), currentUser.uid);
-
-    loadUser();
-
-    SnackbarHelperGeneral.showCustomSnackBar(
-      'Your profile has been updated successfully.',
-      backgroundColor: Colors.green,
-    );
   }
 }

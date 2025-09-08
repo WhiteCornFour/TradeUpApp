@@ -185,6 +185,7 @@ class _ViewOfferState extends State<ViewOffer> {
                                 productName:
                                     offer.product?.productName ??
                                     "Unknown product",
+                                offerModel: offer,
                                 offerPrice: offer.offerPrice ?? 0,
                                 status: offer.status ?? 0,
                                 onTap: () {
@@ -192,8 +193,8 @@ class _ViewOfferState extends State<ViewOffer> {
                                     Get.to(
                                       () => ProductDetailShop(
                                         product: offer.product!,
-                                        userId:
-                                            homeController.user.value?.userId,
+                                        userId: offer.product!.userId,
+                                        // homeController.user.value?.userId,
                                       ),
                                     );
                                   }
