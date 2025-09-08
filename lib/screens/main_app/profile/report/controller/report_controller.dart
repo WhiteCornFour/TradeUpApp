@@ -18,6 +18,7 @@ class ReportController extends GetxController {
   final tagnameTargetController = TextEditingController();
   RxList<File> imageList = <File>[].obs;
   late final BuildContext context;
+  RxBool isLoading = false.obs;
 
   //Khai báo biến database
   final db = DatabaseService();
@@ -67,60 +68,64 @@ class ReportController extends GetxController {
 
   //Hàm thêm report mới vào firbase
   void handleSubmitReport(BuildContext context) async {
-    final currentUser = FirebaseAuth.instance.currentUser;
-    if (contentFeedBackController.text.isEmpty) {
-      SnackbarHelperGeneral.showCustomSnackBar(
-        'Enter the details of what you want to report!',
-        backgroundColor: Colors.red,
-      );
-      return;
-    }
-    //Gọi hàm upload ảnh lên cloudinary
     try {
-      List<String> urlImageList = [];
-      if (imageList.isNotEmpty) {
-        for (var imageFile in imageList) {
-          String? url;
-          url = await uploadToCloudinary(imageFile);
-          if (url == null) {
-            SnackbarHelperGeneral.showCustomSnackBar(
-              'Failed to upload image. Please try again.',
-              backgroundColor: Colors.red,
-            );
-            return;
-          } else {
-            urlImageList.add(url);
+      isLoading.value = true;
+      final currentUser = FirebaseAuth.instance.currentUser;
+      if (contentFeedBackController.text.isEmpty) {
+        SnackbarHelperGeneral.showCustomSnackBar(
+          'Enter the details of what you want to report!',
+          backgroundColor: Colors.red,
+        );
+        return;
+      }
+      //Gọi hàm upload ảnh lên cloudinary
+      try {
+        List<String> urlImageList = [];
+        if (imageList.isNotEmpty) {
+          for (var imageFile in imageList) {
+            String? url;
+            url = await uploadToCloudinary(imageFile);
+            if (url == null) {
+              SnackbarHelperGeneral.showCustomSnackBar(
+                'Failed to upload image. Please try again.',
+                backgroundColor: Colors.red,
+              );
+              return;
+            } else {
+              urlImageList.add(url);
+            }
           }
         }
+        //Chuẩn bị Report modal để add report lên firebase
+        final reportData = ReportModel(
+          idUserReported: currentUser!.uid,
+          content: contentFeedBackController.text,
+          tagnameToReport: tagnameTargetController.text.isEmpty
+              ? 'Unknown'
+              : tagnameTargetController.text,
+          imageList: urlImageList,
+          status: 0,
+          createdAt: Timestamp.now().toString(),
+        );
+
+        await db.addNewReport(reportData.toMap());
+        // Clear UI
+        _clearTextField();
+        SnackbarHelperGeneral.showCustomSnackBar(
+          'Your report has been submitted successfully.',
+          backgroundColor: Colors.green,
+        );
+      } catch (e) {
+        SnackbarHelperGeneral.showCustomSnackBar(
+          'Something went wrong. Please try again.',
+          backgroundColor: Colors.red,
+        );
       }
-      //Chuẩn bị Report modal để add report lên firebase
-      final reportData = ReportModel(
-        idUserReported: currentUser!.uid,
-        content: contentFeedBackController.text,
-        tagnameToReport: tagnameTargetController.text.isEmpty
-            ? 'Unknown'
-            : tagnameTargetController.text,
-        imageList: urlImageList,
-        status: 0,
-        createdAt: Timestamp.now().toString(),
-      );
-      
-      //Thêm report lên firebase
-      // await FirebaseFirestore.instance
-      //     .collection('reports')
-      //     .add(reportData.toMap());
-      await db.addNewReport(reportData.toMap());
-      // Clear UI
-      _clearTextField();
-      SnackbarHelperGeneral.showCustomSnackBar(
-        'Your report has been submitted successfully.',
-        backgroundColor: Colors.green,
-      );
     } catch (e) {
-      SnackbarHelperGeneral.showCustomSnackBar(
-        'Something went wrong. Please try again.',
-        backgroundColor: Colors.red,
-      );
+      // ignore: avoid_print
+      print("Error handleSubmitReport: $e");
+    } finally {
+      isLoading.value = false;
     }
   }
 

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:http/http.dart';
 import 'package:tradeupapp/models/card_model.dart';
 import 'package:tradeupapp/models/category_model.dart';
 import 'package:tradeupapp/models/chat_room_model.dart';
@@ -725,6 +726,7 @@ class DatabaseService {
       // ignore: avoid_print
       print("Error getCards: $e");
     }
+    return null;
   }
 
   //MakeAnOfferController: Thêm offer cho nguời dùng

@@ -7,7 +7,6 @@ import 'package:tradeupapp/screens/main_app/profile/controller/profile_controlle
 import 'package:tradeupapp/screens/main_app/profile/view_offer/view_offer.dart';
 import 'package:tradeupapp/screens/main_app/profile/report/report.dart';
 import 'package:tradeupapp/screens/main_app/profile/save_product/save_product.dart';
-import 'package:tradeupapp/screens/main_app/shop/payment.dart';
 import 'package:tradeupapp/widgets/general/general_custom_dialog.dart';
 import 'package:tradeupapp/widgets/general/general_snackbar_helper.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/user_profile_widgets/user_profile_appbar_custom_widget.dart';
@@ -24,12 +23,6 @@ class Profile extends StatefulWidget {
 
 class _ProfileState extends State<Profile> {
   final profileController = Get.put(ProfileController());
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   profileController.loadUser();
-  // }
 
   void _handleBusinessMode(bool value) {
     if (value) {
@@ -133,7 +126,6 @@ class _ProfileState extends State<Profile> {
                   children: [
                     CategoryFuncUserProfile(
                       onTap: () {
-                        Get.to(Payment());
                       },
                       icon: Icons.history,
                       label: 'Buy history',

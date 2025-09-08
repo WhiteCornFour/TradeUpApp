@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:tradeupapp/firebase/auth_service.dart';
 import 'package:tradeupapp/firebase/database_service.dart';
 import 'package:tradeupapp/models/card_model.dart';
+import 'package:tradeupapp/models/offer_model.dart';
 import 'package:tradeupapp/models/product_model.dart';
 import 'package:tradeupapp/models/user_model.dart';
 import 'package:tradeupapp/widgets/general/general_snackbar_helper.dart';
@@ -18,6 +19,8 @@ class PaymentController extends GetxController {
   var cards = <CardModel>[].obs; // 🔥 dùng RxList
   var tempCards = <CardModel>[].obs; // card dùng 1 lần
   final db = DatabaseService();
+
+  RxBool idLoading = false.obs;
 
   @override
   void onInit() {

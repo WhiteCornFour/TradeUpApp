@@ -2,12 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:tradeupapp/constants/app_colors.dart';
 import 'package:tradeupapp/firebase/database_service.dart';
 import 'package:tradeupapp/models/product_model.dart';
 import 'package:tradeupapp/screens/main_app/chat/controllers/message_controller.dart';
 import 'package:tradeupapp/screens/main_app/shop/shop_product_detail/shop_product_detail.dart';
 import 'package:tradeupapp/widgets/general/general_custom_dialog.dart';
+import 'package:tradeupapp/widgets/general/general_loading_screen.dart';
 import 'package:tradeupapp/widgets/general/general_snackbar_helper.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/chat_widgets/message_app_bar_custom_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/chat_widgets/message_bottom_text_field_widget.dart';
@@ -141,11 +141,8 @@ class _MessageState extends State<Message> {
             Expanded(
               child: Obx(() {
                 if (messageController.isLoading.value) {
-                  return Center(
-                    child: CircularProgressIndicator(
-                      backgroundColor: AppColors.background,
-                      color: AppColors.text,
-                    ),
+                  return LoadingScreenGeneral(
+                    message: "Waiting for a few seconds...",
                   );
                 }
 
@@ -204,6 +201,12 @@ class _MessageState extends State<Message> {
 
                           return ItemProductMessage(
                             isRight: isRight,
+                            onLongPressed: () {
+                              _showDialogBeforeDeleteMessage(
+                                message.idMessage!,
+                                messageController.idCurrentUser,
+                              );
+                            },
                             onPressed: (idProduct) {
                               messageController.handleGetDataProductById(
                                 idProduct,
@@ -212,7 +215,7 @@ class _MessageState extends State<Message> {
                                 Get.to(
                                   ProductDetailShop(
                                     product: messageController.product!,
-                                    userId: messageController.idCurrentUser,
+                                    userId: messageController.product!.userId,
                                   ),
                                 );
                               } else {

@@ -48,7 +48,7 @@ class MessageController extends GetxController {
         backgroundColor: Colors.red,
       );
     }
-    _fetchAllMessages();
+     _fetchAllMessages();
     super.onInit();
   }
 

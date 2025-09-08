@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:tradeupapp/constants/app_colors.dart';
+import 'package:tradeupapp/models/offer_model.dart';
+import 'package:tradeupapp/screens/main_app/shop/payment.dart';
 
 class ViewOfferSentOfferCardUserProfile extends StatelessWidget {
   final String productImage;
   final String productName;
   final double offerPrice;
+  final OfferModel offerModel;
   final int status;
   final VoidCallback? onTap;
 
@@ -16,6 +20,7 @@ class ViewOfferSentOfferCardUserProfile extends StatelessWidget {
     required this.offerPrice,
     required this.status,
     this.onTap,
+    required this.offerModel,
   });
 
   String getStatusText(int? status) {
@@ -57,7 +62,7 @@ class ViewOfferSentOfferCardUserProfile extends StatelessWidget {
                     )
                   : Image.asset(productImage, fit: BoxFit.cover),
             ),
-      
+
             //Content
             Expanded(
               child: Padding(
@@ -99,7 +104,7 @@ class ViewOfferSentOfferCardUserProfile extends StatelessWidget {
                         ],
                       ),
                       const SizedBox(height: 4),
-      
+
                       //Trạng thái
                       if (status == 0) ...[
                         Row(
@@ -139,7 +144,9 @@ class ViewOfferSentOfferCardUserProfile extends StatelessWidget {
                         Align(
                           alignment: Alignment.bottomRight,
                           child: ElevatedButton.icon(
-                            onPressed: () {},
+                            onPressed: () {
+                              Get.to(Payment(offer: offerModel));
+                            },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: AppColors.header,
                               shape: RoundedRectangleBorder(

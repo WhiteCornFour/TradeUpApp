@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tradeupapp/constants/app_colors.dart';
+import 'package:tradeupapp/models/offer_model.dart';
 import 'package:tradeupapp/screens/main_app/shop/controllers/payment_controller.dart';
 import 'package:tradeupapp/widgets/general/general_snackbar_helper.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/payment_widgets/payment_app_bar_widget.dart';
@@ -12,8 +13,9 @@ import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/payment_widgets
 import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/payment_widgets/payment_tab_bar_widget.dart';
 
 class Payment extends StatefulWidget {
-  const Payment({super.key});
+  const Payment({super.key, required this.offer});
 
+  final OfferModel offer;
   @override
   State<Payment> createState() => _PaymentState();
 }
@@ -86,7 +88,7 @@ class _PaymentState extends State<Payment> {
                     //Show thong tin cua cua hang
                     FutureBuilder(
                       future: paymentController.db.fetchUserModelById(
-                        "EUh3D2nHZIdATzKr2s84rAk5DZo2",
+                        widget.offer.receiverId!,
                       ),
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==
@@ -138,7 +140,7 @@ class _PaymentState extends State<Payment> {
                     //Show cac thong tin lien quan den san pham hien tai
                     FutureBuilder(
                       future: paymentController.db.getProductById(
-                        "2t8M9ixX3ZYqJ4lUlxmb",
+                        widget.offer.productId!,
                       ),
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==
@@ -169,6 +171,7 @@ class _PaymentState extends State<Payment> {
                         return ShowInforProductPayment(
                           controller: paymentController,
                           data: dataStore,
+                          totalPrice: widget.offer.offerPrice.toString(),
                         );
                       },
                     ),
@@ -178,7 +181,7 @@ class _PaymentState extends State<Payment> {
 
               //Chon phuong thuc thanh toan
               TabBarPayment(
-                idCurrentUser: "L0G2huA9UqNI4Nb6WZvt8vvnCBf2",
+                idCurrentUser: paymentController.idCurrentUser,
                 cards: paymentController.cards,
               ),
 

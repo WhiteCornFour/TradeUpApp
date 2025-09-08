@@ -10,10 +10,12 @@ class ShowInforProductPayment extends StatelessWidget {
     super.key,
     required this.controller,
     required this.data,
+    required this.totalPrice,
   });
 
   final PaymentController controller;
   final ProductModel data;
+  final String totalPrice;
 
   @override
   Widget build(BuildContext context) {
@@ -146,9 +148,9 @@ class ShowInforProductPayment extends StatelessWidget {
                     ),
 
                     Text(
-                      "100000.0",
+                      totalPrice,
                       style: TextStyle(
-                        color: AppColors.background,
+                        color: Colors.red,
                         fontFamily: 'Roboto-Medium',
                         fontWeight: FontWeight.w500,
                         fontSize: 16,
