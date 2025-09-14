@@ -7,7 +7,7 @@ class OfferModel {
   String? _senderId;
   String? _receiverId;
   String? _productId;
-  int? _status; // 0: Chưa phản hồi, 1: Đồng ý, 2: Từ chối
+  int? _status; // 0: Chưa phản hồi, 1: Đồng ý, 2: Từ chối, 3: Đã thanh toán
   double? _price;
   double? _offerPrice;
   String? _type;

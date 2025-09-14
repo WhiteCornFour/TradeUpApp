@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:http/http.dart';
 import 'package:tradeupapp/models/card_model.dart';
 import 'package:tradeupapp/models/category_model.dart';
 import 'package:tradeupapp/models/chat_room_model.dart';

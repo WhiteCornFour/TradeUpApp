@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tradeupapp/screens/authentication/login.dart';
@@ -17,6 +18,11 @@ void main() async {
   //Check if user have already seen the OnBoarding screeen yet by using SharedPreference
   final prefs = await SharedPreferences.getInstance();
   final seenOnBoarding = prefs.getBool('seenOnBoarding') ?? false;
+
+  WidgetsBinding.instance.addPostFrameCallback((_) async {
+    // Load environment variables from the .env file
+    await dotenv.load(fileName: ".env");
+  });
 
   runApp(
     GetMaterialApp(

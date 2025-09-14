@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tradeupapp/constants/app_colors.dart';
 import 'package:tradeupapp/models/card_model.dart';
-import 'package:tradeupapp/screens/main_app/shop/controllers/payment_controller.dart';
+import 'package:tradeupapp/screens/main_app/shop/payment/controller/payment_controller.dart';
 import 'package:tradeupapp/widgets/general/general_custom_dialog.dart';
-import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/payment_widgets/payment_bottom_sheet_wallet_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/payment_widgets/payment_button_add_credit_card_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/payment_widgets/payment_credit_card_item_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/payment_widgets/payment_dialog_add_new_credit_card_widget.dart';
@@ -165,9 +164,8 @@ class _TabBarPaymentState extends State<TabBarPayment> {
                           WalletItemPayment(
                             walletName: 'PayPal',
                             walletImage: 'paypal.png',
-                            walletStatus: "Not linked yet",
-                            onPressed: () {
-                              BottomSheetWalletPayment.show(context);
+                            walletStatus: "Now available",
+                            onPressed: () {                            
                             },
                           ),
                           WalletItemPayment(

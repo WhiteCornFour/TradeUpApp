@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tradeupapp/constants/app_colors.dart';
 import 'package:tradeupapp/models/product_model.dart';
-import 'package:tradeupapp/screens/main_app/shop/controllers/payment_controller.dart';
+import 'package:tradeupapp/screens/main_app/shop/payment/controller/payment_controller.dart';
 
 class ShowInforProductPayment extends StatelessWidget {
   const ShowInforProductPayment({
@@ -147,14 +147,23 @@ class ShowInforProductPayment extends StatelessWidget {
                       ),
                     ),
 
-                    Text(
-                      totalPrice,
-                      style: TextStyle(
-                        color: Colors.red,
-                        fontFamily: 'Roboto-Medium',
-                        fontWeight: FontWeight.w500,
-                        fontSize: 16,
-                      ),
+                    Row(
+                      children: [
+                        Text(
+                          totalPrice,
+                          style: TextStyle(
+                            color: Colors.red,
+                            fontFamily: 'Roboto-Medium',
+                            fontWeight: FontWeight.w500,
+                            fontSize: 16,
+                          ),
+                        ),
+                        Icon(
+                          Icons.attach_money_sharp,
+                          color: Colors.red,
+                          size: 16,
+                        ),
+                      ],
                     ),
                   ],
                 ),

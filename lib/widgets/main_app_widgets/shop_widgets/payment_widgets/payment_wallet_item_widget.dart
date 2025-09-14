@@ -4,7 +4,7 @@ import 'package:tradeupapp/constants/app_colors.dart';
 class WalletItemPayment extends StatelessWidget {
   final String walletName;
   final String walletImage;
-  final VoidCallback onPressed;
+  final Function onPressed;
   final String walletStatus;
   const WalletItemPayment({
     super.key,
