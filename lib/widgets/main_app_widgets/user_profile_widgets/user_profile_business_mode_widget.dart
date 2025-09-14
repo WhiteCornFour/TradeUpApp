@@ -49,8 +49,8 @@ class BusinessModeUserProfile extends StatelessWidget {
             Switch(
               value: value,
               onChanged: onChanged,
-              activeThumbColor: AppColors.text,
-              activeTrackColor: AppColors.background,
+              thumbColor: WidgetStateProperty.all(AppColors.text),
+              trackColor: WidgetStateProperty.all(AppColors.background),
             ),
           ],
         ),
