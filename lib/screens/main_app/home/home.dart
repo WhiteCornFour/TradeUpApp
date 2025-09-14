@@ -10,6 +10,7 @@ import 'package:tradeupapp/screens/main_app/chat/controllers/chat_room_controlle
 import 'package:tradeupapp/screens/general/general_all_products.dart';
 
 import 'package:tradeupapp/screens/main_app/home/controller/home_controller.dart';
+import 'package:tradeupapp/screens/main_app/news/controller/news_controller.dart';
 import 'package:tradeupapp/screens/main_app/profile/save_product/controller/save_product_controller.dart';
 import 'package:tradeupapp/screens/main_app/shop/controllers/shop_controller.dart';
 import 'package:tradeupapp/widgets/general/general_loading_screen.dart';
@@ -33,6 +34,7 @@ class _Home extends State<Home> {
   final PageController _pageController = PageController(viewportFraction: 0.92);
   final homeController = Get.put(HomeController());
   final shopController = Get.put(ShopController());
+  final newsController = Get.put(NewsController());
   final saveController = Get.put(SaveProductController());
   final db = DatabaseService();
 

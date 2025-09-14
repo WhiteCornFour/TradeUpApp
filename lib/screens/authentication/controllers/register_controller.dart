@@ -39,7 +39,7 @@ class RegisterController extends GetxController {
       return;
     }
     //Kiem tra email hien tai co trung hay khong?
-    final emailExists = await auth.checkEmailExists(email);
+    final emailExists = await auth.checkEmailExistsInFirestore(email);
     if (emailExists) {
       SnackbarHelperGeneral.showCustomSnackBar(
         // ignore: use_build_context_synchronously

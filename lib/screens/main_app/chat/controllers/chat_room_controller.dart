@@ -24,7 +24,7 @@ class ChatRoomController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    _listenToChatRooms();
+    listenToChatRooms();
   }
 
   @override
@@ -34,7 +34,7 @@ class ChatRoomController extends GetxController {
   }
 
   //load ds cac chat room cua nguoi dung realtime
-  void _listenToChatRooms() {
+  Future<void> listenToChatRooms() async {
     if (uid == null) return;
 
     isLoading.value = true;

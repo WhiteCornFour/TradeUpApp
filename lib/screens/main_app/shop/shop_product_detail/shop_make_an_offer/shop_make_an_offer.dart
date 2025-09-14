@@ -208,7 +208,7 @@ class MakeAnOfferShop extends StatelessWidget {
                         : () {
                             makeAnOfferController.createOffer(
                               senderId: homeController.currentUserId ?? '',
-                              reciverId: product.userId ?? '',
+                              receiverId: product.userId ?? '',
                               productId: product.productId ?? '',
                             );
                           },

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:tradeupapp/models/category_model.dart';
 import 'package:tradeupapp/models/chat_room_model.dart';
+import 'package:tradeupapp/models/notification_model.dart';
 import 'package:tradeupapp/models/offer_model.dart';
 import 'package:tradeupapp/models/product_model.dart';
 import 'package:tradeupapp/models/search_history_model.dart';
@@ -150,7 +151,7 @@ class DatabaseService {
     }
   }
 
-  //ChatRoomController: Hàm fetch thông tin của user khi truyền vào id
+  //ChatRoomController & ProductDetailController: Hàm fetch thông tin của user khi truyền vào id
   Future<UserModel?> fetchUserModelById(String idUser) async {
     try {
       final docSnapshot = await FirebaseFirestore.instance
@@ -291,7 +292,7 @@ class DatabaseService {
     }
   }
 
-  //MessageController & ViewOfferController: Lấy dữ liệu của 1 product khi truyền vào Id
+  //MessageController & ViewOfferController & NewsController: Lấy dữ liệu của 1 product khi truyền vào Id
   Future<ProductModel?> getProductById(String idProduct) async {
     try {
       final snapshot = await FirebaseFirestore.instance
@@ -474,7 +475,7 @@ class DatabaseService {
     }
   }
 
-  //PersonalController: Kiểm tra đã có phòng chat giữa 2 ngươi dùng hay chưa
+  //PersonalController & NewsController: Kiểm tra đã có phòng chat giữa 2 ngươi dùng hay chưa
   //Phòng chat đó có bị block hay không
   //Khi người dùng bấm send message ở screen personal
   Future<String?> checkChatRoomStatus(
@@ -671,9 +672,12 @@ class DatabaseService {
     }
   }
 
-  //MakeAnOfferController: Thêm offer cho nguời dùng
-  Future<void> addOffer(OfferModel offer) async {
-    await FirebaseFirestore.instance.collection('offers').add(offer.toMap());
+  //MakeAnOfferController: Thêm offer cho nguời dùng sau do tra ve offer id
+  Future<String> addOffer(OfferModel offer) async {
+    final docRef = await FirebaseFirestore.instance
+        .collection('offers')
+        .add(offer.toMap());
+    return docRef.id;
   }
 
   //ViewOfferController: Lấy danh sách offer mà currentUser nhận được
@@ -779,7 +783,7 @@ class DatabaseService {
       }
       return null;
     } catch (e) {
-      print("❌ Error fetchAcceptedOfferByProductId: $e");
+      print("Error fetchAcceptedOfferByProductId: $e");
       return null;
     }
   }
@@ -796,8 +800,105 @@ class DatabaseService {
           .map((doc) => OfferModel.fromMap(doc.data(), docId: doc.id))
           .toList();
     } catch (e) {
-      print("❌ Error getOffersByProductId: $e");
+      print("Error getOffersByProductId: $e");
       return [];
+    }
+  }
+
+  //ShopController: Thêm Notification
+  Future<void> addNotification(NotificationModel notification) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection("notifications")
+          .add(notification.toMap());
+    } catch (e) {
+      throw Exception("Lỗi khi thêm notification: $e");
+    }
+  }
+
+  // NewsController: Lấy danh sách notification của 1 user
+  Future<List<NotificationModel>> getUserNotifications(String userId) async {
+    try {
+      final querySnapshot = await FirebaseFirestore.instance
+          .collection("notifications")
+          .where("targetUserId", isEqualTo: userId)
+          .where("isRead", isNotEqualTo: 2)
+          .orderBy("createdAt", descending: true)
+          .get();
+
+      return querySnapshot.docs.map((doc) {
+        final data = doc.data();
+        return NotificationModel.fromMap(data, id: doc.id);
+      }).toList();
+    } catch (e) {
+      throw Exception("Lỗi khi load notifications: $e");
+    }
+  }
+
+  //NewsController: Lấy thông tin Offer theo offerId
+  Future<OfferModel?> getOfferById(String offerId) async {
+    try {
+      final doc = await FirebaseFirestore.instance
+          .collection("offers")
+          .doc(offerId)
+          .get();
+      if (doc.exists) {
+        return OfferModel.fromMap(doc.data()!, docId: doc.id);
+      }
+      return null;
+    } catch (e) {
+      print("Error getOfferById: $e");
+      return null;
+    }
+  }
+
+  //MessageController: Hàm kiểm tra xem message của người a với người b có tồn tại trong khoảng 1 tiếng không, nếu không thì gửi.
+  Future<bool> hasRecentMessageNotification({
+    required String receiverId,
+    required String senderId,
+    Duration within = const Duration(hours: 1),
+  }) async {
+    try {
+      final oneHourAgo = Timestamp.fromDate(DateTime.now().subtract(within));
+
+      final query = await FirebaseFirestore.instance
+          .collection("notifications")
+          .where("targetUserId", isEqualTo: receiverId)
+          .where("actorUserId", isEqualTo: senderId)
+          .where("type", isEqualTo: 0)
+          .where("createdAt", isGreaterThan: oneHourAgo)
+          .orderBy("createdAt", descending: true)
+          .limit(1)
+          .get();
+
+      return query.docs.isNotEmpty;
+    } catch (e) {
+      print("Error hasRecentMessageNotification: $e");
+      return false;
+    }
+  }
+
+  //NewsController: Đổi trạng thái isRead = 1 (Đã đọc) khi user click vào notification
+  Future<void> updateNotificationIsRead(String notificationId) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection("notifications")
+          .doc(notificationId)
+          .update({"isRead": 1});
+    } catch (e) {
+      print("Error updateNotificationIsRead: $e");
+    }
+  }
+
+  //NewsController: Đổi trạng thái isRead = 2 (Xóa notification) khi user click vào notification
+  Future<void> updateNotificationAsDelete(String notificationId) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection("notifications")
+          .doc(notificationId)
+          .update({"isRead": 2});
+    } catch (e) {
+      print("Error updateNotificationAsDelete: $e");
     }
   }
 }

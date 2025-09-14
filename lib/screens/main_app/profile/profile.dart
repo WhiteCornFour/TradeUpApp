@@ -8,6 +8,7 @@ import 'package:tradeupapp/screens/main_app/profile/view_offer/view_offer.dart';
 import 'package:tradeupapp/screens/main_app/profile/report/report.dart';
 import 'package:tradeupapp/screens/main_app/profile/save_product/save_product.dart';
 import 'package:tradeupapp/widgets/general/general_custom_dialog.dart';
+import 'package:tradeupapp/widgets/general/general_loading_screen.dart';
 import 'package:tradeupapp/widgets/general/general_snackbar_helper.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/user_profile_widgets/user_profile_appbar_custom_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/user_profile_widgets/user_profile_business_mode_widget.dart';
@@ -64,17 +65,22 @@ class _ProfileState extends State<Profile> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await profileController.listenUser();
+      await profileController.loadUser();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     profileController.context = context;
     return Obx(() {
+      //1. Kiểm tra trạng thái Loading
       if (profileController.isLoading.value) {
         return const Scaffold(
-          body: Center(
-            child: CircularProgressIndicator(
-              backgroundColor: AppColors.background,
-              color: AppColors.text,
-            ),
-          ),
+          body: LoadingScreenGeneral(message: "Loading Profile page..."),
         );
       }
 

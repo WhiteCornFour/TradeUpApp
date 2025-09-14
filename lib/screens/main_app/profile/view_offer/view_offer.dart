@@ -5,7 +5,6 @@ import 'package:tradeupapp/screens/main_app/profile/view_offer/controller/view_o
 import 'package:tradeupapp/screens/main_app/shop/shop_product_detail/shop_product_detail.dart';
 import 'package:tradeupapp/widgets/general/general_back_button.dart';
 import 'package:tradeupapp/widgets/general/general_loading_screen.dart';
-import 'package:tradeupapp/widgets/general/general_search_app_bar_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/user_profile_widgets/view_offer_widgets/user_profile_view_offer_received_offer_card_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/user_profile_widgets/view_offer_widgets/user_profile_view_offer_sent_offer_card_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/user_profile_widgets/view_offer_widgets/user_profile_view_offer_tab_item_widget.dart';
@@ -157,9 +156,8 @@ class _ViewOfferState extends State<ViewOffer> {
                               status: offer.status ?? 0,
                               onAccept: () =>
                                   viewOfferController.acceptOffer(offer),
-                              onDecline: () => viewOfferController.declineOffer(
-                                offer.offerId!,
-                              ),
+                              onDecline: () =>
+                                  viewOfferController.declineOffer(offer),
                             );
                           },
                         );
@@ -188,12 +186,13 @@ class _ViewOfferState extends State<ViewOffer> {
                                 offerPrice: offer.offerPrice ?? 0,
                                 status: offer.status ?? 0,
                                 onTap: () {
+                                  print(offer.product!.userId);
                                   if (offer.product != null) {
                                     Get.to(
                                       () => ProductDetailShop(
                                         product: offer.product!,
-                                        userId:
-                                            homeController.user.value?.userId,
+                                        userId: offer.product!.userId,
+                                        // homeController.user.value?.userId,
                                       ),
                                     );
                                   }
