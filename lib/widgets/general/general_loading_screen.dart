@@ -17,7 +17,7 @@ class LoadingScreenGeneral extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const SpinKitWave(color: AppColors.header, size: 40.0),
+            const SpinKitCubeGrid(color: AppColors.header, size: 40.0),
             if (message != null) ...[
               const SizedBox(height: 20),
               Padding(

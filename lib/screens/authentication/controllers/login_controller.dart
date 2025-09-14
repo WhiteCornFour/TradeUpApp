@@ -1,10 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tradeupapp/firebase/auth_service.dart';
 import 'package:tradeupapp/screens/authentication/complete_personal_info.dart';
-import 'package:tradeupapp/screens/authentication/login.dart';
 import 'package:tradeupapp/screens/main_app/index.dart';
 import 'package:tradeupapp/widgets/general/general_snackbar_helper.dart';
 
@@ -24,35 +22,35 @@ class LoginController extends GetxController {
   //Nhan thông tin của User mới từ Register gửi qua
   String errorMessage = '';
 
-  void signIn() async {
-    final email = controllerEmail.text.trim();
-    final password = controllerPassword.text.trim();
+  Future<void> signIn() async {
     try {
       isLogin.value = true;
-      //Đăng nhập
-      final credential = await AuthServices().signIn(
-        email: email,
-        password: password,
+
+      final result = await AuthServices().signIn(
+        email: controllerEmail.text.trim(),
+        password: controllerPassword.text.trim(),
       );
-      //Reload lấy thông tin mới nhất
-      final user = credential.user;
-      await user?.reload();
-      //Kiem tra tai khoan da verify chưa
-      if (user != null && user.emailVerified) {
-        SnackbarHelperGeneral.showCustomSnackBar(
-          'Sign in sucessfull!!!',
-          backgroundColor: Colors.green,
+
+      if (result == null) {
+        Get.snackbar(
+          "Login Error",
+          "Invalid email or password.",
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red.shade100,
+          colorText: Colors.black,
         );
-        await Future.delayed(Duration(seconds: 2)); //Chờ 2 giây
-        Get.offAll(() => MainAppIndex());
-      } else {
-        Get.replace(() => Login());
-        await AuthServices().signOut();
+        return;
       }
-    } on FirebaseAuthException catch (_) {
-      SnackbarHelperGeneral.showCustomSnackBar(
-        "Something went wrong!",
-        backgroundColor: Colors.red,
+
+      // Nếu thành công
+      Get.offAll(() => MainAppIndex());
+    } catch (e) {
+      Get.snackbar(
+        "Error",
+        "Something went wrong. Please try again later.",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red.shade100,
+        colorText: Colors.black,
       );
     } finally {
       isLogin.value = false;

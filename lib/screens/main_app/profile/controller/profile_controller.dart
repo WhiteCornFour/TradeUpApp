@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:tradeupapp/firebase/auth_service.dart';
 import 'package:tradeupapp/firebase/database_service.dart';
 import 'package:tradeupapp/models/user_model.dart';
@@ -43,27 +42,37 @@ class ProfileController extends GetxController {
     }
   }
 
-  void listenUser() {
-    final currentUser = FirebaseAuth.instance.currentUser;
-    if (currentUser == null) return;
+  Future<void> listenUser() async {
+    try {
+      isLoading.value = true;
+      final currentUser = FirebaseAuth.instance.currentUser;
+      if (currentUser == null) return;
 
-    FirebaseFirestore.instance
-        .collection('users')
-        .doc(currentUser.uid)
-        .snapshots()
-        .listen((doc) {
-          if (doc.exists) {
-            user.value = UserModel.fromMap(doc.data()!);
-            isBusinessMode.value = user.value?.role != 1;
-          }
-        });
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(currentUser.uid)
+          .snapshots()
+          .listen((doc) {
+            if (doc.exists) {
+              user.value = UserModel.fromMap(doc.data()!);
+              isBusinessMode.value = user.value?.role != 1;
+            }
+          });
+    } catch (e) {
+      SnackbarHelperGeneral.showCustomSnackBar(
+        'Error: $e',
+        backgroundColor: Colors.red,
+        seconds: 1,
+      );
+    } finally {
+      isLoading.value = false;
+    }
   }
 
-  // Đăng xuất
+  //Đăng xuất
   Future<void> _logout() async {
     try {
       await authServices.value.signOut();
-      await GoogleSignIn().signOut();
       Get.offAllNamed('/login');
     } catch (e) {
       SnackbarHelperGeneral.showCustomSnackBar(
