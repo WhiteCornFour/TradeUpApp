@@ -1,20 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:tradeupapp/constants/app_colors.dart';
+import 'package:tradeupapp/models/card_model.dart';
 import 'package:tradeupapp/widgets/general/general_back_button.dart';
+import 'package:tradeupapp/widgets/general/general_snackbar_helper.dart';
 
 class DialogAddNewCreditCardPayment {
-  static void show(BuildContext context) {
+  static Future<CardModel?> show(BuildContext context) {
     final TextEditingController nameController = TextEditingController();
     final TextEditingController numberController = TextEditingController();
     final TextEditingController expController = TextEditingController();
     final TextEditingController cvvController = TextEditingController();
+
     bool saveCard = false;
     bool showCVV = false;
 
-    showDialog(
+    List<Map<String, dynamic>> items = [
+      {"name": "MasterCard", "image": "assets/images/mastercard.png"},
+      {"name": "Visa", "image": "assets/images/visa.png"},
+      {
+        "name": "American Express",
+        "image": "assets/images/americanexpress.png",
+      },
+      {"name": "JCB", "image": "assets/images/jcb.png"},
+    ];
+
+    Map<String, dynamic>? selectedItem;
+
+    return showDialog<CardModel>(
       context: context,
-      barrierDismissible: false, // Không cho đóng khi bấm ngoài
+      barrierDismissible: false,
       builder: (context) {
         return Dialog(
           backgroundColor: AppColors.backgroundGrey,
@@ -31,7 +46,10 @@ class DialogAddNewCreditCardPayment {
               }
 
               return Padding(
-                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 15,
+                  vertical: 20,
+                ),
                 child: SingleChildScrollView(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -40,7 +58,7 @@ class DialogAddNewCreditCardPayment {
                       // Header
                       ListTile(
                         leading: BackButtonCustomGeneral(),
-                        title: Center(
+                        title: const Center(
                           child: Text(
                             "Add Card",
                             style: TextStyle(
@@ -49,9 +67,9 @@ class DialogAddNewCreditCardPayment {
                             ),
                           ),
                         ),
-                        trailing: SizedBox(width: 10),
+                        trailing: const SizedBox(width: 10),
                       ),
-                      SizedBox(width: 10),
+                      const SizedBox(width: 10),
 
                       // Card Container
                       Container(
@@ -83,14 +101,62 @@ class DialogAddNewCreditCardPayment {
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 16),
 
+                            const SizedBox(height: 16),
+                            // Card Type Dropdown
+                            Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: AppColors.header,
+                                  width: 1,
+                                ),
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              padding: const EdgeInsets.only(left: 10),
+                              child: DropdownButton<Map<String, dynamic>>(
+                                borderRadius: BorderRadius.circular(16),
+                                isExpanded: true,
+                                hint: const Text(
+                                  "Select card type",
+                                  style: TextStyle(
+                                    color: AppColors.header,
+                                    fontFamily: "Roboto-Regular",
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                value: selectedItem,
+                                items: items.map((item) {
+                                  return DropdownMenuItem<Map<String, dynamic>>(
+                                    value: item,
+                                    child: Row(
+                                      children: [
+                                        Image.asset(
+                                          item["image"],
+                                          width: 30,
+                                          height: 20,
+                                        ),
+                                        const SizedBox(width: 10),
+                                        Text(item["name"]),
+                                      ],
+                                    ),
+                                  );
+                                }).toList(),
+                                onChanged: (value) {
+                                  setState(() {
+                                    selectedItem = value;
+                                  });
+                                },
+                              ),
+                            ),
+
+                            const SizedBox(height: 12),
                             // Cardholder Name
                             TextField(
                               controller: nameController,
                               decoration: InputDecoration(
                                 labelText: "Cardholder Name",
-                                border: OutlineInputBorder(),
+                                border: const OutlineInputBorder(),
                                 floatingLabelStyle: TextStyle(
                                   color: AppColors.header,
                                 ),
@@ -99,10 +165,9 @@ class DialogAddNewCreditCardPayment {
                                   borderSide: BorderSide(
                                     color: AppColors.header,
                                     width: 2,
-                                  ), // Khi focus
+                                  ),
                                 ),
                               ),
-
                               style: TextStyle(
                                 color: AppColors.header,
                                 fontSize: 16,
@@ -112,7 +177,7 @@ class DialogAddNewCreditCardPayment {
                             ),
                             const SizedBox(height: 12),
 
-                            // Card Number with auto-format #### #### #### ####
+                            // Card Number
                             TextField(
                               controller: numberController,
                               keyboardType: TextInputType.number,
@@ -132,7 +197,7 @@ class DialogAddNewCreditCardPayment {
                                   borderSide: BorderSide(
                                     color: AppColors.header,
                                     width: 2,
-                                  ), // Khi focus
+                                  ),
                                 ),
                               ),
                               style: TextStyle(
@@ -168,7 +233,7 @@ class DialogAddNewCreditCardPayment {
                                         borderSide: BorderSide(
                                           color: AppColors.header,
                                           width: 2,
-                                        ), // Khi focus
+                                        ),
                                       ),
                                       labelStyle: const TextStyle(
                                         color: Colors.grey,
@@ -200,7 +265,7 @@ class DialogAddNewCreditCardPayment {
                                         borderSide: BorderSide(
                                           color: AppColors.header,
                                           width: 2,
-                                        ), // Khi focus
+                                        ),
                                       ),
                                       suffixIcon: IconButton(
                                         icon: Icon(
@@ -255,26 +320,49 @@ class DialogAddNewCreditCardPayment {
                       ),
                       const SizedBox(height: 10),
 
-                      // Pay Now Button with validate
+                      // Pay Now Button
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
                           onPressed: () {
                             if (nameController.text.isEmpty) {
-                              showError("Cardholder name cannot be empty");
+                              SnackbarHelperGeneral.showCustomSnackBar(
+                                "Cardholder name cannot be empty",
+                              );
                             } else if (numberController.text
                                     .replaceAll(" ", "")
                                     .length !=
                                 16) {
-                              showError("Card number must be 16 digits");
+                              SnackbarHelperGeneral.showCustomSnackBar(
+                                "Card number must be 16 digits",
+                              );
                             } else if (!RegExp(
                               r"^(0[1-9]|1[0-2])/\d{4}$",
                             ).hasMatch(expController.text)) {
-                              showError("Expiration date must be MM/YYYY");
+                              SnackbarHelperGeneral.showCustomSnackBar(
+                                "Expiration date must be MM/YYYY",
+                              );
                             } else if (cvvController.text.length != 3) {
-                              showError("CVV must be 3 digits");
+                              SnackbarHelperGeneral.showCustomSnackBar(
+                                "CVV must be 3 digits",
+                              );
+                            } else if (selectedItem == null) {
+                              SnackbarHelperGeneral.showCustomSnackBar(
+                                "Please select a card type",
+                              );
                             } else {
-                              Navigator.pop(context);
+                              final card = CardModel(
+                                cardType: selectedItem!['name'],
+                                cardHolderName: nameController.text.trim(),
+                                cardNumber: numberController.text.replaceAll(
+                                  " ",
+                                  "",
+                                ),
+                                exDate: expController.text.trim(),
+                                cvv: cvvController.text.trim(),
+                                status: saveCard ? 1 : 0,
+                              );
+                              Navigator.pop(context, card);
                             }
                           },
                           style: ElevatedButton.styleFrom(
@@ -285,7 +373,7 @@ class DialogAddNewCreditCardPayment {
                             ),
                           ),
                           child: const Text(
-                            "Pay Now",
+                            "Add Now",
                             style: TextStyle(
                               fontSize: 16,
                               color: AppColors.text,

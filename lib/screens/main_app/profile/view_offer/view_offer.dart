@@ -183,6 +183,7 @@ class _ViewOfferState extends State<ViewOffer> {
                                 productName:
                                     offer.product?.productName ??
                                     "Unknown product",
+                                offerModel: offer,
                                 offerPrice: offer.offerPrice ?? 0,
                                 status: offer.status ?? 0,
                                 onTap: () {

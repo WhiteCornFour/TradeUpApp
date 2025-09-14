@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tradeupapp/constants/app_colors.dart';
+import 'package:tradeupapp/models/offer_model.dart';
 import 'package:tradeupapp/screens/main_app/shop/controllers/payment_controller.dart';
+import 'package:tradeupapp/widgets/general/general_snackbar_helper.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/payment_widgets/payment_app_bar_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/payment_widgets/payment_button_create_order_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/payment_widgets/payment_dialog_change_shipping_address_widget.dart';
@@ -11,19 +13,22 @@ import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/payment_widgets
 import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/payment_widgets/payment_tab_bar_widget.dart';
 
 class Payment extends StatefulWidget {
-  const Payment({super.key});
+  const Payment({super.key, required this.offer});
 
+  final OfferModel offer;
   @override
   State<Payment> createState() => _PaymentState();
 }
 
 class _PaymentState extends State<Payment> {
-  final controller = Get.put(PaymentController());
-  final List<String> images = [
-    'assets/images/logo.png',
-    'assets/images/logo.png',
-    'assets/images/logo.png',
-  ];
+  late PaymentController paymentController;
+
+  @override
+  void initState() {
+    super.initState();
+    paymentController = Get.put(PaymentController());
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,11 +39,28 @@ class _PaymentState extends State<Payment> {
           child: Column(
             children: [
               //hien thi dia chi cua current user
-              ShowAddressPayment(
-                onPressedIconButton: () {
-                  DialogChangeShippingAddressPayment.show(context);
-                },
-              ),
+              Obx(() {
+                return ShowAddressPayment(
+                  shippingAdress: paymentController.shippingAddress.value,
+                  onPressedIconButton: () async {
+                    final result =
+                        await DialogChangeShippingAddressPayment.show(
+                          context,
+                          paymentController.newAddressController,
+                          paymentController.shippingAddress.value,
+                        );
+
+                    if (result != null && result.isNotEmpty) {
+                      paymentController.shippingAddress.value = result;
+                      paymentController.handleUpdateShippingAdress();
+                      SnackbarHelperGeneral.showCustomSnackBar(
+                        "Update shipping address completed!",
+                        backgroundColor: Colors.green,
+                      );
+                    }
+                  },
+                );
+              }),
 
               SizedBox(height: 10),
               //hien thi lai thong tin san pham
@@ -64,8 +86,39 @@ class _PaymentState extends State<Payment> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     //Show thong tin cua cua hang
-                    ShowPersonalStorePayment(
-                      idUserPersonal: "EUh3D2nHZIdATzKr2s84rAk5DZo2",
+                    FutureBuilder(
+                      future: paymentController.db.fetchUserModelById(
+                        widget.offer.receiverId!,
+                      ),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                            child: SizedBox(),
+                            // child: CircularProgressIndicator(
+                            //   padding: EdgeInsets.symmetric(vertical: 10),
+                            //   color: AppColors.text,
+                            //   backgroundColor: AppColors.background,
+                            // ),
+                          );
+                        }
+
+                        if (snapshot.hasError) {
+                          return Center(
+                            child: Text(
+                              "Error: ${snapshot.error}",
+                              style: const TextStyle(color: Colors.red),
+                            ),
+                          );
+                        }
+
+                        if (!snapshot.hasData || snapshot.data == null) {
+                          return const Center(child: Text("No data found"));
+                        }
+
+                        final dataStore = snapshot.data!;
+                        return ShowPersonalStorePayment(data: dataStore);
+                      },
                     ),
 
                     //border duoi chu
@@ -85,16 +138,52 @@ class _PaymentState extends State<Payment> {
                     ),
 
                     //Show cac thong tin lien quan den san pham hien tai
-                    ShowInforProductPayment(
-                      images: images,
-                      controller: controller,
+                    FutureBuilder(
+                      future: paymentController.db.getProductById(
+                        widget.offer.productId!,
+                      ),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                            child: CircularProgressIndicator(
+                              padding: EdgeInsets.symmetric(vertical: 10),
+                              color: AppColors.text,
+                              backgroundColor: AppColors.background,
+                            ),
+                          );
+                        }
+
+                        if (snapshot.hasError) {
+                          return Center(
+                            child: Text(
+                              "Error: ${snapshot.error}",
+                              style: const TextStyle(color: Colors.red),
+                            ),
+                          );
+                        }
+
+                        if (!snapshot.hasData || snapshot.data == null) {
+                          return const Center(child: Text("No data found"));
+                        }
+
+                        final dataStore = snapshot.data!;
+                        return ShowInforProductPayment(
+                          controller: paymentController,
+                          data: dataStore,
+                          totalPrice: widget.offer.offerPrice.toString(),
+                        );
+                      },
                     ),
                   ],
                 ),
               ),
 
               //Chon phuong thuc thanh toan
-              TabBarPayment(),
+              TabBarPayment(
+                idCurrentUser: paymentController.idCurrentUser,
+                cards: paymentController.cards,
+              ),
 
               //Xac nhan thanh toan
               ButtonCreateOrderPayment(),

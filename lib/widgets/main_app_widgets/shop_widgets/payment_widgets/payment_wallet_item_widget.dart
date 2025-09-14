@@ -11,7 +11,7 @@ class WalletItemPayment extends StatelessWidget {
     required this.walletName,
     required this.walletImage,
     required this.onPressed,
-    this.walletStatus = "Not linked yet",
+    this.walletStatus = "Comming soon",
   });
 
   @override

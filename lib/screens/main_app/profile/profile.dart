@@ -25,12 +25,6 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
   final profileController = Get.put(ProfileController());
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   profileController.loadUser();
-  // }
-
   void _handleBusinessMode(bool value) {
     if (value) {
       CustomDialogGeneral.show(
@@ -137,7 +131,8 @@ class _ProfileState extends State<Profile> {
                   title: 'Activity',
                   children: [
                     CategoryFuncUserProfile(
-                      onTap: () {},
+                      onTap: () {
+                      },
                       icon: Icons.history,
                       label: 'Buy history',
                     ),

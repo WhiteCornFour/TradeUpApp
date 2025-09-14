@@ -10,7 +10,6 @@ import 'package:tradeupapp/constants/app_colors.dart';
 import 'package:tradeupapp/firebase/auth_service.dart';
 import 'package:tradeupapp/firebase/database_service.dart';
 import 'package:tradeupapp/firebase/notification_service.dart';
-
 import 'package:tradeupapp/models/message_modal.dart';
 import 'package:tradeupapp/models/notification_model.dart';
 import 'package:tradeupapp/models/product_model.dart';
@@ -53,7 +52,7 @@ class MessageController extends GetxController {
         backgroundColor: Colors.red,
       );
     }
-    _fetchAllMessages();
+     _fetchAllMessages();
     super.onInit();
   }
 
