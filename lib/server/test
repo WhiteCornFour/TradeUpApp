@@ -1,0 +1,12 @@
+curl -X POST http://10.0.2.2:3000/sendNotification \
+  -H "Content-Type: application/json" \
+  -d '{
+    "token": "FCM_TOKEN",
+    "notification": {
+      "title": "Test Notification",
+      "body": "Hello from curl!"
+    },
+    "data": {
+      "screen": "offers"
+    }
+  }'

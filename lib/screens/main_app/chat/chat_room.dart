@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:tradeupapp/constants/app_colors.dart';
 import 'package:tradeupapp/screens/main_app/chat/controllers/chat_room_controller.dart';
+import 'package:tradeupapp/widgets/general/general_loading_screen.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/chat_widgets/chat_room_app_bar_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/chat_widgets/chat_room_item_user_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/chat_widgets/chat_room_no_chat_found_widget.dart';
@@ -24,11 +25,13 @@ class _Chat extends State<Chat> {
   @override
   void initState() {
     super.initState();
-
-    chatController.searchController.addListener(() {
-      chatController.filterChatRoomsByNameAndTagname(
-        chatController.searchController.text,
-      );
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      chatController.searchController.addListener(() {
+        chatController.filterChatRoomsByNameAndTagname(
+          chatController.searchController.text,
+        );
+      });
+      await chatController.listenToChatRooms();
     });
   }
 
@@ -48,64 +51,72 @@ class _Chat extends State<Chat> {
   @override
   Widget build(BuildContext context) {
     chatController.context = context;
-    return Scaffold(
-      backgroundColor: Colors.white,
-      resizeToAvoidBottomInset: false,
-      appBar: AppBarChatRoom(),
-      body: SafeArea(
-        child: Column(
-          children: [
-            SearchBarChatRoom(
-              onTap: () {},
-              hintText: 'Looking for someone?',
-              searchController: chatController.searchController,
-            ),
-            SizedBox(height: 10),
+    return Obx(() {
+      if (chatController.isLoading.value) {
+        return const Scaffold(
+          body: LoadingScreenGeneral(message: "Loading Chat room..."),
+        );
+      }
 
-            Expanded(
-              child: Obx(() {
-                if (chatController.isLoading.value) {
-                  return const Center(
-                    child: CircularProgressIndicator(
-                      backgroundColor: AppColors.background,
-                      color: AppColors.text,
-                    ),
-                  );
-                }
+      return Scaffold(
+        backgroundColor: Colors.white,
+        resizeToAvoidBottomInset: false,
+        appBar: AppBarChatRoom(),
+        body: SafeArea(
+          child: Column(
+            children: [
+              SearchBarChatRoom(
+                onTap: () {},
+                hintText: 'Looking for someone?',
+                searchController: chatController.searchController,
+              ),
+              SizedBox(height: 10),
 
-                if (chatController.chatRooms.isEmpty) {
-                  return NoChatFoundChatRoom();
-                }
-                
-                if (chatController.filteredChatRooms.isEmpty) {
-                  return NoChatFoundChatRoom();
-                }
-
-                return ListView.builder(
-                  itemCount: chatController.filteredChatRooms.length,
-                  physics: BouncingScrollPhysics(),
-
-                  itemBuilder: (context, index) {
-                    final chatData = chatController.filteredChatRooms[index];
-                    final otherIdUser = chatData.idUser1 == currentUserId
-                        ? chatData.idUser2
-                        : chatData.idUser1;
-                    return ItemUserChatRoom(
-                      userName: chatData.otherUserName ?? 'Unknown',
-                      imageURL: chatData.otherUserAvatar ?? '',
-                      lastMessage: chatData.lastMessage,
-                      lastTime: _formatTimestamp(chatData.lastTime),
-                      onPressed: () {
-                        chatController.handleSendMessage(otherIdUser);
-                      },
+              Expanded(
+                child: Obx(() {
+                  if (chatController.isLoading.value) {
+                    return const Center(
+                      child: CircularProgressIndicator(
+                        backgroundColor: AppColors.background,
+                        color: AppColors.text,
+                      ),
                     );
-                  },
-                );
-              }),
-            ),
-          ],
+                  }
+
+                  if (chatController.chatRooms.isEmpty) {
+                    return NoChatFoundChatRoom();
+                  }
+
+                  if (chatController.filteredChatRooms.isEmpty) {
+                    return NoChatFoundChatRoom();
+                  }
+
+                  return ListView.builder(
+                    itemCount: chatController.filteredChatRooms.length,
+                    physics: BouncingScrollPhysics(),
+
+                    itemBuilder: (context, index) {
+                      final chatData = chatController.filteredChatRooms[index];
+                      final otherIdUser = chatData.idUser1 == currentUserId
+                          ? chatData.idUser2
+                          : chatData.idUser1;
+                      return ItemUserChatRoom(
+                        userName: chatData.otherUserName ?? 'Unknown',
+                        imageURL: chatData.otherUserAvatar ?? '',
+                        lastMessage: chatData.lastMessage,
+                        lastTime: _formatTimestamp(chatData.lastTime),
+                        onPressed: () {
+                          chatController.handleSendMessage(otherIdUser);
+                        },
+                      );
+                    },
+                  );
+                }),
+              ),
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 }
