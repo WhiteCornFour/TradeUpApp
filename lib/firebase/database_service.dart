@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:http/http.dart';
 import 'package:tradeupapp/models/card_model.dart';
 import 'package:tradeupapp/models/category_model.dart';
 import 'package:tradeupapp/models/chat_room_model.dart';
@@ -674,13 +673,13 @@ class DatabaseService {
     }
   }
 
-
   //MakeAnOfferController: Thêm offer cho nguời dùng sau do tra ve offer id
   Future<String> addOffer(OfferModel offer) async {
     final docRef = await FirebaseFirestore.instance
         .collection('offers')
         .add(offer.toMap());
     return docRef.id;
+  }
 
   //PaymentController: update address user
   Future<void> updateAddresUser(String idUser, String newAdress) async {
@@ -738,10 +737,7 @@ class DatabaseService {
     return null;
   }
 
-  //MakeAnOfferController: Thêm offer cho nguời dùng
-  Future<void> addOffer(OfferModel offer) async {
-    await FirebaseFirestore.instance.collection('offers').add(offer.toMap());
-  }
+
 
   //ViewOfferController: Lấy danh sách offer mà currentUser nhận được
   Future<List<OfferModel>> getUserReceivedOfferList(

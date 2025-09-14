@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tradeupapp/firebase/auth_service.dart';
@@ -33,7 +32,9 @@ class ChangePasswordController extends GetxController {
       }
       try {
         //kiem tra email nay co ton tai tren database hay khong
-        final methods = await auth.checkEmailExists(emailController.text);
+        final methods = await auth.checkEmailExistsInFirestore(
+          emailController.text,
+        );
         if (methods) {
           SnackbarHelperGeneral.showCustomSnackBar(
             "This email has not been registered!",
