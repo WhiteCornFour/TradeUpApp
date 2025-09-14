@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -104,6 +105,11 @@ Future<void> main() async {
   //Check if user has seen OnBoarding
   final prefs = await SharedPreferences.getInstance();
   final seenOnBoarding = prefs.getBool('seenOnBoarding') ?? false;
+
+  WidgetsBinding.instance.addPostFrameCallback((_) async {
+    // Load environment variables from the .env file
+    await dotenv.load(fileName: ".env");
+  });
 
   runApp(
     GetMaterialApp(

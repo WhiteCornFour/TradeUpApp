@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:tradeupapp/constants/app_colors.dart';
 import 'package:tradeupapp/models/offer_model.dart';
-import 'package:tradeupapp/screens/main_app/shop/payment.dart';
+import 'package:tradeupapp/screens/main_app/shop/payment/payment.dart';
 
 class ViewOfferSentOfferCardUserProfile extends StatelessWidget {
   final String productImage;

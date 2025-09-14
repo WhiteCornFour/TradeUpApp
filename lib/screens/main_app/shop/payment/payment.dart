@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tradeupapp/constants/app_colors.dart';
 import 'package:tradeupapp/models/offer_model.dart';
-import 'package:tradeupapp/screens/main_app/shop/controllers/payment_controller.dart';
+import 'package:tradeupapp/screens/main_app/shop/payment/controller/payment_controller.dart';
 import 'package:tradeupapp/widgets/general/general_snackbar_helper.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/payment_widgets/payment_app_bar_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/payment_widgets/payment_button_create_order_widget.dart';
@@ -164,7 +164,17 @@ class _PaymentState extends State<Payment> {
                         }
 
                         if (!snapshot.hasData || snapshot.data == null) {
-                          return const Center(child: Text("No data found"));
+                          return const Center(
+                            child: Text(
+                              "Try again later",
+                              style: TextStyle(
+                                color: AppColors.header,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                                fontFamily: 'Roboto-Regular',
+                              ),
+                            ),
+                          );
                         }
 
                         final dataStore = snapshot.data!;
