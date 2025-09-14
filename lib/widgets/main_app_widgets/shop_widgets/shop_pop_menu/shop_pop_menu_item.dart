@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-class PopMenuItem {
+class PopMenuItemShop {
   final String text;
   final IconData icon;
 
-  const PopMenuItem({required this.text, required this.icon});
+  const PopMenuItemShop({required this.text, required this.icon});
 }

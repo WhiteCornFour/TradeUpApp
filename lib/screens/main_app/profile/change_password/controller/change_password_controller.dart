@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
 import 'package:tradeupapp/firebase/auth_service.dart';
+import 'package:tradeupapp/firebase/database_service.dart';
+import 'package:tradeupapp/models/notification_model.dart';
 import 'package:tradeupapp/screens/general/general_email_sent.dart';
 import 'package:tradeupapp/screens/main_app/index.dart';
 import 'package:tradeupapp/widgets/general/general_snackbar_helper.dart';
@@ -10,6 +11,7 @@ class ChangePasswordController extends GetxController {
   final emailController = TextEditingController();
   late BuildContext context;
   final auth = AuthServices();
+  final db = DatabaseService();
 
   RxBool isLoading = false.obs;
 
@@ -30,7 +32,9 @@ class ChangePasswordController extends GetxController {
       }
       try {
         //kiem tra email nay co ton tai tren database hay khong
-        final methods = await auth.checkEmailExists(emailController.text);
+        final methods = await auth.checkEmailExistsInFirestore(
+          emailController.text,
+        );
         if (methods) {
           SnackbarHelperGeneral.showCustomSnackBar(
             "This email has not been registered!",
@@ -62,5 +66,17 @@ class ChangePasswordController extends GetxController {
     } finally {
       isLoading.value = false;
     }
+  }
+
+  Future<void> addPasswordResetNotification(String userId) async {
+    await db.addNotification(
+      NotificationModel(
+        targetUserId: userId,
+        type: 5,
+        message:
+            "You have tried to change password. Please check if it was you.",
+        isRead: 0,
+      ),
+    );
   }
 }

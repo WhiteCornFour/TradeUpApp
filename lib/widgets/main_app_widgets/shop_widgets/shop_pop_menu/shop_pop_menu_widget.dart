@@ -11,14 +11,14 @@ class PopMenuShop extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final shopController = Get.find<ShopController>();
-    return PopupMenuButton<PopMenuItem>(
+    return PopupMenuButton<PopMenuItemShop>(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       offset: Offset(0, 45),
       color: Colors.white,
       elevation: 6,
       tooltip: 'Sort Menu',
       icon: Icon(Iconsax.menu_1, color: Colors.black),
-      onSelected: (PopMenuItem item) {
+      onSelected: (PopMenuItemShop item) {
         if (item.text == 'Newest') {
           shopController.handleFilterNewest();
         } else {
@@ -26,8 +26,8 @@ class PopMenuShop extends StatelessWidget {
         }
       },
       itemBuilder: (BuildContext context) =>
-          PopMenuItemsList.itemsFirst.map((item) {
-            return PopupMenuItem<PopMenuItem>(
+          PopMenuItemsListShop.itemsFirst.map((item) {
+            return PopupMenuItem<PopMenuItemShop>(
               value: item,
               child: Row(
                 children: [

@@ -70,6 +70,7 @@ class _PostCardBottomShopState extends State<PostCardBottomShop> {
                           widget.productId,
                           currentUserId,
                         );
+                        await shopController.addLikeProductNotification(productOwnerId: widget.userId!, currentUserId: currentUserId, productId: widget.productId);
                       }
                     },
                     icon: Icon(

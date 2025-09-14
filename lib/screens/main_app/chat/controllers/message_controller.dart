@@ -9,8 +9,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:tradeupapp/constants/app_colors.dart';
 import 'package:tradeupapp/firebase/auth_service.dart';
 import 'package:tradeupapp/firebase/database_service.dart';
-
+import 'package:tradeupapp/firebase/notification_service.dart';
 import 'package:tradeupapp/models/message_modal.dart';
+import 'package:tradeupapp/models/notification_model.dart';
 import 'package:tradeupapp/models/product_model.dart';
 import 'package:tradeupapp/models/user_model.dart';
 import 'package:tradeupapp/widgets/general/general_snackbar_helper.dart';
@@ -28,6 +29,9 @@ class MessageController extends GetxController {
   var isLoadingButton = false.obs;
   //Khai báo biến database
   final db = DatabaseService();
+
+  //Khai báo biến database
+  final ns = NotificationService();
 
   ProductModel? product;
 
@@ -100,6 +104,73 @@ class MessageController extends GetxController {
     Get.back();
   }
 
+  //Thêm Notification khi người dùng gửi Message
+  Future<void> addSendMessageNotification({
+    required String receiverId,
+    required String senderId,
+  }) async {
+    try {
+      //1. Kiểm tra trong vòng 1 tiếng có thông báo chưa => nếu có thì bỏ qua
+      final alreadyExists = await db.hasRecentMessageNotification(
+        receiverId: receiverId,
+        senderId: senderId,
+      );
+
+      if (alreadyExists) {
+        print("Skip creating notification, already exists within 1h");
+        return;
+      }
+
+      //2. Tạo object Notification và lưu vào Firestore
+      final notification = NotificationModel(
+        targetUserId: receiverId,
+        actorUserId: senderId,
+        productId: null,
+        offerId: null,
+        createdAt: Timestamp.now(),
+        type: 0,
+        isRead: 0, 
+        message: "sent you a message.",
+      );
+
+      await db.addNotification(notification);
+
+      //3. Lấy token của người nhận
+      final userDoc = await FirebaseFirestore.instance
+          .collection("users")
+          .doc(receiverId)
+          .get();
+
+      if (!userDoc.exists) {
+        print("Receiver user not found!");
+        return;
+      }
+
+      final tokens = List<String>.from(userDoc.data()?["fcmTokens"] ?? []);
+      if (tokens.isEmpty) {
+        print("Receiver has no FCM tokens!");
+        return;
+      }
+
+      //4. Lấy thêm thông tin để hiển thị thông báo rõ ràng
+      final actorDoc = await db.fetchUserModelById(senderId);
+      final actorName = actorDoc?.fullName ?? 'Someone';
+
+      //5. Gửi thông báo FCM cho tất cả token
+      for (final token in tokens) {
+        await ns.sendPushNotification(
+          token: token,
+          title: "New Message",
+          body: "$actorName sent you a message.",
+        );
+      }
+
+      print("Message notification created successfully!");
+    } catch (e) {
+      print("Error addSendMessageNotification: $e");
+    }
+  }
+
   void handleSendMessage() async {
     var text = messageController.text.trim();
 
@@ -132,6 +203,12 @@ class MessageController extends GetxController {
 
       // Gửi message lên Firestore
       await DatabaseService().addNewMessage(message.toJson(), idChatRoom!);
+
+      await addSendMessageNotification(
+        receiverId: idOtherUser!,
+        senderId: idCurrentUser,
+      );
+
       isLoadingButton.value = false;
     } catch (e) {
       // ignore: avoid_print
