@@ -4,6 +4,7 @@ import 'package:tradeupapp/models/card_model.dart';
 import 'package:tradeupapp/models/category_model.dart';
 import 'package:tradeupapp/models/chat_room_model.dart';
 import 'package:tradeupapp/models/notification_model.dart';
+import 'package:tradeupapp/models/offer_details_model.dart';
 import 'package:tradeupapp/models/offer_model.dart';
 import 'package:tradeupapp/models/product_model.dart';
 import 'package:tradeupapp/models/search_history_model.dart';
@@ -737,7 +738,32 @@ class DatabaseService {
     return null;
   }
 
+  //PaymentController: thêm offer detail mới vào offer by offerId
+  Future<void> addOfferDetail(
+    String offerId,
+    OfferDetailsModel offerDetail,
+  ) async {
+    try {
+      final docRef = FirebaseFirestore.instance
+          .collection("offers")
+          .doc(offerId);
+      final subCollRef = docRef.collection("offerDetails");
+      await subCollRef.add(offerDetail.toJson());
+      // ignore: avoid_print
+      print("Offer detail added successfully to offer $offerId");
 
+      //Update lai status offer ve 3 (đã có chi tiết)
+      await docRef.update({
+        'status': 3,
+        'createdAt': FieldValue.serverTimestamp(),
+      });
+      // ignore: avoid_print
+      print("Offer $offerId updated to status 3");
+    } catch (e) {
+      // ignore: avoid_print
+      print("Error addOfferDetail: $e");
+    }
+  }
 
   //ViewOfferController: Lấy danh sách offer mà currentUser nhận được
   Future<List<OfferModel>> getUserReceivedOfferList(
@@ -758,7 +784,15 @@ class DatabaseService {
   Future<List<OfferModel>> getUserSentOfferList(String currentUserId) async {
     final querySnapshot = await FirebaseFirestore.instance
         .collection('offers')
-        .where('senderId', isEqualTo: currentUserId)
+        .where(
+          Filter.and(
+            Filter('senderId', isEqualTo: currentUserId),
+            Filter(
+              'status',
+              isNotEqualTo: 3,
+            ), //Cập nhật: Không load những offer đã checkout
+          ),
+        )
         .orderBy('createdAt', descending: true)
         .get();
 

@@ -33,7 +33,7 @@ class CreditCardItemPayment extends StatelessWidget {
     ];
 
     // Hiển thị 4 số cuối của thẻ (nếu đủ dài)
-    String getMaskedCardNumber(String? cardNumber) {
+   String getMaskedCardNumber(String? cardNumber) {
       if (cardNumber == null || cardNumber.isEmpty) return "";
       if (cardNumber.length <= 4) return cardNumber;
       return "**** ${cardNumber.substring(cardNumber.length - 4)}";
