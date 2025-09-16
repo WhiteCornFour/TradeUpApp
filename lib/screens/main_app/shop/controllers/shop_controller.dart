@@ -124,6 +124,7 @@ class ShopController extends GetxController {
       final tagName = await db.getTagNameFromUserId(userId);
       return tagName;
     } catch (e) {
+      // ignore: avoid_print
       print('Lỗi khi lấy tagName: $e');
       return 'Unknown';
     }

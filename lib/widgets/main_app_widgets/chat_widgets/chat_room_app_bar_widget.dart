@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tradeupapp/constants/app_colors.dart';
 
 class AppBarChatRoom extends StatelessWidget implements PreferredSizeWidget {
   const AppBarChatRoom({super.key});
@@ -16,9 +17,10 @@ class AppBarChatRoom extends StatelessWidget implements PreferredSizeWidget {
           const Text(
             "messenger",
             style: TextStyle(
-              color: Colors.black,
+              color: AppColors.header,
               fontFamily: 'Roboto-Medium',
               fontSize: 26,
+              fontWeight: FontWeight.w500,
             ),
           ),
           Container(

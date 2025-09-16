@@ -216,6 +216,7 @@ class _PaymentState extends State<Payment> {
                   amount: widget.offer.offerPrice!,
                   onCardSelected: (selectedCard) => card = selectedCard,
                   offerId: widget.offer.offerId!,
+                  productId: widget.offer.productId!,
                 ),
 
                 // Xac nhan thanh toan
@@ -244,6 +245,7 @@ class _PaymentState extends State<Payment> {
                           paymentController.handleAddOfferDetail(
                             widget.offer.offerId!,
                             offerDetail,
+                            widget.offer.productId!,
                           );
                           SnackbarHelperGeneral.showCustomSnackBar(
                             "Payment completed successfully!",
@@ -252,7 +254,6 @@ class _PaymentState extends State<Payment> {
                         },
                         numberOfButton: 2,
                       );
-                      
                     } else {
                       SnackbarHelperGeneral.showCustomSnackBar(
                         "Please select a card!",

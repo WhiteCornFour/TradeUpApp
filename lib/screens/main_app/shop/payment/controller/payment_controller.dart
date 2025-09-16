@@ -71,11 +71,12 @@ class PaymentController extends GetxController {
   void handleAddOfferDetail(
     String offerId,
     OfferDetailsModel offerDetail,
+    String productId
   ) async {
     try {
       idLoading.value = true;
 
-      await db.addOfferDetail(offerId, offerDetail);
+      await db.addOfferDetail(offerId, offerDetail, productId);
       Get.off(Profile());
     } catch (e) {
       // ignore: avoid_print

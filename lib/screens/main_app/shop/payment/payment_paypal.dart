@@ -14,8 +14,9 @@ import 'package:tradeupapp/widgets/general/general_snackbar_helper.dart';
 class PaymentPaypal extends StatefulWidget {
   final double amount;
   final String offerId;
+  final String productId;
 
-  const PaymentPaypal({super.key, required this.amount, required this.offerId});
+  const PaymentPaypal({super.key, required this.amount, required this.offerId, required this.productId});
 
   @override
   State<PaymentPaypal> createState() => _PaymentPaypalState();
@@ -87,7 +88,7 @@ class _PaymentPaypalState extends State<PaymentPaypal> {
           style: TextStyle(
             color: AppColors.header,
             fontFamily: "Roboto-Medium",
-            fontSize: 20,
+            fontSize: 26,
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -113,6 +114,7 @@ class _PaymentPaypalState extends State<PaymentPaypal> {
                       paymentController.handleAddOfferDetail(
                         widget.offerId,
                         offerDetail,
+                        widget.productId
                       );
                       SnackbarHelperGeneral.showCustomSnackBar(
                         "Payment completed successfully!",
