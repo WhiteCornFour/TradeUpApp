@@ -8,6 +8,7 @@ import 'package:tradeupapp/models/offer_details_model.dart';
 import 'package:tradeupapp/models/offer_model.dart';
 import 'package:tradeupapp/models/product_model.dart';
 import 'package:tradeupapp/models/search_history_model.dart';
+import 'package:tradeupapp/models/sold_product_model.dart';
 import 'package:tradeupapp/models/user_model.dart';
 
 class DatabaseService {
@@ -742,6 +743,7 @@ class DatabaseService {
   Future<void> addOfferDetail(
     String offerId,
     OfferDetailsModel offerDetail,
+    String productId,
   ) async {
     try {
       final docRef = FirebaseFirestore.instance
@@ -757,8 +759,11 @@ class DatabaseService {
         'status': 3,
         'createdAt': FieldValue.serverTimestamp(),
       });
-      // ignore: avoid_print
-      print("Offer $offerId updated to status 3");
+      //Update lai status cua product sang 1 ( da ban )
+      await FirebaseFirestore.instance
+          .collection("products")
+          .doc(productId)
+          .update({"status": 1});
     } catch (e) {
       // ignore: avoid_print
       print("Error addOfferDetail: $e");
@@ -784,20 +789,13 @@ class DatabaseService {
   Future<List<OfferModel>> getUserSentOfferList(String currentUserId) async {
     final querySnapshot = await FirebaseFirestore.instance
         .collection('offers')
-        .where(
-          Filter.and(
-            Filter('senderId', isEqualTo: currentUserId),
-            Filter(
-              'status',
-              isNotEqualTo: 3,
-            ), //Cập nhật: Không load những offer đã checkout
-          ),
-        )
+        .where('senderId', isEqualTo: currentUserId)
         .orderBy('createdAt', descending: true)
         .get();
 
     return querySnapshot.docs
         .map((doc) => OfferModel.fromMap(doc.data(), docId: doc.id))
+        .where((offer) => offer.status != 3) // bỏ những offer có status = 3
         .toList();
   }
 
@@ -1010,5 +1008,34 @@ class DatabaseService {
     } catch (e) {
       print("Error updateNotificationAsDelete: $e");
     }
+  }
+
+  //SalseHistoryController: load những feed (là những sản phẩm) người dùng đã bán thành công
+  Future<List<SoldProductModel>> getSoldProducts(String idCurrentUser) async {
+    List<SoldProductModel> soldList = [];
+    try {
+      final offerCollection = FirebaseFirestore.instance.collection("offers");
+
+      final getOfferCurrentUser = await offerCollection
+          .where("receiverId", isEqualTo: idCurrentUser)
+          .where("status", isEqualTo: 3) // đã thanh toán
+          .get();
+
+      for (var doc in getOfferCurrentUser.docs) {
+        final data = doc.data();
+        final productId = data["productId"];
+
+        if (productId != null) {
+          final product = await getProductById(productId);
+          if (product != null) {
+            final offer = OfferModel.fromMap(data, docId: doc.id);
+            soldList.add(SoldProductModel(product: product, offer: offer));
+          }
+        }
+      }
+    } catch (e) {
+      print("Error getSoldProducts: $e");
+    }
+    return soldList;
   }
 }

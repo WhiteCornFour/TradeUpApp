@@ -16,13 +16,15 @@ class TabBarPayment extends StatefulWidget {
   final double amount;
   final Function(CardModel? card) onCardSelected;
   final String offerId;
+  final String productId;
 
   const TabBarPayment({
     super.key,
     required this.idCurrentUser,
     required this.cards,
     required this.amount,
-    required this.onCardSelected, required this.offerId,
+    required this.onCardSelected,
+    required this.offerId, required this.productId,
   });
 
   @override
@@ -220,7 +222,11 @@ class _TabBarPaymentState extends State<TabBarPayment> {
                             walletStatus: "Now available",
                             onPressed: () {
                               Get.to(
-                                () => PaymentPaypal(amount: widget.amount, offerId: widget.offerId,),
+                                () => PaymentPaypal(
+                                  amount: widget.amount,
+                                  offerId: widget.offerId,
+                                  productId: widget.productId,
+                                ),
                               );
                             },
                           ),

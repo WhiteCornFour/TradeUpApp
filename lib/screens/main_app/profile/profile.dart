@@ -4,6 +4,7 @@ import 'package:tradeupapp/constants/app_colors.dart';
 import 'package:tradeupapp/screens/main_app/profile/about_us/about_us.dart';
 import 'package:tradeupapp/screens/main_app/profile/change_password/change_password.dart';
 import 'package:tradeupapp/screens/main_app/profile/controller/profile_controller.dart';
+import 'package:tradeupapp/screens/main_app/profile/sales_history/sales_history.dart';
 import 'package:tradeupapp/screens/main_app/profile/view_offer/view_offer.dart';
 import 'package:tradeupapp/screens/main_app/profile/report/report.dart';
 import 'package:tradeupapp/screens/main_app/profile/save_product/save_product.dart';
@@ -74,7 +75,7 @@ class _ProfileState extends State<Profile> {
       //1. Kiểm tra trạng thái Loading
       if (profileController.isLoading.value) {
         return const Scaffold(
-          body: LoadingScreenGeneral(message: "Loading Profile page..."),
+          body: LoadingScreenGeneral(message: "Loading Profile Screen..."),
         );
       }
 
@@ -131,15 +132,16 @@ class _ProfileState extends State<Profile> {
                   title: 'Activity',
                   children: [
                     CategoryFuncUserProfile(
-                      onTap: () {
-                      },
+                      onTap: () {},
                       icon: Icons.history,
                       label: 'Buy history',
                     ),
 
                     user.role == 2
                         ? CategoryFuncUserProfile(
-                            onTap: () {},
+                            onTap: () {
+                              Get.to(SalesHistory());
+                            },
                             icon: Icons.history,
                             label: 'Sales history',
                           )
