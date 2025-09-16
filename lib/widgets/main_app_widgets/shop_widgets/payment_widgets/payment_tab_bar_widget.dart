@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:tradeupapp/constants/app_colors.dart';
 import 'package:tradeupapp/models/card_model.dart';
 import 'package:tradeupapp/screens/main_app/shop/payment/controller/payment_controller.dart';
+import 'package:tradeupapp/screens/main_app/shop/payment/payment_paypal.dart';
 import 'package:tradeupapp/widgets/general/general_custom_dialog.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/payment_widgets/payment_button_add_credit_card_widget.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/payment_widgets/payment_credit_card_item_widget.dart';
@@ -12,10 +13,16 @@ import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/payment_widgets
 class TabBarPayment extends StatefulWidget {
   final String idCurrentUser;
   final List<CardModel> cards;
+  final double amount;
+  final Function(CardModel? card) onCardSelected;
+  final String offerId;
+
   const TabBarPayment({
     super.key,
     required this.idCurrentUser,
     required this.cards,
+    required this.amount,
+    required this.onCardSelected, required this.offerId,
   });
 
   @override
@@ -23,7 +30,7 @@ class TabBarPayment extends StatefulWidget {
 }
 
 class _TabBarPaymentState extends State<TabBarPayment> {
-  String _selectedValue = "A"; // State cho radio
+  String _selectedValue = ""; // lưu idCard đã chọn
   final paymentController = Get.find<PaymentController>();
 
   void showDialogComfirmDelete(String? idCard) {
@@ -53,6 +60,7 @@ class _TabBarPaymentState extends State<TabBarPayment> {
   @override
   Widget build(BuildContext context) {
     final double tabViewHeight = MediaQuery.of(context).size.height * 0.35;
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -107,56 +115,101 @@ class _TabBarPaymentState extends State<TabBarPayment> {
                     physics: const NeverScrollableScrollPhysics(),
                     children: [
                       // Tab 1: Cards
-                      Obx(() {
-                        final allCards = [
-                          ...paymentController.cards,
-                          ...paymentController.tempCards,
-                        ];
-                        return ListView.builder(
-                          itemCount: allCards.length + 1,
-                          itemBuilder: (context, index) {
-                            if (index < allCards.length) {
-                              final card = allCards[index];
-                              return CreditCardItemPayment(
-                                card: card,
-                                onLongPressed: () {
-                                  if (paymentController.cards.contains(card)) {
-                                    showDialogComfirmDelete(card.idCard);
+                      Column(
+                        children: [
+                          // Clear selection
+                          InkWell(
+                            onTap: () {
+                              setState(() {
+                                _selectedValue = "";
+                                widget.onCardSelected(null);
+                              });
+                            },
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                const Icon(
+                                  Icons.clear,
+                                  size: 20,
+                                  color: AppColors.background,
+                                ),
+                                const SizedBox(width: 5),
+                                const Text(
+                                  "Clear selection",
+                                  style: TextStyle(
+                                    color: AppColors.background,
+                                    fontFamily: 'Roboto-Regular',
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 5),
+
+                          // List cards
+                          Expanded(
+                            child: Obx(() {
+                              final allCards = [
+                                ...paymentController.cards,
+                                ...paymentController.tempCards,
+                              ];
+                              return ListView.builder(
+                                itemCount: allCards.length + 1,
+                                itemBuilder: (context, index) {
+                                  if (index < allCards.length) {
+                                    final card = allCards[index];
+                                    return CreditCardItemPayment(
+                                      card: card,
+                                      onLongPressed: () {
+                                        if (paymentController.cards.contains(
+                                          card,
+                                        )) {
+                                          showDialogComfirmDelete(card.idCard);
+                                        } else {
+                                          showDialogComfirmDeleteTempCard(card);
+                                        }
+                                      },
+                                      selectedValue: _selectedValue,
+                                      value: card.idCard ?? "",
+                                      onChanged: (val) {
+                                        setState(() {
+                                          if (_selectedValue == val) {
+                                            // Nếu click lại radio => bỏ chọn
+                                            _selectedValue = "";
+                                            widget.onCardSelected(null);
+                                          } else {
+                                            _selectedValue = val ?? "";
+                                            widget.onCardSelected(card);
+                                          }
+                                        });
+                                      },
+                                    );
                                   } else {
-                                    // Xóa card tạm
-                                    showDialogComfirmDeleteTempCard(card);
-                                  }
-                                },
-                                selectedValue: _selectedValue,
-                                value: card.idCard ?? "",
-                                onChanged: (val) {
-                                  setState(() {
-                                    _selectedValue = val!;
-                                  });
-                                },
-                              );
-                            } else {
-                              return ButtonAddCreditCardPayment(
-                                onPressedAddNew: () async {
-                                  final card =
-                                      await DialogAddNewCreditCardPayment.show(
-                                        context,
-                                      );
-                                  if (card != null) {
-                                    final positionSaveCard = card.status == 1
-                                        ? true
-                                        : false;
-                                    paymentController.handleAddCard(
-                                      card,
-                                      saveToDb: positionSaveCard,
+                                    return ButtonAddCreditCardPayment(
+                                      onPressedAddNew: () async {
+                                        final card =
+                                            await DialogAddNewCreditCardPayment.show(
+                                              context,
+                                            );
+                                        if (card != null) {
+                                          final positionSaveCard =
+                                              card.status == 1;
+                                          paymentController.handleAddCard(
+                                            card,
+                                            saveToDb: positionSaveCard,
+                                          );
+                                        }
+                                      },
                                     );
                                   }
                                 },
                               );
-                            }
-                          },
-                        );
-                      }),
+                            }),
+                          ),
+                        ],
+                      ),
 
                       // Tab 2: Wallets
                       ListView(
@@ -165,36 +218,31 @@ class _TabBarPaymentState extends State<TabBarPayment> {
                             walletName: 'PayPal',
                             walletImage: 'paypal.png',
                             walletStatus: "Now available",
-                            onPressed: () {                            
+                            onPressed: () {
+                              Get.to(
+                                () => PaymentPaypal(amount: widget.amount, offerId: widget.offerId,),
+                              );
                             },
                           ),
                           WalletItemPayment(
                             walletName: 'MoMo',
                             walletImage: 'MoMo.jpg',
-                            onPressed: () {
-                              //BottomSheetWalletPayment.show(context);
-                            },
+                            onPressed: () {},
                           ),
                           WalletItemPayment(
                             walletName: 'ZaloPay',
                             walletImage: 'zalopay.png',
-                            onPressed: () {
-                              //BottomSheetWalletPayment.show(context);
-                            },
+                            onPressed: () {},
                           ),
                           WalletItemPayment(
                             walletName: 'VnPay',
                             walletImage: 'vnpay.png',
-                            onPressed: () {
-                              //BottomSheetWalletPayment.show(context);
-                            },
+                            onPressed: () {},
                           ),
                           WalletItemPayment(
                             walletName: 'Viettel Money',
                             walletImage: 'viettelmoney.jpg',
-                            onPressed: () {
-                              //BottomSheetWalletPayment.show(context);
-                            },
+                            onPressed: () {},
                           ),
                         ],
                       ),

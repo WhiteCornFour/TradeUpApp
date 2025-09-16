@@ -3,9 +3,10 @@ import 'package:get/get.dart';
 import 'package:tradeupapp/firebase/auth_service.dart';
 import 'package:tradeupapp/firebase/database_service.dart';
 import 'package:tradeupapp/models/card_model.dart';
-import 'package:tradeupapp/models/offer_model.dart';
+import 'package:tradeupapp/models/offer_details_model.dart';
 import 'package:tradeupapp/models/product_model.dart';
 import 'package:tradeupapp/models/user_model.dart';
+import 'package:tradeupapp/screens/main_app/profile/profile.dart';
 import 'package:tradeupapp/widgets/general/general_snackbar_helper.dart';
 
 class PaymentController extends GetxController {
@@ -65,5 +66,22 @@ class PaymentController extends GetxController {
       "Completed delete card!",
       backgroundColor: Colors.green,
     );
+  }
+
+  void handleAddOfferDetail(
+    String offerId,
+    OfferDetailsModel offerDetail,
+  ) async {
+    try {
+      idLoading.value = true;
+
+      await db.addOfferDetail(offerId, offerDetail);
+      Get.off(Profile());
+    } catch (e) {
+      // ignore: avoid_print
+      print("Error handleAddOfferDetail: $e");
+    } finally {
+      idLoading.value = false;
+    }
   }
 }

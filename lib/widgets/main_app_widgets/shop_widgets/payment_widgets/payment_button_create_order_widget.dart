@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:tradeupapp/constants/app_colors.dart';
 
 class ButtonCreateOrderPayment extends StatelessWidget {
-  const ButtonCreateOrderPayment({super.key});
+  final Function onPressed;
+  const ButtonCreateOrderPayment({super.key, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -10,7 +11,9 @@ class ButtonCreateOrderPayment extends StatelessWidget {
       height: 50,
       margin: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
       child: ElevatedButton(
-        onPressed: () {},
+        onPressed: () {
+          onPressed();
+        },
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.background,
           shape: ContinuousRectangleBorder(
