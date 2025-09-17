@@ -43,7 +43,6 @@ class CardProductSalesProduct extends StatefulWidget {
 class _CardProductSalesProductState extends State<CardProductSalesProduct> {
   @override
   Widget build(BuildContext context) {
-    int likeCount = widget.likedBy.length;
 
     return GestureDetector(
       onTap: widget.onPressed,
@@ -90,7 +89,7 @@ class _CardProductSalesProductState extends State<CardProductSalesProduct> {
                     radius: 22,
                     backgroundImage: widget.buyerAvatar != ""
                         ? NetworkImage(widget.buyerAvatar)
-                        : const AssetImage("assets/images/default_avatar.png")
+                        : const AssetImage("assets/images/avatar-user.png")
                               as ImageProvider,
                   ),
                   title: Text(

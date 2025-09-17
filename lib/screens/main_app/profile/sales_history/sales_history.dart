@@ -51,20 +51,30 @@ class _SalesHistoryState extends State<SalesHistory> {
       return Scaffold(
         appBar: AppBar(
           leading: BackButtonCustomGeneral(),
-          title: Text(
-            "Sales history",
-            style: TextStyle(
-              color: AppColors.header,
-              fontFamily: "Roboto-Medium",
-              fontSize: 22,
-              fontWeight: FontWeight.w600,
-            ),
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.attach_money_outlined,
+                size: 25,
+                color: AppColors.header,
+              ),
+              Text(
+                "Sales history",
+                style: TextStyle(
+                  color: AppColors.header,
+                  fontFamily: "Roboto-Medium",
+                  fontSize: 22,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
           ),
           centerTitle: true,
           actions: [
             Padding(
               padding: const EdgeInsets.only(right: 12),
-              child: PopMenuSalesHistory(controller: salesHistoryController,),
+              child: PopMenuSalesHistory(controller: salesHistoryController),
             ),
           ],
         ),
@@ -76,13 +86,13 @@ class _SalesHistoryState extends State<SalesHistory> {
                     children: [
                       Image(
                         image: AssetImage("assets/images/nosaleyet.jpg"),
-                        height: 350,
+                        height: 330,
                       ),
                       Text(
                         "No sales yet!",
                         style: TextStyle(
                           color: AppColors.header,
-                          fontSize: 16,
+                          fontSize: 20,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -115,8 +125,8 @@ class _SalesHistoryState extends State<SalesHistory> {
                       currentUserId: salesHistoryController.idCurrentUser,
                       productId: product.productId,
                       buyerName:
-                          salesHistoryController.buyerName ?? 'Unknown Buyer',
-                      totalPrice: offer.price?.toString() ?? '0',
+                          salesHistoryController.buyerName ?? 'Loading...',
+                      totalPrice: offer.price?.toString() ?? 'Loading...',
                       buyerAvatar: salesHistoryController.buyerAvt ?? "",
                     );
                   },
