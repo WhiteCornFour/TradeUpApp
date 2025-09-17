@@ -7,6 +7,7 @@ import 'package:tradeupapp/models/notification_model.dart';
 import 'package:tradeupapp/models/offer_details_model.dart';
 import 'package:tradeupapp/models/offer_model.dart';
 import 'package:tradeupapp/models/product_model.dart';
+import 'package:tradeupapp/models/purchase_history_modal.dart';
 import 'package:tradeupapp/models/search_history_model.dart';
 import 'package:tradeupapp/models/sold_product_model.dart';
 import 'package:tradeupapp/models/user_model.dart';
@@ -1034,8 +1035,60 @@ class DatabaseService {
         }
       }
     } catch (e) {
+      // ignore: avoid_print
       print("Error getSoldProducts: $e");
     }
     return soldList;
+  }
+
+  //BuyHistoryController: load danh sach nhung san pham ma nguoi dun hien tai da check out thanh cong
+  Future<List<PurchaseHistoryModal>?> getPurchaseProducts(
+    String idCurrentUser,
+  ) async {
+    try {
+      List<PurchaseHistoryModal> result = [];
+
+      final collectionRef = FirebaseFirestore.instance.collection("offers");
+      final getDocs = await collectionRef
+          .where("senderId", isEqualTo: idCurrentUser)
+          .where("status", isEqualTo: 3)
+          .get();
+
+      for (var e in getDocs.docs) {
+        // Parse offer
+        final offer = OfferModel.fromMap(e.data(), docId: e.id);
+
+        // Get product info
+        final product = await getProductById(e.data()["productId"]);
+
+        // Get offerDetail (lấy document đầu tiên trong sub-collection)
+        final offerDetailSnap = await FirebaseFirestore.instance
+            .collection("offers")
+            .doc(e.id)
+            .collection("offerDetails")
+            .limit(1)
+            .get();
+
+        if (product != null && offerDetailSnap.docs.isNotEmpty) {
+          final offerDetails = OfferDetailsModel.fromJson(
+            offerDetailSnap.docs.first.data(),
+          );
+
+          final purchaseHistory = PurchaseHistoryModal(
+            productModel: product,
+            offerModel: offer,
+            offerDetailsModel: offerDetails,
+          );
+
+          result.add(purchaseHistory);
+        }
+      }
+
+      return result;
+    } catch (e) {
+      // ignore: avoid_print
+      print("Error getPurchaseProducts: $e");
+      return null;
+    }
   }
 }
