@@ -187,6 +187,29 @@ class ViewOfferSentOfferCardUserProfile extends StatelessWidget {
                             ),
                           ],
                         ),
+                      ] else if (status == 3) ...[
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Icon(
+                              Iconsax.wallet_check,
+                              size: 18,
+                              color: Colors.blue,
+                            ),
+                            const SizedBox(width: 6),
+                            Expanded(
+                              child: Text(
+                                'Payment completed',
+                                style: const TextStyle(
+                                  fontFamily: 'Roboto-Regular',
+                                  fontSize: 14,
+                                  color: Colors.blue,
+                                ),
+                                softWrap: true,
+                              ),
+                            ),
+                          ],
+                        ),
                       ],
                     ],
                   ),

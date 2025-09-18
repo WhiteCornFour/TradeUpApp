@@ -796,7 +796,6 @@ class DatabaseService {
 
     return querySnapshot.docs
         .map((doc) => OfferModel.fromMap(doc.data(), docId: doc.id))
-        .where((offer) => offer.status != 3) // bỏ những offer có status = 3
         .toList();
   }
 

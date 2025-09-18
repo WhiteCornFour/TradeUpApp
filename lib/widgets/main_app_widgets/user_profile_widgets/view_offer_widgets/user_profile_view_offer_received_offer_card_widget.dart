@@ -88,7 +88,7 @@ class ViewOfferReceivedOfferCardUserProfile extends StatelessWidget {
                           fit: BoxFit.cover,
                         ),
                 ),
-      
+
                 //Content
                 Expanded(
                   child: Padding(
@@ -112,7 +112,7 @@ class ViewOfferReceivedOfferCardUserProfile extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 6),
-      
+
                         //Offered by
                         Row(
                           children: [
@@ -138,7 +138,7 @@ class ViewOfferReceivedOfferCardUserProfile extends StatelessWidget {
                           ],
                         ),
                         const SizedBox(height: 8),
-      
+
                         // Prices
                         Row(
                           children: [
@@ -166,9 +166,9 @@ class ViewOfferReceivedOfferCardUserProfile extends StatelessWidget {
                             ),
                           ],
                         ),
-      
+
                         const SizedBox(height: 12),
-      
+
                         //Action buttons
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
@@ -296,6 +296,42 @@ class ViewOfferReceivedOfferCardUserProfile extends StatelessWidget {
                                   ),
                                 ),
                               ),
+                            ] else if (status == 3) ...[
+                              SizedBox(
+                                width: 220,
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 14,
+                                    vertical: 10,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.blue.withOpacity(0.1),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: const Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(
+                                        Iconsax.wallet_check,
+                                        size: 18,
+                                        color: Colors.blue,
+                                      ),
+                                      SizedBox(width: 6),
+                                      Expanded(
+                                        child: Text(
+                                          "Dealer has checked out.",
+                                          style: TextStyle(
+                                            fontFamily: 'Roboto-Bold',
+                                            fontSize: 12,
+                                            color: Colors.blue,
+                                          ),
+                                          softWrap: true,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
                             ],
                           ],
                         ),
@@ -305,7 +341,7 @@ class ViewOfferReceivedOfferCardUserProfile extends StatelessWidget {
                 ),
               ],
             ),
-      
+
             // Tag on top-right
             Positioned(
               top: 10,

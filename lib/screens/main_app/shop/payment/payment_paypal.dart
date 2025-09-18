@@ -15,8 +15,9 @@ class PaymentPaypal extends StatefulWidget {
   final double amount;
   final String offerId;
   final String productId;
+  final String productOwnerId;
 
-  const PaymentPaypal({super.key, required this.amount, required this.offerId, required this.productId});
+  const PaymentPaypal({super.key, required this.amount, required this.offerId, required this.productId, required this.productOwnerId});
 
   @override
   State<PaymentPaypal> createState() => _PaymentPaypalState();
@@ -29,7 +30,7 @@ class _PaymentPaypalState extends State<PaymentPaypal> {
   Future<void> _createOrder() async {
     try {
       final response = await http.post(
-        Uri.parse("http://10.0.2.2:3000/create-order"),
+        Uri.parse("https://tradeupapp.onrender.com/create-order"),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({
           "amount": widget.amount.toStringAsFixed(2), // "10.00"
@@ -59,7 +60,7 @@ class _PaymentPaypalState extends State<PaymentPaypal> {
   Future<void> _captureOrder() async {
     try {
       final response = await http.post(
-        Uri.parse("http://10.0.2.2:3000/capture-order/$orderId"),
+        Uri.parse("https://tradeupapp.onrender.com/capture-order/$orderId"),
       );
 
       final data = jsonDecode(response.body);
@@ -114,7 +115,8 @@ class _PaymentPaypalState extends State<PaymentPaypal> {
                       paymentController.handleAddOfferDetail(
                         widget.offerId,
                         offerDetail,
-                        widget.productId
+                        widget.productId,
+                        widget.productOwnerId
                       );
                       SnackbarHelperGeneral.showCustomSnackBar(
                         "Payment completed successfully!",

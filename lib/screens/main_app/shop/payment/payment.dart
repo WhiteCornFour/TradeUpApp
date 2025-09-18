@@ -246,6 +246,7 @@ class _PaymentState extends State<Payment> {
                             widget.offer.offerId!,
                             offerDetail,
                             widget.offer.productId!,
+                            widget.offer.receiverId!,
                           );
                           SnackbarHelperGeneral.showCustomSnackBar(
                             "Payment completed successfully!",
