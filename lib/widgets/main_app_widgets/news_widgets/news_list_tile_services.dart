@@ -107,6 +107,25 @@ Widget buildNotificationText(NotificationModel item) {
       }
       break;
 
+    case 4: // checkout
+      // actorName + "checked out" + productName
+      spans.add(
+        TextSpan(
+          text: "${item.message ?? 'has checked out for'} ",
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Colors.blue,
+          ),
+        ),
+      );
+
+      if (item.productName != null) {
+        spans.add(TextSpan(text: item.productName));
+      }
+
+      spans.add(const TextSpan(text: "."));
+      break;
+
     default:
       spans.add(TextSpan(text: item.message ?? ""));
   }
