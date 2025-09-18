@@ -17,6 +17,7 @@ class TabBarPayment extends StatefulWidget {
   final Function(CardModel? card) onCardSelected;
   final String offerId;
   final String productId;
+  final String productOwnerId;
 
   const TabBarPayment({
     super.key,
@@ -24,7 +25,9 @@ class TabBarPayment extends StatefulWidget {
     required this.cards,
     required this.amount,
     required this.onCardSelected,
-    required this.offerId, required this.productId,
+    required this.offerId,
+    required this.productId,
+    required this.productOwnerId,
   });
 
   @override
@@ -226,6 +229,7 @@ class _TabBarPaymentState extends State<TabBarPayment> {
                                   amount: widget.amount,
                                   offerId: widget.offerId,
                                   productId: widget.productId,
+                                  productOwnerId: widget.productOwnerId,
                                 ),
                               );
                             },
