@@ -16,7 +16,7 @@ class AppBarPayment extends StatelessWidget implements PreferredSizeWidget {
         style: TextStyle(
           color: AppColors.header,
           fontFamily: 'Roboto-Medium',
-          fontSize: 23,
+          fontSize: 26,
         ),
       ),
     );
