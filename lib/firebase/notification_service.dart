@@ -18,6 +18,9 @@ class NotificationService {
     await flutterLocalNotificationsPlugin.initialize(initSettings);
   }
 
+  //Duong dan toi Render
+  String urlRenderLink = 'https://tradeupapp.onrender.com';
+
   //Lưu token duy nhất của người dùng lên hệ thống
   Future<void> saveTokenToUser(String token) async {
     final uid = FirebaseAuth.instance.currentUser?.uid;
@@ -75,7 +78,7 @@ class NotificationService {
   }) async {
     print("Token gửi lên server: $token");
     final response = await http.post(
-      Uri.parse('http://10.0.2.2:3000/sendNotification'),
+      Uri.parse('https://tradeupapp.onrender.com/sendNotification'),
       headers: {"Content-Type": "application/json"},
       body: json.encode({
         "token": token,
