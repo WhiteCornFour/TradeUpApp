@@ -217,6 +217,7 @@ class _PaymentState extends State<Payment> {
                   onCardSelected: (selectedCard) => card = selectedCard,
                   offerId: widget.offer.offerId!,
                   productId: widget.offer.productId!,
+                  productOwnerId: widget.offer.receiverId!,
                 ),
 
                 // Xac nhan thanh toan
