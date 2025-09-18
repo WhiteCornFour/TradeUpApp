@@ -4,9 +4,12 @@ import 'package:tradeupapp/models/card_model.dart';
 import 'package:tradeupapp/models/category_model.dart';
 import 'package:tradeupapp/models/chat_room_model.dart';
 import 'package:tradeupapp/models/notification_model.dart';
+import 'package:tradeupapp/models/offer_details_model.dart';
 import 'package:tradeupapp/models/offer_model.dart';
 import 'package:tradeupapp/models/product_model.dart';
+import 'package:tradeupapp/models/purchase_history_modal.dart';
 import 'package:tradeupapp/models/search_history_model.dart';
+import 'package:tradeupapp/models/sold_product_model.dart';
 import 'package:tradeupapp/models/user_model.dart';
 
 class DatabaseService {
@@ -737,7 +740,36 @@ class DatabaseService {
     return null;
   }
 
+  //PaymentController: thêm offer detail mới vào offer by offerId
+  Future<void> addOfferDetail(
+    String offerId,
+    OfferDetailsModel offerDetail,
+    String productId,
+  ) async {
+    try {
+      final docRef = FirebaseFirestore.instance
+          .collection("offers")
+          .doc(offerId);
+      final subCollRef = docRef.collection("offerDetails");
+      await subCollRef.add(offerDetail.toJson());
+      // ignore: avoid_print
+      print("Offer detail added successfully to offer $offerId");
 
+      //Update lai status offer ve 3 (đã có chi tiết)
+      await docRef.update({
+        'status': 3,
+        'createdAt': FieldValue.serverTimestamp(),
+      });
+      //Update lai status cua product sang 1 ( da ban )
+      await FirebaseFirestore.instance
+          .collection("products")
+          .doc(productId)
+          .update({"status": 1});
+    } catch (e) {
+      // ignore: avoid_print
+      print("Error addOfferDetail: $e");
+    }
+  }
 
   //ViewOfferController: Lấy danh sách offer mà currentUser nhận được
   Future<List<OfferModel>> getUserReceivedOfferList(
@@ -764,6 +796,7 @@ class DatabaseService {
 
     return querySnapshot.docs
         .map((doc) => OfferModel.fromMap(doc.data(), docId: doc.id))
+        .where((offer) => offer.status != 3) // bỏ những offer có status = 3
         .toList();
   }
 
@@ -975,6 +1008,87 @@ class DatabaseService {
           .update({"isRead": 2});
     } catch (e) {
       print("Error updateNotificationAsDelete: $e");
+    }
+  }
+
+  //SalseHistoryController: load những feed (là những sản phẩm) người dùng đã bán thành công
+  Future<List<SoldProductModel>> getSoldProducts(String idCurrentUser) async {
+    List<SoldProductModel> soldList = [];
+    try {
+      final offerCollection = FirebaseFirestore.instance.collection("offers");
+
+      final getOfferCurrentUser = await offerCollection
+          .where("receiverId", isEqualTo: idCurrentUser)
+          .where("status", isEqualTo: 3) // đã thanh toán
+          .get();
+
+      for (var doc in getOfferCurrentUser.docs) {
+        final data = doc.data();
+        final productId = data["productId"];
+
+        if (productId != null) {
+          final product = await getProductById(productId);
+          if (product != null) {
+            final offer = OfferModel.fromMap(data, docId: doc.id);
+            soldList.add(SoldProductModel(product: product, offer: offer));
+          }
+        }
+      }
+    } catch (e) {
+      // ignore: avoid_print
+      print("Error getSoldProducts: $e");
+    }
+    return soldList;
+  }
+
+  //BuyHistoryController: load danh sach nhung san pham ma nguoi dun hien tai da check out thanh cong
+  Future<List<PurchaseHistoryModal>?> getPurchaseProducts(
+    String idCurrentUser,
+  ) async {
+    try {
+      List<PurchaseHistoryModal> result = [];
+
+      final collectionRef = FirebaseFirestore.instance.collection("offers");
+      final getDocs = await collectionRef
+          .where("senderId", isEqualTo: idCurrentUser)
+          .where("status", isEqualTo: 3)
+          .get();
+
+      for (var e in getDocs.docs) {
+        // Parse offer
+        final offer = OfferModel.fromMap(e.data(), docId: e.id);
+
+        // Get product info
+        final product = await getProductById(e.data()["productId"]);
+
+        // Get offerDetail (lấy document đầu tiên trong sub-collection)
+        final offerDetailSnap = await FirebaseFirestore.instance
+            .collection("offers")
+            .doc(e.id)
+            .collection("offerDetails")
+            .limit(1)
+            .get();
+
+        if (product != null && offerDetailSnap.docs.isNotEmpty) {
+          final offerDetails = OfferDetailsModel.fromJson(
+            offerDetailSnap.docs.first.data(),
+          );
+
+          final purchaseHistory = PurchaseHistoryModal(
+            productModel: product,
+            offerModel: offer,
+            offerDetailsModel: offerDetails,
+          );
+
+          result.add(purchaseHistory);
+        }
+      }
+
+      return result;
+    } catch (e) {
+      // ignore: avoid_print
+      print("Error getPurchaseProducts: $e");
+      return null;
     }
   }
 }
