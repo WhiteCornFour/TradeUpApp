@@ -35,22 +35,22 @@ class _ShopState extends State<Shop> {
   }
 
   //Ham gia de tao dummy offer
-  Future<void> _createDummyOffer() async {
-    final controller = MakeAnOfferController();
+  // Future<void> _createDummyOffer() async {
+  //   final controller = MakeAnOfferController();
 
-    // Giá gốc của sản phẩm
-    controller.originPrice.value = 1200;
+  //   // Giá gốc của sản phẩm
+  //   controller.originPrice.value = 1200;
 
-    // Giá đề nghị (counter offer)
-    controller.offerAmount.value = 1700;
+  //   // Giá đề nghị (counter offer)
+  //   controller.offerAmount.value = 1700;
 
-    // Gọi hàm createOffer với dữ liệu test
-    await controller.createOffer(
-      senderId: "XBJwec7Y0cMoSVJK8bJCoRvZuFd2", // User gửi
-      receiverId: "EUh3D2nHZIdATzKr2s84rAk5DZo2", // User nhận
-      productId: "7SaOwXpS1XqXoI1P3gPo", // Product test
-    );
-  }
+  //   // Gọi hàm createOffer với dữ liệu test
+  //   await controller.createOffer(
+  //     senderId: "XBJwec7Y0cMoSVJK8bJCoRvZuFd2", // User gửi
+  //     receiverId: "EUh3D2nHZIdATzKr2s84rAk5DZo2", // User nhận
+  //     productId: "7SaOwXpS1XqXoI1P3gPo", // Product test
+  //   );
+  // }
 
   @override
   void initState() {
@@ -90,7 +90,7 @@ class _ShopState extends State<Shop> {
                     children: [
                       GestureDetector(
                         onDoubleTap: () async {
-                          await _createDummyOffer();
+                          // await _createDummyOffer();
                           // final token = await FirebaseMessaging.instance
                           //     .getToken();
                           // if (token != null) {

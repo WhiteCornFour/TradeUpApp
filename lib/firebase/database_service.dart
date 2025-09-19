@@ -897,6 +897,27 @@ class DatabaseService {
     }
   }
 
+  //ProductDetailController: Lấy offer duoc check out của 1 sản phẩm
+  Future<OfferModel?> fetchCheckOutOfferByProductId(String productId) async {
+    try {
+      final snapshot = await FirebaseFirestore.instance
+          .collection('offers')
+          .where('productId', isEqualTo: productId)
+          .where('status', isEqualTo: 3)
+          .limit(1)
+          .get();
+
+      if (snapshot.docs.isNotEmpty) {
+        final doc = snapshot.docs.first;
+        return OfferModel.fromMap(doc.data(), docId: doc.id);
+      }
+      return null;
+    } catch (e) {
+      print("Error fetchAcceptedOfferByProductId: $e");
+      return null;
+    }
+  }
+
   //ProductDetailController: Lấy danh sách Offer của Product từ Firebase
   Future<List<OfferModel>> getOffersByProductId(String productId) async {
     try {

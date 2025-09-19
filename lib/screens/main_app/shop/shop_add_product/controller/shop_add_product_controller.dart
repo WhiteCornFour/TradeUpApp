@@ -240,7 +240,7 @@ class AddProductController extends GetxController {
         categoryList: categories.toList(),
         imageList: urlImageList,
         productStory: productStoryController.text.trim(),
-        status: 1,
+        status: 0,
         createdAt: Timestamp.now(),
         likedBy: [],
       );
