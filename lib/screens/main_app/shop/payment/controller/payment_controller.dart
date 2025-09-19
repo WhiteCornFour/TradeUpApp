@@ -10,7 +10,6 @@ import 'package:tradeupapp/models/offer_details_model.dart';
 import 'package:tradeupapp/models/product_model.dart';
 import 'package:tradeupapp/models/user_model.dart';
 import 'package:tradeupapp/screens/main_app/index.dart';
-import 'package:tradeupapp/screens/main_app/profile/profile.dart';
 import 'package:tradeupapp/widgets/general/general_snackbar_helper.dart';
 
 class PaymentController extends GetxController {

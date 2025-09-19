@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -71,6 +70,7 @@ Future<void> main() async {
 
   //Foreground: Listener khi nhận FCM message (Khi đang xài app)
   FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
+    // ignore: avoid_print
     print('Foreground message received: ${message.notification?.title}');
 
     //prepare payload data from message.data (if any)
@@ -90,6 +90,7 @@ Future<void> main() async {
 
   //Background: app đang chạy nền
   FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+    // ignore: avoid_print
     print('onMessageOpenedApp: ${message.data}');
     _handleMessage(message); // handle navigation
   });
@@ -98,6 +99,7 @@ Future<void> main() async {
   RemoteMessage? initialMessage = await FirebaseMessaging.instance
       .getInitialMessage();
   if (initialMessage != null) {
+    // ignore: avoid_print
     print('getInitialMessage: ${initialMessage.data}');
     _handleMessage(initialMessage);
   }
@@ -105,11 +107,6 @@ Future<void> main() async {
   //Check if user has seen OnBoarding
   final prefs = await SharedPreferences.getInstance();
   final seenOnBoarding = prefs.getBool('seenOnBoarding') ?? false;
-
-  WidgetsBinding.instance.addPostFrameCallback((_) async {
-    // Load environment variables from the .env file
-    await dotenv.load(fileName: ".env");
-  });
 
   runApp(
     GetMaterialApp(
@@ -138,6 +135,7 @@ void _handleMessage(RemoteMessage message) {
     Get.to(() => MainAppIndex());
   } else {
     // handle other screens if needed
+    // ignore: avoid_print
     print('Unhandled message data: $data');
   }
 }
@@ -150,9 +148,11 @@ void _handleMessageFromPayload(String payload) {
     if (data['screen'] == 'offers') {
       Get.to(() => MainAppIndex());
     } else {
+      // ignore: avoid_print
       print('Payload has no screen key: $data');
     }
   } catch (e) {
+    // ignore: avoid_print
     print('Failed to parse notification payload: $e');
   }
 }

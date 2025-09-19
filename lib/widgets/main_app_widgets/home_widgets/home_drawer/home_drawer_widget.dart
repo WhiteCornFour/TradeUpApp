@@ -100,12 +100,19 @@ class _DrawerHomeState extends State<DrawerHome> {
               text: 'Apply',
               backgroundColor: AppColors.header,
               onPressed: () {
+                // ignore: avoid_print
                 print('========== FILTER STATE ==========');
+                // ignore: avoid_print
                 print('Keyword: ${keywordController.text}');
+                // ignore: avoid_print
                 print('Selected Categories: $selectedCategories');
+                // ignore: avoid_print
                 print('Min Price: $minPrice');
+                // ignore: avoid_print
                 print('Max Price: $maxPrice');
+                // ignore: avoid_print
                 print('Condition: $condition');
+                // ignore: avoid_print
                 print('=================================');
 
                 //Gọi hàm search với dữ liệu gom lại từ drawer

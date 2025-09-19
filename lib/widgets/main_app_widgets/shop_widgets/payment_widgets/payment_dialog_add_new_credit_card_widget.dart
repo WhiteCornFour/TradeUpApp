@@ -39,6 +39,7 @@ class DialogAddNewCreditCardPayment {
           insetPadding: const EdgeInsets.symmetric(horizontal: 16),
           child: StatefulBuilder(
             builder: (context, setState) {
+              // ignore: unused_element
               void showError(String msg) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text(msg), backgroundColor: Colors.red),

@@ -117,6 +117,7 @@ class MessageController extends GetxController {
       );
 
       if (alreadyExists) {
+        // ignore: avoid_print
         print("Skip creating notification, already exists within 1h");
         return;
       }
@@ -142,12 +143,14 @@ class MessageController extends GetxController {
           .get();
 
       if (!userDoc.exists) {
+        // ignore: avoid_print
         print("Receiver user not found!");
         return;
       }
 
       final tokens = List<String>.from(userDoc.data()?["fcmTokens"] ?? []);
       if (tokens.isEmpty) {
+        // ignore: avoid_print
         print("Receiver has no FCM tokens!");
         return;
       }
@@ -164,9 +167,10 @@ class MessageController extends GetxController {
           body: "$actorName sent you a message.",
         );
       }
-
+// ignore: avoid_print
       print("Message notification created successfully!");
     } catch (e) {
+      // ignore: avoid_print
       print("Error addSendMessageNotification: $e");
     }
   }

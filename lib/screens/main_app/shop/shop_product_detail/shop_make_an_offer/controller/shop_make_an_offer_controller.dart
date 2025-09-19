@@ -146,12 +146,14 @@ class MakeAnOfferController extends GetxController {
           .get();
 
       if (!userDoc.exists) {
+        // ignore: avoid_print
         print("Receiver user not found!");
         return;
       }
 
       final tokens = List<String>.from(userDoc.data()?["fcmTokens"] ?? []);
       if (tokens.isEmpty) {
+        // ignore: avoid_print
         print("Receiver has no FCM tokens!");
         return;
       }
@@ -188,9 +190,10 @@ class MakeAnOfferController extends GetxController {
               "$actorName sent you an offer for $productName $verb $priceText",
         );
       }
-
+// ignore: avoid_print
       print("Offer notification sent successfully!");
     } catch (e) {
+      // ignore: avoid_print
       print("Error addMakeAnOfferNotification: $e");
     }
   }

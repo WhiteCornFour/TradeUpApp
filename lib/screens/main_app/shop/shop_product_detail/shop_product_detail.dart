@@ -289,6 +289,7 @@ class _ProductDetailShopState extends State<ProductDetailShop> {
                                 textColor: Colors.black87,
                                 iconColor: Colors.black54,
                                 onPressed: () =>
+                                // ignore: avoid_print
                                     print('Selected: ${category.name}'),
                               );
                             }).toList(),

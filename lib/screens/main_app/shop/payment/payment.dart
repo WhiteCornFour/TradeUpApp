@@ -5,7 +5,6 @@ import 'package:tradeupapp/constants/app_colors.dart';
 import 'package:tradeupapp/models/card_model.dart';
 import 'package:tradeupapp/models/offer_details_model.dart';
 import 'package:tradeupapp/models/offer_model.dart';
-import 'package:tradeupapp/screens/main_app/profile/profile.dart';
 import 'package:tradeupapp/screens/main_app/shop/payment/controller/payment_controller.dart';
 import 'package:tradeupapp/widgets/general/general_custom_dialog.dart';
 import 'package:tradeupapp/widgets/general/general_loading_screen.dart';
