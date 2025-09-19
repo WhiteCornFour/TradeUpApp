@@ -92,6 +92,7 @@ class ProductDetailImageSliderShop extends StatelessWidget {
                       )
                     : ListView.separated(
                         padding: EdgeInsets.zero,
+                        // ignore: unnecessary_underscores
                         separatorBuilder: (_, __) => const SizedBox(width: 10),
                         itemCount: imageList.length,
                         shrinkWrap: true,

@@ -100,8 +100,10 @@ class DatabaseService {
       //Lưu dữ liệu lên Firestore
       await docRef.set(product.toMap());
 
+      // ignore: avoid_print
       print("Adding product successfull: ${docRef.id}");
     } catch (e) {
+      // ignore: avoid_print
       print("Error adding product: $e");
     }
   }
@@ -171,10 +173,12 @@ class DatabaseService {
         user.total_reviews = docSnapshot.data()!['total_rating'].toInt();
         return user;
       } else {
+        // ignore: avoid_print
         print('User not found fetchUserModelById');
         return null;
       }
     } catch (e) {
+      // ignore: avoid_print
       print('Error fetching user fetchUserModelById: $e');
       return null;
     }
@@ -197,6 +201,7 @@ class DatabaseService {
       }
       return null; // không tìm thấy user
     } catch (e) {
+      // ignore: avoid_print
       print('Error searchUserByTagName: $e');
       return null;
     }
@@ -307,6 +312,7 @@ class DatabaseService {
         return ProductModel.fromMap(snapshot.docs.first.data());
       }
     } catch (e) {
+      // ignore: avoid_print
       print('Error getProductById: $e');
     }
     return null;
@@ -325,6 +331,7 @@ class DatabaseService {
         return product;
       }).toList();
     } catch (e) {
+      // ignore: avoid_print
       print('Error fetching products: $e');
       return [];
     }
@@ -386,6 +393,7 @@ class DatabaseService {
 
       return users;
     } catch (e) {
+      // ignore: avoid_print
       print('Error getting users: $e');
       return [];
     }
@@ -410,6 +418,7 @@ class DatabaseService {
             .collection('searchHistory')
             .doc(docId)
             .update({'createdAt': Timestamp.now()});
+            // ignore: avoid_print
         print(
           "Updated search history time for: ${searchHistory.searchContent}",
         );
@@ -422,9 +431,11 @@ class DatabaseService {
         searchHistory.id = docRef.id;
 
         await docRef.set(searchHistory.toMap());
+        // ignore: avoid_print
         print("Added new search history: ${searchHistory.searchContent}");
       }
     } catch (e) {
+      // ignore: avoid_print
       print("Error add/update search history: $e");
     }
   }
@@ -443,6 +454,7 @@ class DatabaseService {
             }).toList();
           });
     } catch (e) {
+      // ignore: avoid_print
       print('Error getting user search history: $e');
       // Trả về Stream rỗng nếu có lỗi
       return Stream.value([]);
@@ -570,6 +582,7 @@ class DatabaseService {
   //ShopController: Lấy Tagname dựa trên Id truyền vào
   Future<String> getTagNameFromUserId(String userId) async {
     try {
+      // ignore: avoid_print
       print('User id Report: $userId');
       final doc = await FirebaseFirestore.instance
           .collection('users')
@@ -582,6 +595,7 @@ class DatabaseService {
         return 'Unknown';
       }
     } catch (e) {
+      // ignore: avoid_print
       print('ShopController TagName: $e');
       return 'Unknown';
     }
@@ -659,6 +673,7 @@ class DatabaseService {
             'likedBy': FieldValue.arrayUnion([userId]),
           });
     } catch (e) {
+      // ignore: avoid_print
       print("Error while liking product: $e");
     }
   }
@@ -673,6 +688,7 @@ class DatabaseService {
             'likedBy': FieldValue.arrayRemove([userId]),
           });
     } catch (e) {
+      // ignore: avoid_print
       print("Error while unliking product: $e");
     }
   }
@@ -814,6 +830,7 @@ class DatabaseService {
         return "Unknown user";
       }
     } catch (e) {
+      // ignore: avoid_print
       print("Error getUserNameFromUserId: $e");
       return "Unknown user";
     }
@@ -854,6 +871,7 @@ class DatabaseService {
           .map((doc) => OfferModel.fromMap(doc.data()))
           .toList();
     } catch (e) {
+      // ignore: avoid_print
       print("Error fetchOffersByProductId: $e");
       return [];
     }
@@ -892,6 +910,7 @@ class DatabaseService {
       }
       return null;
     } catch (e) {
+      // ignore: avoid_print
       print("Error fetchAcceptedOfferByProductId: $e");
       return null;
     }
@@ -909,6 +928,7 @@ class DatabaseService {
           .map((doc) => OfferModel.fromMap(doc.data(), docId: doc.id))
           .toList();
     } catch (e) {
+      // ignore: avoid_print
       print("Error getOffersByProductId: $e");
       return [];
     }
@@ -956,6 +976,7 @@ class DatabaseService {
       }
       return null;
     } catch (e) {
+      // ignore: avoid_print
       print("Error getOfferById: $e");
       return null;
     }
@@ -982,6 +1003,7 @@ class DatabaseService {
 
       return query.docs.isNotEmpty;
     } catch (e) {
+      // ignore: avoid_print
       print("Error hasRecentMessageNotification: $e");
       return false;
     }
@@ -995,6 +1017,7 @@ class DatabaseService {
           .doc(notificationId)
           .update({"isRead": 1});
     } catch (e) {
+      // ignore: avoid_print
       print("Error updateNotificationIsRead: $e");
     }
   }
@@ -1007,6 +1030,7 @@ class DatabaseService {
           .doc(notificationId)
           .update({"isRead": 2});
     } catch (e) {
+      // ignore: avoid_print
       print("Error updateNotificationAsDelete: $e");
     }
   }

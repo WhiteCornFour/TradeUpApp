@@ -8,6 +8,7 @@ class DebugMenu extends StatelessWidget {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('seenOnBoarding');
 
+    // ignore: use_build_context_synchronously
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Đã reset trạng thái OnBoarding!')),
     );

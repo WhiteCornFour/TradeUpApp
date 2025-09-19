@@ -76,6 +76,7 @@ class NotificationService {
     required String title,
     required String body,
   }) async {
+    // ignore: avoid_print
     print("Token gửi lên server: $token");
     final response = await http.post(
       Uri.parse('https://tradeupapp.onrender.com/sendNotification'),
@@ -89,8 +90,9 @@ class NotificationService {
         },
       }),
     );
-
+// ignore: avoid_print
     print("Server status: ${response.statusCode}");
+    // ignore: avoid_print
     print("Server response: ${response.body}");
   }
 
@@ -158,9 +160,10 @@ class NotificationService {
           "image": imageUrl,
         }),
       );
-
+// ignore: avoid_print
       print("Server response: ${response.body}");
     } catch (e) {
+      // ignore: avoid_print
       print("Error sending notification: $e");
     }
   }

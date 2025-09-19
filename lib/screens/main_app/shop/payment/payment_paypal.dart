@@ -6,7 +6,6 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:tradeupapp/constants/app_colors.dart';
 import 'package:tradeupapp/models/offer_details_model.dart';
-import 'package:tradeupapp/screens/main_app/index.dart';
 import 'package:tradeupapp/screens/main_app/shop/payment/controller/payment_controller.dart';
 import 'package:tradeupapp/widgets/general/general_back_button.dart';
 import 'package:tradeupapp/widgets/general/general_snackbar_helper.dart';

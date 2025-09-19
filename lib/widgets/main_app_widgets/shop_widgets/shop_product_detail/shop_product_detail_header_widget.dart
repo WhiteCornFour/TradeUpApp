@@ -29,6 +29,7 @@ class ProductDetailHeaderShop extends StatelessWidget {
         //Avatar
         GestureDetector(
           onTap: () {
+            // ignore: avoid_print
             print("Go to personal of $sellerId");
             // Điều hướng sang trang Personal
             Get.to(() => Personal(idUser: sellerId));
