@@ -85,7 +85,6 @@ flutter:
     - assets/images/
     - assets/images/on_boarding_images/
     - assets/images/sample_images/
-    - .env
 
   fonts:
     - family: Roboto-Thin
