@@ -4,7 +4,7 @@ import 'package:iconsax/iconsax.dart';
 import 'package:tradeupapp/constants/app_colors.dart';
 import 'package:tradeupapp/firebase/notification_service.dart';
 import 'package:tradeupapp/screens/main_app/news/controller/news_controller.dart';
-import 'package:tradeupapp/screens/main_app/profile/buy_history/purchase_history.dart';
+import 'package:tradeupapp/screens/main_app/profile/purchase_history/purchase_history.dart';
 import 'package:tradeupapp/screens/main_app/profile/view_offer/view_offer.dart';
 import 'package:tradeupapp/screens/main_app/shop/personal.dart';
 import 'package:tradeupapp/widgets/general/general_loading_screen.dart';

@@ -9,6 +9,7 @@ import 'package:tradeupapp/models/notification_model.dart';
 import 'package:tradeupapp/models/offer_details_model.dart';
 import 'package:tradeupapp/models/product_model.dart';
 import 'package:tradeupapp/models/user_model.dart';
+import 'package:tradeupapp/screens/main_app/index.dart';
 import 'package:tradeupapp/screens/main_app/profile/profile.dart';
 import 'package:tradeupapp/widgets/general/general_snackbar_helper.dart';
 
@@ -77,7 +78,7 @@ class PaymentController extends GetxController {
     String offerId,
     OfferDetailsModel offerDetail,
     String productId,
-    String productOwnerId
+    String productOwnerId,
   ) async {
     try {
       idLoading.value = true;
@@ -90,7 +91,7 @@ class PaymentController extends GetxController {
         productId: productId,
       );
 
-      Get.off(Profile());
+      Get.offAll(MainAppIndex());
     } catch (e) {
       // ignore: avoid_print
       print("Error handleAddOfferDetail: $e");

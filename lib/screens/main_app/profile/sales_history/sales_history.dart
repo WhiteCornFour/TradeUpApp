@@ -108,26 +108,31 @@ class _SalesHistoryState extends State<SalesHistory> {
                     final product = sold.product;
                     final offer = sold.offer;
 
-                    salesHistoryController.handleGetDataBuyer(offer.senderId!);
+                   
 
-                    return CardProductSalesProduct(
-                      onPressed: () {},
-                      imageUrls: product.imageList ?? [],
-                      description: product.productDescription ?? '',
-                      userName:
-                          salesHistoryController.currentUser!.fullName ??
-                          'Loading...',
-                      timeAgo: _formatTimestampToNgayGio(product.createdAt),
-                      likedBy: product.likedBy ?? [],
-                      userAvatar:
-                          salesHistoryController.currentUser!.avtURL ?? '',
-                      userId: product.userId,
-                      currentUserId: salesHistoryController.idCurrentUser,
-                      productId: product.productId,
-                      buyerName:
-                          salesHistoryController.buyerName ?? 'Loading...',
-                      totalPrice: offer.price?.toString() ?? 'Loading...',
-                      buyerAvatar: salesHistoryController.buyerAvt ?? "",
+                    return FutureBuilder(
+                      future:  salesHistoryController.handleGetDataBuyer(offer.senderId!),
+                      builder: (context, asyncSnapshot) {
+                        return CardProductSalesProduct(
+                          onPressed: () {},
+                          imageUrls: product.imageList ?? [],
+                          description: product.productDescription ?? '',
+                          userName:
+                              salesHistoryController.currentUser!.fullName ??
+                              'Loading...',
+                          timeAgo: _formatTimestampToNgayGio(product.createdAt),
+                          likedBy: product.likedBy ?? [],
+                          userAvatar:
+                              salesHistoryController.currentUser!.avtURL ?? '',
+                          userId: product.userId,
+                          currentUserId: salesHistoryController.idCurrentUser,
+                          productId: product.productId,
+                          buyerName:
+                              salesHistoryController.buyerName ?? 'Loading...',
+                          totalPrice: offer.price?.toString() ?? 'Loading...',
+                          buyerAvatar: salesHistoryController.buyerAvt ?? "",
+                        );
+                      }
                     );
                   },
                 ),
