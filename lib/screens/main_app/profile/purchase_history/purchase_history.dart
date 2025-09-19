@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get_instance/get_instance.dart';
 import 'package:get/state_manager.dart';
 import 'package:tradeupapp/constants/app_colors.dart';
-import 'package:tradeupapp/screens/main_app/profile/buy_history/controller/purchase_history_controller.dart';
+import 'package:tradeupapp/screens/main_app/profile/purchase_history/controller/purchase_history_controller.dart';
 import 'package:tradeupapp/widgets/general/general_back_button.dart';
 import 'package:tradeupapp/widgets/general/general_loading_screen.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/user_profile_widgets/purchase_history_widgets/purchase_history_pop_menu_widget.dart';

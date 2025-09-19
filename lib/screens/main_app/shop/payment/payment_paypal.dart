@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:tradeupapp/constants/app_colors.dart';
 import 'package:tradeupapp/models/offer_details_model.dart';
-import 'package:tradeupapp/screens/main_app/profile/profile.dart';
+import 'package:tradeupapp/screens/main_app/index.dart';
 import 'package:tradeupapp/screens/main_app/shop/payment/controller/payment_controller.dart';
 import 'package:tradeupapp/widgets/general/general_back_button.dart';
 import 'package:tradeupapp/widgets/general/general_snackbar_helper.dart';
@@ -17,7 +17,13 @@ class PaymentPaypal extends StatefulWidget {
   final String productId;
   final String productOwnerId;
 
-  const PaymentPaypal({super.key, required this.amount, required this.offerId, required this.productId, required this.productOwnerId});
+  const PaymentPaypal({
+    super.key,
+    required this.amount,
+    required this.offerId,
+    required this.productId,
+    required this.productOwnerId,
+  });
 
   @override
   State<PaymentPaypal> createState() => _PaymentPaypalState();
@@ -116,21 +122,21 @@ class _PaymentPaypalState extends State<PaymentPaypal> {
                         widget.offerId,
                         offerDetail,
                         widget.productId,
-                        widget.productOwnerId
+                        widget.productOwnerId,
                       );
                       SnackbarHelperGeneral.showCustomSnackBar(
                         "Payment completed successfully!",
                         backgroundColor: Colors.green,
                       );
-                      Get.offAll(() => Profile()); // thay thế hết stack
                     }
+                    
                   } else if (url.toString().contains("/cancel")) {
                     if (mounted) {
                       SnackbarHelperGeneral.showCustomSnackBar(
                         "Payment cancelled!",
                         backgroundColor: Colors.red,
                       );
-                      Get.offAll(() => Profile()); // thay thế hết stack
+                     
                     }
                   }
                 },

@@ -43,28 +43,31 @@ class ProductCardPurchaseHistory extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-      padding: const EdgeInsets.all(14),
+      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: AppColors.text),
         boxShadow: [
           BoxShadow(
-            color: Colors.black12,
-            blurRadius: 6,
-            offset: const Offset(0, 3),
+            color: Colors.black.withOpacity(0.08),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
           ),
         ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          /// --- Store info ---
+          /// --- Seller info ---
           FutureBuilder<UserModel?>(
             future: DatabaseService().fetchUserModelById(productModel.userId!),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return const CircularProgressIndicator();
+                return const Center(
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                );
               }
               if (!snapshot.hasData || snapshot.hasError) {
                 return const Text(
@@ -72,7 +75,7 @@ class ProductCardPurchaseHistory extends StatelessWidget {
                   style: TextStyle(
                     color: AppColors.header,
                     fontFamily: "Roboto-Medium",
-                    fontSize: 20,
+                    fontSize: 18,
                     fontWeight: FontWeight.w500,
                   ),
                 );
@@ -83,70 +86,71 @@ class ProductCardPurchaseHistory extends StatelessWidget {
                 children: [
                   CircleAvatar(
                     backgroundImage: user.avtURL == null
-                        ? AssetImage("assets/images/logo.png")
-                        : NetworkImage(user.avtURL!),
-                    radius: 24,
+                        ? const AssetImage("assets/images/logo.png")
+                        : NetworkImage(user.avtURL!) as ImageProvider,
+                    radius: 26,
                   ),
                   const SizedBox(width: 12),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        user.fullName ?? "Unknown seller",
-                        style: const TextStyle(
-                          color: AppColors.header,
-                          fontFamily: "Roboto-Regular",
-                          fontWeight: FontWeight.w600,
-                          fontSize: 16,
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          user.fullName ?? "Unknown seller",
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.header,
+                          ),
                         ),
-                      ),
-                      Text(
-                        user.address ?? "No address",
-                        style: const TextStyle(
-                          color: Colors.grey,
-                          fontSize: 13,
-                          fontFamily: "Roboto-Regular",
-                          fontWeight: FontWeight.w600,
+                        Text(
+                          user.address ?? "No address",
+                          style: const TextStyle(
+                            fontSize: 13,
+                            color: Colors.grey,
+                          ),
+                          overflow: TextOverflow.ellipsis,
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ],
               );
             },
           ),
-          const SizedBox(height: 16),
 
-          /// --- Product ---
-          const Text(
+          const SizedBox(height: 18),
+
+          /// --- Product block ---
+          Text(
             "Product",
             style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
-              color: AppColors.header,
-              fontFamily: "Roboto-Medium",
+              fontSize: 17,
+              fontWeight: FontWeight.w700,
+              color: AppColors.header.withOpacity(0.9),
             ),
           ),
           const SizedBox(height: 10),
 
           ClipRRect(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(14),
             child:
                 productModel.imageList != null &&
                     productModel.imageList!.isNotEmpty
                 ? Image.network(
                     productModel.imageList!.first,
-                    height: 150,
+                    height: 160,
                     width: double.infinity,
-                    fit: BoxFit.cover,
+                    fit: BoxFit.fitHeight,
                   )
                 : Image.asset(
                     "assets/images/logo.png",
-                    height: 150,
+                    height: 160,
                     width: double.infinity,
-                    fit: BoxFit.cover,
+                    fit: BoxFit.fitHeight,
                   ),
           ),
+
           const SizedBox(height: 12),
 
           Text(
@@ -155,12 +159,11 @@ class ProductCardPurchaseHistory extends StatelessWidget {
               fontSize: 16,
               fontWeight: FontWeight.w600,
               color: AppColors.header,
-              fontFamily: "Roboto-Medium",
             ),
           ),
-          const SizedBox(height: 8),
 
-          /// --- Offer Info ---
+          const SizedBox(height: 10),
+
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -170,54 +173,71 @@ class ProductCardPurchaseHistory extends StatelessWidget {
                   fontSize: 15,
                   color: Colors.grey,
                   decoration: TextDecoration.lineThrough,
-                  fontFamily: "Roboto-Regular",
-                  fontWeight: FontWeight.w500,
                 ),
               ),
               Text(
                 "Offer: \$${offerDetailsModel.totalPayment ?? 0}",
                 style: const TextStyle(
                   fontSize: 17,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: "Roboto-Regular",
+                  fontWeight: FontWeight.w700,
                   color: Colors.green,
                 ),
               ),
             ],
           ),
-          const Divider(height: 24, thickness: 1),
 
-          /// --- Payment Info ---
-          Row(
-            children: [
-              const Icon(Icons.access_time, size: 18, color: Colors.grey),
-              const SizedBox(width: 6),
-              Text(
-                "Paid at: ${formatTimestamp(offerDetailsModel.createdAt!)}",
-                style: const TextStyle(
-                  fontSize: 14,
-                  color: AppColors.header,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: "Roboto-Regular",
-                ),
+          const SizedBox(height: 16),
+          const Divider(thickness: 1, indent: 1),
+
+          /// --- Payment info block ---
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 14),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(14),
+              gradient: LinearGradient(
+                colors: [
+                  AppColors.text,
+                  const Color.fromARGB(255, 212, 240, 255),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
               ),
-            ],
-          ),
-          const SizedBox(height: 6),
-          Row(
-            children: [
-              const Icon(Icons.credit_card, size: 18, color: Colors.grey),
-              const SizedBox(width: 6),
-              Text(
-                "Payment Method: ${mapPaymentMethod(offerDetailsModel.paymentMethod)}",
-                style: const TextStyle(
-                  fontSize: 14,
-                  color: AppColors.header,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: "Roboto-Regular",
+            ),
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    const Icon(Icons.access_time, size: 18, color: Colors.grey),
+                    const SizedBox(width: 6),
+                    Expanded(
+                      child: Text(
+                        "Paid at: ${formatTimestamp(offerDetailsModel.createdAt!)}",
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.header,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ],
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    const Icon(Icons.credit_card, size: 18, color: Colors.grey),
+                    const SizedBox(width: 6),
+                    Text(
+                      "Method: ${mapPaymentMethod(offerDetailsModel.paymentMethod)}",
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.header,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ],
       ),

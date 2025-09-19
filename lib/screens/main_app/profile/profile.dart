@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tradeupapp/constants/app_colors.dart';
 import 'package:tradeupapp/screens/main_app/profile/about_us/about_us.dart';
-import 'package:tradeupapp/screens/main_app/profile/buy_history/purchase_history.dart';
+import 'package:tradeupapp/screens/main_app/profile/purchase_history/purchase_history.dart';
 import 'package:tradeupapp/screens/main_app/profile/change_password/change_password.dart';
 import 'package:tradeupapp/screens/main_app/profile/controller/profile_controller.dart';
 import 'package:tradeupapp/screens/main_app/profile/sales_history/sales_history.dart';

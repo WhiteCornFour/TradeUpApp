@@ -32,7 +32,7 @@ class SalesHistoryController extends GetxController {
     }
   }
 
-  void handleGetDataBuyer(String idUser) async {
+  Future<void> handleGetDataBuyer(String idUser) async {
     final data = await db.fetchUserModelById(idUser);
     if (data != null) {
       buyerName = data.fullName;

@@ -458,6 +458,7 @@ class DatabaseService {
         .map((snapshot) {
           return snapshot.docs
               .map((doc) => ProductModel.fromMap(doc.data()))
+              .where((product) => product.status != 1) // 🔥 lọc ở đây
               .toList();
         });
   }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:tradeupapp/constants/app_colors.dart';
-import 'package:tradeupapp/screens/main_app/profile/buy_history/controller/purchase_history_controller.dart';
+import 'package:tradeupapp/screens/main_app/profile/purchase_history/controller/purchase_history_controller.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/shop_pop_menu/shop_pop_menu_item.dart';
 import 'package:tradeupapp/widgets/main_app_widgets/shop_widgets/shop_pop_menu/shop_pop_menu_items_list.dart';
 

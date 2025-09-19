@@ -32,7 +32,7 @@ class CardProductSalesProduct extends StatefulWidget {
   final String? currentUserId;
   final String? productId;
   final String buyerName;
-  final String buyerAvatar; // thêm avatar buyer
+  final String buyerAvatar;
   final String totalPrice;
 
   @override
@@ -43,92 +43,189 @@ class CardProductSalesProduct extends StatefulWidget {
 class _CardProductSalesProductState extends State<CardProductSalesProduct> {
   @override
   Widget build(BuildContext context) {
-
     return GestureDetector(
       onTap: widget.onPressed,
       child: Column(
         children: [
           Container(
             decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(
+                color: const Color.fromARGB(255, 255, 233, 197),
+                width: 1,
+              ),
+              gradient: LinearGradient(
+                colors: [Colors.white, Colors.purple.shade50],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.2),
-                  blurRadius: 15,
-                  offset: Offset(0, 4),
-                  spreadRadius: 1,
+                  color: Colors.black.withOpacity(0.08),
+                  blurRadius: 12,
+                  offset: const Offset(0, 6),
                 ),
               ],
-              color: const Color.fromARGB(255, 242, 236, 255),
-              borderRadius: BorderRadius.circular(16),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                PostCardHeaderShop(
-                  userName: widget.userName,
-                  timeAgo: widget.timeAgo,
-                  userAvatar: widget.userAvatar,
-                  userId: widget.userId ?? '',
-                  productId: widget.productId ?? '',
-                  isOwnPost: widget.userId == widget.currentUserId,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 5,
+                /// Header
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        AppColors.text,
+                        const Color.fromARGB(255, 212, 240, 255),
+                      ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(20),
+                    ),
                   ),
+                  child: PostCardHeaderShop(
+                    userName: widget.userName,
+                    timeAgo: widget.timeAgo,
+                    userAvatar: widget.userAvatar,
+                    userId: widget.userId ?? '',
+                    productId: widget.productId ?? '',
+                    isOwnPost: widget.userId == widget.currentUserId,
+                  ),
+                ),
+
+                /// Description
+                Padding(
+                  padding: const EdgeInsets.all(14),
                   child: PostCardDescriptionShop(text: widget.description),
                 ),
-                PostCardImageSliderShop(imageUrls: widget.imageUrls),
 
-                const Divider(),
-
-                // Buyer info với avatar
-                ListTile(
-                  leading: CircleAvatar(
-                    radius: 22,
-                    backgroundImage: widget.buyerAvatar != ""
-                        ? NetworkImage(widget.buyerAvatar)
-                        : const AssetImage("assets/images/avatar-user.png")
-                              as ImageProvider,
-                  ),
-                  title: Text(
-                    widget.buyerName,
-                    style: TextStyle(
-                      fontFamily: "Roboto-Regular",
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.header,
-                    ),
-                  ),
-                  subtitle: const Text(
-                    "Buyer",
-                    style: TextStyle(
-                      fontFamily: "Roboto-Regular",
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.header,
-                    ),
+                /// Images
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 14),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(16),
+                    child: PostCardImageSliderShop(imageUrls: widget.imageUrls),
                   ),
                 ),
 
-                // Payment info
-                ListTile(
-                  leading: const Icon(Icons.attach_money, color: Colors.green),
-                  title: Text(
-                    "Total payment: ${widget.totalPrice}",
-                    style: TextStyle(
-                      fontFamily: "Roboto-Regular",
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.header,
+                const SizedBox(height: 12),
+
+                /// Buyer info block
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 14),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 14,
+                    vertical: 10,
+                  ),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        AppColors.text,
+                        const Color.fromARGB(255, 212, 240, 255),
+                      ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                  child: Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 26,
+                        backgroundImage: widget.buyerAvatar != ""
+                            ? NetworkImage(widget.buyerAvatar)
+                            : const AssetImage("assets/images/avatar-user.png")
+                                  as ImageProvider,
+                      ),
+                      const SizedBox(width: 12),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            widget.buyerName,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700,
+                              color: AppColors.header,
+                            ),
+                          ),
+                          const Text(
+                            "Buyer",
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+
+                const SizedBox(height: 5),
+
+                /// Payment info badge
+                Padding(
+                  padding: const EdgeInsets.only(
+                    left: 14,
+                    right: 14,
+                    bottom: 16,
+                    top: 4,
+                  ),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 12,
+                    ),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          AppColors.text,
+                          const Color.fromARGB(255, 212, 240, 255),
+                        ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      borderRadius: BorderRadius.circular(14),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.blue.withOpacity(0.3),
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(
+                          Icons.attach_money,
+                          color: AppColors.header,
+                          size: 24,
+                        ),
+                        const SizedBox(width: 6),
+                        Text(
+                          "Total Payment: ${widget.totalPrice}",
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.header,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
               ],
             ),
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 16),
+          Divider(),
         ],
       ),
     );
