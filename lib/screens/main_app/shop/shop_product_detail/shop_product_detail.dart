@@ -70,6 +70,9 @@ class _ProductDetailShopState extends State<ProductDetailShop> {
       await productDetailController.loadOffersOfProduct(
         widget.product.productId ?? '',
       );
+      await productDetailController.loadCheckOutOffer(
+        widget.product.productId ?? '',
+      );
       makeAnOfferController.originPrice.value =
           widget.product.productPrice ?? 0.0;
     });
@@ -341,17 +344,39 @@ class _ProductDetailShopState extends State<ProductDetailShop> {
                           ),
                           const SizedBox(height: 8),
                           Obx(() {
-                            final offer =
+                            final checkoutOffer =
+                                productDetailController.checkOutOffer.value;
+                            final topOffer =
                                 productDetailController.topOffer.value;
-                            return ProductDetailTopOfferCardShop(
-                              userName: offer?.senderName ?? "Unknown User",
-                              userAvatar: offer?.senderAvatar,
-                              offerPrice: offer?.offerPrice,
-                              offerType: offer?.type,
-                              status: offer?.status,
-                            );
-                          }),
 
+                            print(
+                              "Checkout Offer status = ${checkoutOffer?.status}",
+                            );
+
+                            if (checkoutOffer != null &&
+                                checkoutOffer.status == 3) {
+                              //Đã có deal agreed (paid)
+                              return ProductDetailTopOfferCardShop(
+                                userName:
+                                    checkoutOffer.senderName ?? "Unknown User",
+                                userAvatar: checkoutOffer.senderAvatar,
+                                offerPrice: checkoutOffer.offerPrice,
+                                offerType: checkoutOffer.type,
+                                status: checkoutOffer.status,
+                              );
+                            } else if (topOffer != null) {
+                              //Chỉ có top offer
+                              return ProductDetailTopOfferCardShop(
+                                userName: topOffer.senderName ?? "Unknown User",
+                                userAvatar: topOffer.senderAvatar,
+                                offerPrice: topOffer.offerPrice,
+                                offerType: topOffer.type,
+                                status: topOffer.status,
+                              );
+                            } else {
+                              return ProductDetailTopOfferCardShop();
+                            }
+                          }),
                           const SizedBox(height: 16),
                           const Divider(),
                           const SizedBox(height: 16),
@@ -394,6 +419,13 @@ class _ProductDetailShopState extends State<ProductDetailShop> {
               ),
               bottomNavigationBar: Obx(() {
                 final topOffer = productDetailController.topOffer.value;
+                final checkoutOffer =
+                    productDetailController.checkOutOffer.value;
+
+                // Nếu đã có checkoutOffer (deal agreed / paid) thì ẩn luôn
+                if (checkoutOffer != null && checkoutOffer.status == 3) {
+                  return const SizedBox.shrink();
+                }
 
                 // Nếu có top offer và status = 1 thì ẩn
                 if (topOffer != null && topOffer.status == 1) {

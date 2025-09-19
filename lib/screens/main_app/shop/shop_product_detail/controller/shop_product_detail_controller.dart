@@ -30,6 +30,9 @@ class ProductDetailController extends GetxController {
   //Top offer
   var topOffer = Rxn<OfferModel>();
 
+  //Check out offer
+  var checkOutOffer = Rxn<OfferModel>();
+
   //Danh sach Offer cua san pham
   var offerList = <OfferModel>[].obs;
 
@@ -57,6 +60,7 @@ class ProductDetailController extends GetxController {
   //Hàm load Top Offer
   Future<void> loadTopOffer(String productId) async {
     try {
+      isLoading.value = true;
       final acceptedOffer = await db.fetchAcceptedOfferByProductId(productId);
       if (acceptedOffer != null) {
         final sender = await db.fetchUserModelById(
@@ -71,6 +75,31 @@ class ProductDetailController extends GetxController {
       }
     } catch (e) {
       print("Error loadTopOffer: $e");
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  //Hàm load Check Out Offer
+  Future<void> loadCheckOutOffer(String productId) async {
+    try {
+      isLoading.value = true;
+      final checkedOutOffer = await db.fetchCheckOutOfferByProductId(productId);
+      if (checkedOutOffer != null) {
+        final sender = await db.fetchUserModelById(
+          checkedOutOffer.senderId ?? '',
+        );
+        checkedOutOffer.senderName = sender?.fullName;
+        checkedOutOffer.senderAvatar = sender?.avtURL;
+
+        checkOutOffer.value = checkedOutOffer;
+      } else {
+        checkOutOffer.value = null; // không có offer nào được accept
+      }
+    } catch (e) {
+      print("Error loadCheckOffer: $e");
+    } finally {
+      isLoading.value = false;
     }
   }
 
